@@ -8,6 +8,7 @@ export async function POST(req) {
     
     try {
         const { username, password } = await req.json();
+        const userRole = "student";
 
         console.log("Username: ", username);
         console.log("Password: ", password);
@@ -27,8 +28,8 @@ export async function POST(req) {
 
         // เพิ่มผู้ใช้ใหม่ด้วยรหัสผ่านที่ถูกแฮช
         await promisePool.query(
-            'INSERT INTO user (username, password) VALUES (?, ?)',
-            [username, hashedPassword]
+            'INSERT INTO user (username, password, user_role) VALUES (?, ?, ?)',
+            [username, hashedPassword, userRole]
         );
 
         return NextResponse.json({ message: "User registered successfully." }, { status: 201 });

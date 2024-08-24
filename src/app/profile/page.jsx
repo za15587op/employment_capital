@@ -1,3 +1,4 @@
+
 "use client";
 import React from 'react'
 import Navber from '../components/Navber'
@@ -5,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 // import { authOption } from '../api/auth/[...nextauth]/route';
 
-function WelcomePage() {
+function ProfilePage() {
 
   
   // const session = await getServerSession(authOptions);
@@ -28,7 +29,6 @@ function WelcomePage() {
     <div>
         <Navber session = {session}/>
         <div>
-            <h3>Welcome</h3>
             <p>Welcome, {session.user.name}!</p>
             <p>Role: {session.user.role}</p>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Earum corporis iure suscipit quia mollitia accusantium maiores, consequuntur placeat odio autem quasi illo libero perspiciatis molestias porro quibusdam in quae neque?</p>
@@ -37,4 +37,4 @@ function WelcomePage() {
   )
 }
 
-export default WelcomePage
+export default ProfilePage

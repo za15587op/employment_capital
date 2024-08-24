@@ -33,7 +33,7 @@ function ShowStudent() {
 
 
   const handleUpdate = (id) => {
-    router.push(`/update-student?id=${id}`);
+    router.push(`/student?id=${id}`);
   };
 
 
@@ -43,14 +43,53 @@ function ShowStudent() {
       <div>
         <h3>Student List</h3>
         {error && <div>{error}</div>}
-        <ul>
-          {students.map((student) => (
-            <li key={student.id} onClick={() => handleUpdate(student.id)}>
-              {student.student_firstname} {student.student_lastname} - {student.student_email}
-            </li>
-          ))}
-            {/* <button key={student.student_id} onClick={() => handleUpdate(student.student_id)}>edit</button> */}
-        </ul>
+        <div className="table-container">
+      <table className="student-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+         
+            <tr >
+              <td>student.id</td>
+              <td>student.name</td>
+              <td>student.age</td>
+              <td>student.email</td>
+            </tr>
+
+        </tbody>
+      </table>
+
+      <style jsx>{`
+        .table-container {
+          overflow-x: auto;
+        }
+
+        .student-table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        .student-table th, .student-table td {
+          padding: 8px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+        }
+
+        .student-table th {
+          background-color: #f2f2f2;
+        }
+
+        .student-table tr:hover {
+          background-color: #f1f1f1;
+        }
+      `}</style>
+    </div>
       </div>
     </div>
   );

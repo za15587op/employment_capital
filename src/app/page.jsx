@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import Navber from "./components/Navber";
 import { useSession } from "next-auth/react";
 

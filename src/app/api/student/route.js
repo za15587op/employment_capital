@@ -1,54 +1,19 @@
 import { NextResponse } from "next/server";
-import promisePool from "../../../../lib/db";
+import Student from "../../../../models/student"; // Importing the Student model
 
+// POST: Create a new student
 export async function POST(req) {
-  console.log(req);
-
   try {
-    const {
-      student_id,
-      student_firstname,
-      student_lastname,
-      student_faculty,
-      student_field,
-      student_curriculum,
-      student_year,
-      student_email,
-      student_phone,
-    } = await req.json();
+    const studentData = await req.json(); // Get the student data from the request
 
-    console.log("student_id: ", student_id);
-    console.log("student_firstname: ", student_firstname);
-    console.log("student_lastname: ", student_lastname);
-    console.log("student_faculty: ", student_faculty);
-    console.log("student_field: ", student_field);
-    console.log("student_curriculum: ", student_curriculum);
-    console.log("student_year: ", student_year);
-    console.log("student_email: ", student_email);
-    console.log("student_phone: ", student_phone);
-
-    // เพิ่มผู้ใช้ใหม่ด้วยรหัสผ่านที่ถูกแฮช
-    await promisePool.query(
-      "INSERT INTO student (student_id, student_firstname, student_lastname, student_faculty, student_field, student_curriculum, student_year, student_email, student_phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        student_id,
-        student_firstname,
-        student_lastname,
-        student_faculty,
-        student_field,
-        student_curriculum,
-        student_year,
-        student_email,
-        student_phone,
-      ]
-    );
+    await Student.create(studentData); // Use the create method from the Student model
 
     return NextResponse.json(
       { message: "User registered successfully." },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error during registration:", error); // ช่วยให้คุณเห็นข้อผิดพลาดที่เกิดขึ้น
+    console.error("Error during registration:", error);
     return NextResponse.json(
       { message: "An error occurred during registration." },
       { status: 500 }
@@ -56,10 +21,11 @@ export async function POST(req) {
   }
 }
 
-//อัปเดต
+// PUT: Update a student
 export async function PUT(req) {
   try {
     const {
+      std_id,
       student_id,
       student_firstname,
       student_lastname,
@@ -69,55 +35,94 @@ export async function PUT(req) {
       student_year,
       student_email,
       student_phone,
-    } = await req.json();
+    } = await req.json(); // Get the student data from the request
 
-    await promisePool.query(
-      "UPDATE student SET student_firstname=?, student_lastname=?, student_faculty=?, student_field=?, student_curriculum=?, student_year=?, student_email=?, student_phone=? WHERE id=?",
-      [
-        student_firstname,
-        student_lastname,
-        student_faculty,
-        student_field,
-        student_curriculum,
-        student_year,
-        student_email,
-        student_phone,
-        student_id,
-      ]
+    // Use the update method from the Student model
+    await Student.update(std_id, {
+      student_id,
+      student_firstname,
+      student_lastname,
+      student_faculty,
+      student_field,
+      student_curriculum,
+      student_year,
+      student_email,
+      student_phone,
+    });
+
+    return NextResponse.json(
+      { message: "อัปเดตข้อมูลนักเรียนสำเร็จ." },
+      { status: 200 }
     );
-
-    return NextResponse.json({ message: "อัปเดตข้อมูลนักเรียนสำเร็จ." }, { status: 200 });
   } catch (error) {
     console.error("เกิดข้อผิดพลาดระหว่างการอัปเดต:", error);
-    return NextResponse.json({ message: "เกิดข้อผิดพลาดระหว่างการอัปเดต." }, { status: 500 });
+    return NextResponse.json(
+      { message: "เกิดข้อผิดพลาดระหว่างการอัปเดต." },
+      { status: 500 }
+    );
   }
 }
 
+// // DELETE: Delete a student
+// export async function DELETE(req) {
+//   try {
+//     const { std_id } = await req.json(); // Get the student ID from the request
 
-//ลบข้อมูล
+//     await Student.delete(std_id); // Use the delete method from the Student model
+
+//     return NextResponse.json(
+//       { message: "ลบข้อมูลนักเรียนสำเร็จ." },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("เกิดข้อผิดพลาดระหว่างการลบ:", error);
+//     return NextResponse.json(
+//       { message: "เกิดข้อผิดพลาดระหว่างการลบ." },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+
+// DELETE: Delete a student
 export async function DELETE(req) {
   try {
-    const { student_id } = await req.json();
+    const url = new URL(req.url);
+    const std_id = url.searchParams.get('std_id'); // Get std_id from URL query parameter
 
-    await promisePool.query("DELETE FROM student WHERE student_id=?", [student_id]);
+    if (!std_id) {
+      return NextResponse.json(
+        { message: "Student ID is required." },
+        { status: 400 }
+      );
+    }
 
-    return NextResponse.json({ message: "ลบข้อมูลนักเรียนสำเร็จ." }, { status: 200 });
+    await Student.delete(std_id); // Use the delete method from the Student model
+
+    return NextResponse.json(
+      { message: "ลบข้อมูลนักเรียนสำเร็จ." },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("เกิดข้อผิดพลาดระหว่างการลบ:", error);
-    return NextResponse.json({ message: "เกิดข้อผิดพลาดระหว่างการลบ." }, { status: 500 });
+    return NextResponse.json(
+      { message: "เกิดข้อผิดพลาดระหว่างการลบ." },
+      { status: 500 }
+    );
   }
 }
 
-
-//โชว์ข้อมูล
+// GET: Fetch all students
 export async function GET(req) {
   try {
-    const [rows] = await promisePool.query("SELECT * FROM student");
+    const students = await Student.getAll(); // Use the getAll method from the Student model
 
-    return NextResponse.json(rows, { status: 200 });
+    return NextResponse.json(students, { status: 200 });
   } catch (error) {
     console.error("เกิดข้อผิดพลาดระหว่างการดึงข้อมูล:", error);
-    return NextResponse.json({ message: "เกิดข้อผิดพลาดระหว่างการดึงข้อมูล." }, { status: 500 });
+    return NextResponse.json(
+      { message: "เกิดข้อผิดพลาดระหว่างการดึงข้อมูล." },
+      { status: 500 }
+    );
   }
 }
-

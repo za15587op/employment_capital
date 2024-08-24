@@ -16,7 +16,17 @@ function LoginPage() {
   const router = useRouter();
 
   const {data : session } = useSession();
-  if(session) router.replace("/welcome");
+
+  
+  // if(session) router.replace("/welcome");
+
+  if (session) {
+    if (session.user.role === 'admin') {
+      router.replace("/profile");
+    } else if (session.user.role === 'student') {
+      router.replace("/welcome");
+    }
+  }
 
   const handlerSubmit = async (e) => {
     e.preventDefault();
@@ -26,12 +36,30 @@ function LoginPage() {
         username , password, redirect: false  
       })
 
+      console.log(res, "res");
+      
+
       if(res.error){
         setError("Invalid credentials");
         return;
       }
 
-      router.replace("welcome");
+      // user_role == admin
+
+      // user_role == student
+
+      const userRole = res.user?.role;
+
+      console.log(userRole);
+      
+      // if (userRole === 'admin') {
+      //   router.replace("/profile");
+      // } else if (userRole === 'student') {
+      //   router.replace("/welcome");
+      // } else {
+      //   setError("Unknown role");
+      // }
+      
 
     } catch(error){
       console.log(error);
@@ -48,7 +76,7 @@ function LoginPage() {
             {error && (<div>{error}</div>)}
 
                 <h3>Login Page</h3>
-                <input onChange={(e) => setUsername(e.target.value)} type="username" placeholder='Enter your username' />
+                <input onChange={(e) => setUsername(e.target.value)} type="email" placeholder='Enter your username' />
                 <input onChange={(e) => setPassword(e.target.value)} type="password" placeholder='Enter your password' />
                 <button type='submit'>Sign Up</button>
             </form>

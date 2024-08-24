@@ -1,60 +1,76 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from 'bcryptjs';
-import promisePool from "../../../../../lib/db";
+import User from "../../../../../models/user"; // ใช้โมเดล MySQL
 
-const authOption = {
+const authOptions = {
     providers: [
         CredentialsProvider({
-         
-          name: 'credentials',
-        
-          credentials: {},
-          async authorize(credentials, req) {
+            name: 'credentials',
+            credentials: {},
+            async authorize(credentials) {
+                const { username, password } = credentials;
 
+                try {
+                    // ใช้เมธอด findByUsername ของโมเดล User (MySQL)
+                    const user = await User.findByUsername(username);
 
-           const {username , password} = credentials;
+                    if (!user) {
+                        return null; // ถ้าไม่พบผู้ใช้
+                    }
 
-           try{
+                    // ตรวจสอบรหัสผ่าน
+                    const passwordMatch = await bcrypt.compare(password, user.password);
 
-            const [rows] = await promisePool.query(
-              'SELECT * FROM user WHERE username = ?',
-              [username]
-          );
+                    if (!passwordMatch) {
+                        return null; // รหัสผ่านไม่ถูกต้อง
+                    }
 
-          if (rows.length === 0) {
-              return null; // User not found
-          }
-
-          const user = rows[0];
-
-          // Check if the password matches
-          const passwordMatch = await bcrypt.compare(password, user.password);
-
-          if (!passwordMatch) {
-              return null; // Password does not match
-          }
-
-          // Return the user object (excluding the password)
-          return { id: user.id, username: user.username };
-
-           }catch(error){
-            console.log("Error : ",error);
-            
-           }
-
-
-          }
+                    // คืนค่าผู้ใช้ (ไม่รวมรหัสผ่าน)
+                    return {
+                        id: user.user_id,
+                        name: user.username,
+                        email: user.username, // เปลี่ยนเป็น username แทน email
+                        role: user.user_role
+                    };
+                } catch (error) {
+                    console.log("Error: ", error);
+                    return null; // จัดการข้อผิดพลาด
+                }
+            }
         })
-      ],
-      session: {
-        strategy: "jwt",
-      },
-      secret: process.env.NEXTAUTH_SECRET,
-      pages:{
+    ],
+    session: {
+        strategy: "jwt"
+    },
+    secret: process.env.NEXTAUTH_SECRET,
+    pages: {
         signIn: "/login"
-      }
-}
+    },
+    callbacks: {
+        async jwt({ token, user }) {
+            if (user) {
+                return {
+                    ...token,
+                    id: user.id,
+                    role: user.role
+                };
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    id: token.id,
+                    role: token.role
+                }
+            };
+        }
+    }
+};
 
-const handler = NextAuth(authOption);
+const handler = NextAuth(authOptions);
+
 export { handler as GET, handler as POST };

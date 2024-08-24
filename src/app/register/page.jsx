@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Navber from "../components/Navber";
-import { useSession} from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 function RegisterPage() {
@@ -11,47 +11,42 @@ function RegisterPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const {data : session } = useSession();
-  if(session) router.replace("/welcome");
+  const { data: session } = useSession();
+  // if (session) router.replace("/welcome");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-
     if (password != confirmPassword) {
       setError("Password do not match!");
       return;
-    }
-
-    if (!username || !password || !confirmPassword) {
+    } else if (!username || !password || !confirmPassword) {
       setError("Please complete all  inputs!");
       return;
-    }
+    } else {
+      try {
+        const res = await fetch("http://localhost:3000/api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            password,
+          }),
+        });
 
-    try {
-      const res = await fetch("http://localhost:3000/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
-      })
-
-      if(res.ok){
-        const form = e.target;
-        setError("");
-        setSuccess("User registration successfully!");
-        form.reset();
-      }else {
-        console.log("User registration failed");
-        
+        if (res.ok) {
+          const form = e.target;
+          setError("");
+          setSuccess("User registration successfully!");
+          form.reset();
+        } else {
+          console.log("User registration failed");
+        }
+      } catch (error) {
+        console.log("error", error);
       }
-
-    } catch (error) {
-      console.log("error", error);
     }
   };
 
@@ -60,13 +55,13 @@ function RegisterPage() {
       <Navber />
       <div>
         <form onSubmit={handleSubmit}>
-          {error && (<div>{error}</div>)}
-          {success && (<div>{success}</div>)}
+          {error && <div>{error}</div>}
+          {success && <div>{success}</div>}
           <h3>Resgister Page</h3>
           <input
             onChange={(e) => setUsername(e.target.value)}
-            type="name"
-            placeholder="Enter your name"
+            type="email"
+            placeholder="Enter your email"
           />
           <input
             onChange={(e) => setPassword(e.target.value)}
