@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import Navber from '@/app/components/Navber';
-import { useSession } from "next-auth/react";
+import { useRouter } from 'next/navigation';
 
 
 function StudentForm() { // ถ้ามี student ให้ถือว่าเป็นการแก้ไข
@@ -12,18 +12,20 @@ function StudentForm() { // ถ้ามี student ให้ถือว่า�
   const [student_field, setStudentField] = useState("");
   const [student_curriculum, setStudentCurriculum] = useState("");
   const [student_year, setStudentYear] = useState("");
-  const [student_email, setStudentEmail] = useState("");
+  const [student_gpa, setStudentGpa] = useState("");
   const [student_phone, setStudentPhone] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const { data: session } = useSession();
+
+  const router = useRouter();
+  // const { data: session } = useSession();
   // if (session) router.replace("/welcome");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   if (!student_id || !student_firstname || !student_lastname || !student_faculty || !student_field || !student_curriculum || !student_year || !student_email || !student_phone) {
+   if (!student_id || !student_firstname || !student_lastname || !student_faculty || !student_field || !student_curriculum || !student_year || !student_gpa || !student_phone) {
       setError("Please complete all  inputs!");
       return;
     } else {
@@ -41,7 +43,7 @@ function StudentForm() { // ถ้ามี student ให้ถือว่า�
             student_field,
             student_curriculum,
             student_year,
-            student_email,
+            student_gpa,
             student_phone,
           }),
         });
@@ -51,6 +53,8 @@ function StudentForm() { // ถ้ามี student ให้ถือว่า�
           setError("");
           setSuccess("User registration successfully!");
           form.reset();
+          router.refresh();
+          router.push("/student/show");
         } else {
           console.log("User registration failed");
         }
@@ -71,7 +75,7 @@ function StudentForm() { // ถ้ามี student ให้ถือว่า�
           <input
             onChange={(e) => setStudentID(e.target.value)}
             type="number"
-            placeholder="Enter your name"
+            placeholder="Enter your ID"
           />
           <input
             onChange={(e) => setStudentFirstName(e.target.value)}
@@ -104,9 +108,9 @@ function StudentForm() { // ถ้ามี student ให้ถือว่า�
             placeholder="Enter your Year"
           />
           <input
-            onChange={(e) => setStudentEmail(e.target.value)}
-            type="email"
-            placeholder="Confirm your email"
+            onChange={(e) => setStudentGpa(e.target.value)}
+            type="float"
+            placeholder="Confirm your GPA"
           />
           <input
             onChange={(e) => setStudentPhone(e.target.value)}

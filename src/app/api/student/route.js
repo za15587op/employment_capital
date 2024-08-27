@@ -33,7 +33,7 @@ export async function PUT(req) {
       student_field,
       student_curriculum,
       student_year,
-      student_email,
+      student_gpa,
       student_phone,
     } = await req.json(); // Get the student data from the request
 
@@ -46,7 +46,7 @@ export async function PUT(req) {
       student_field,
       student_curriculum,
       student_year,
-      student_email,
+      student_gpa,
       student_phone,
     });
 
@@ -62,26 +62,6 @@ export async function PUT(req) {
     );
   }
 }
-
-// // DELETE: Delete a student
-// export async function DELETE(req) {
-//   try {
-//     const { std_id } = await req.json(); // Get the student ID from the request
-
-//     await Student.delete(std_id); // Use the delete method from the Student model
-
-//     return NextResponse.json(
-//       { message: "ลบข้อมูลนักเรียนสำเร็จ." },
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error("เกิดข้อผิดพลาดระหว่างการลบ:", error);
-//     return NextResponse.json(
-//       { message: "เกิดข้อผิดพลาดระหว่างการลบ." },
-//       { status: 500 }
-//     );
-//   }
-// }
 
 
 // DELETE: Delete a student

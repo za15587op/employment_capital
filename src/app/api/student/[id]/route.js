@@ -37,7 +37,7 @@ export async function GET(req, { params }) {
       newstudent_field: student_field,
       newstudent_curriculum: student_curriculum,
       newstudent_year: student_year,
-      newstudent_email: student_email,
+      newstudent_gpa: student_gpa,
       newstudent_phone: student_phone
     } = await req.json();
   
@@ -47,8 +47,8 @@ export async function GET(req, { params }) {
     try {
       // Update the student record in MySQL
       const [result] = await connection.query(
-        'UPDATE student SET student_id = ?, student_firstname = ?, student_lastname = ?, student_faculty = ?, student_field = ?, student_curriculum = ?, student_year = ?, student_email = ?, student_phone = ? WHERE std_id  = ?',
-        [student_id, student_firstname, student_lastname, student_faculty, student_field, student_curriculum, student_year, student_email, student_phone, std_id ]
+        'UPDATE student SET student_id = ?, student_firstname = ?, student_lastname = ?, student_faculty = ?, student_field = ?, student_curriculum = ?, student_year = ?, student_gpa = ?, student_phone = ? WHERE std_id  = ?',
+        [student_id, student_firstname, student_lastname, student_faculty, student_field, student_curriculum, student_year, student_gpa, student_phone, std_id ]
       );
   
       if (result.affectedRows === 0) {

@@ -27,7 +27,7 @@ function ProfilePage() {
 
   return (
     <div>
-        <Navber session = {session}/>
+        {/* <Navber session = {session}/> */}
         <div>
             <p>Welcome, {session.user.name}!</p>
             <p>Role: {session.user.role}</p>

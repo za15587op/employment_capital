@@ -10,7 +10,7 @@ class Student {
     student_field,
     student_curriculum,
     student_year,
-    student_email,
+    student_gpa,
     student_phone
   ) {
     this.std_id = std_id;
@@ -21,7 +21,7 @@ class Student {
     this.student_field = student_field;
     this.student_curriculum = student_curriculum;
     this.student_year = student_year;
-    this.student_email = student_email;
+    this.student_gpa = student_gpa;
     this.student_phone = student_phone;
   }
 
@@ -58,13 +58,13 @@ class Student {
       student_field,
       student_curriculum,
       student_year,
-      student_email,
+      student_gpa,
       student_phone,
     } = studentData;
 
     try {
       const [result] = await promisePool.query(
-        "INSERT INTO student (std_id, student_id, student_firstname, student_lastname, student_faculty, student_field, student_curriculum, student_year, student_email, student_phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO student (std_id, student_id, student_firstname, student_lastname, student_faculty, student_field, student_curriculum, student_year, student_gpa, student_phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           std_id,
           student_id,
@@ -74,7 +74,7 @@ class Student {
           student_field,
           student_curriculum,
           student_year,
-          student_email,
+          student_gpa,
           student_phone,
         ]
       );
@@ -94,13 +94,13 @@ class Student {
       student_field,
       student_curriculum,
       student_year,
-      student_email,
+      student_gpa,
       student_phone,
     } = updatedData;
 
     try {
       const [result] = await promisePool.query(
-        "UPDATE student SET student_id = ?, student_firstname = ?, student_lastname = ?, student_faculty = ?, student_field = ?, student_curriculum = ?, student_year = ?, student_email = ?, student_phone = ? WHERE std_id = ?",
+        "UPDATE student SET student_id = ?, student_firstname = ?, student_lastname = ?, student_faculty = ?, student_field = ?, student_curriculum = ?, student_year = ?, student_gpa = ?, student_phone = ? WHERE std_id = ?",
         [
           student_id,
           student_firstname,
@@ -109,7 +109,7 @@ class Student {
           student_field,
           student_curriculum,
           student_year,
-          student_email,
+          student_gpa,
           student_phone,
           std_id,
         ]

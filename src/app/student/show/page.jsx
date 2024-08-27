@@ -51,13 +51,14 @@ function ShowStudent() {
     <Navber />
     <div>
       <h3>Student List</h3>
+      <a href='/welcome'>Profile</a>
       {error && <div>{error}</div>}
       <table>
         <thead>
           <tr>
             <th>First Name</th>
             <th>Last Name</th>
-            <th>Email</th>
+            {/* <th>Email</th> */}
             <th>Actions</th>
           </tr>
         </thead>
@@ -66,7 +67,6 @@ function ShowStudent() {
             <tr key={student.std_id}>
               <td>{student.student_firstname}</td>
               <td>{student.student_lastname}</td>
-              <td>{student.student_email}</td>
               <td>
                 <button onClick={() => handleUpdate(student.std_id)} className='m-2'>Edit</button>
                 <button onClick={() => handleDelete(student.std_id)}className='m-2'>Delete</button>

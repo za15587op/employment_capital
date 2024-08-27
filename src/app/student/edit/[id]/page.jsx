@@ -15,7 +15,7 @@ function EditStudentPage({ params }) {
   const [newstudent_field, setNewStudentField] = useState("");
   const [newstudent_curriculum, setNewStudentCurriculum] = useState("");
   const [newstudent_year, setNewStudentYear] = useState("");
-  const [newstudent_email, setNewStudentEmail] = useState("");
+  const [newstudent_gpa, setNewStudentGpa] = useState("");
   const [newstudent_phone, setNewStudentPhone] = useState("");
 
   const getDataById = async (std_id) => {
@@ -41,7 +41,7 @@ function EditStudentPage({ params }) {
       setNewStudentField(data.student_field || "");
       setNewStudentCurriculum(data.student_curriculum || "");
       setNewStudentYear(data.student_year || "");
-      setNewStudentEmail(data.student_email || "");
+      setNewStudentGpa(data.student_gpa || "");
       setNewStudentPhone(data.student_phone || "");
     } catch (error) {
       console.log(error);
@@ -71,7 +71,7 @@ function EditStudentPage({ params }) {
           newstudent_field,
           newstudent_curriculum,
           newstudent_year,
-          newstudent_email,
+          newstudent_gpa,
           newstudent_phone,
         }),
       });
@@ -135,10 +135,10 @@ function EditStudentPage({ params }) {
           value={newstudent_year}
         />
         <input
-          onChange={(e) => setNewStudentEmail(e.target.value)}
-          type="email"
+          onChange={(e) => setNewStudentGpa(e.target.value)}
+          type="float"
           placeholder={"Email"}
-          value={newstudent_email}
+          value={newstudent_gpa}
         />
         <input
           onChange={(e) => setNewStudentPhone(e.target.value)}

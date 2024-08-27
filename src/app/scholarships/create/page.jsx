@@ -1,50 +1,50 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import Navber from '@/app/components/Navber';
+import { useRouter } from 'next/navigation';
 
-function ScholarshipsPage() {
-    required_parttime 
-  const [organization_name, setOrganizationName] = useState("");
-  const [student_phone, setStudentPhone] = useState("");
+function ScholarshipsForm() {
+  const [scholarship_id, setscholarshipID] = useState("");
+  const [application_start_date, setApplicationStartDate] = useState("");
+  const [application_end_date, setApplicationEndDate] = useState("");
+  const [academic_year, setAcademicYear] = useState("");
+  const [academic_term, setAcademicTerm] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const { data: session } = useSession();
-  // if (session) router.replace("/welcome");   
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   if (!student_id || !student_firstname || !student_lastname || !student_faculty || !student_field || !student_curriculum || !student_year || !student_email || !student_phone) {
-      setError("Please complete all  inputs!");
+    if (!application_start_date || !application_end_date || !academic_year || !academic_term) {
+      setError("Please complete all inputs!");
       return;
     } else {
       try {
-        const res = await fetch("http://localhost:3000/api/student", {
+        const res = await fetch("http://localhost:3000/api/scholarships", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            student_id,
-            student_firstname,
-            student_lastname,
-            student_faculty,
-            student_field,
-            student_curriculum,
-            student_year,
-            student_email,
-            student_phone,
+            scholarship_id,
+            application_start_date,
+            application_end_date,
+            academic_year,
+            academic_term,
           }),
         });
 
         if (res.ok) {
           const form = e.target;
           setError("");
-          setSuccess("User registration successfully!");
+          setSuccess("เพิ่มทุนสำเร็จ");
           form.reset();
+          router.refresh();
+          router.push("/scholarships");
         } else {
-          console.log("User registration failed");
+          console.log("เพิ่มทุนไม่สำเร็จ");
         }
       } catch (error) {
         console.log("error", error);
@@ -55,62 +55,62 @@ function ScholarshipsPage() {
   return (
     <div>
       <Navber />
-      <div>
-        <form onSubmit={handleSubmit}>
-          {error && <div>{error}</div>}
-          {success && <div>{success}</div>}
-          <h3>Resgister Page</h3>
-          <input
-            onChange={(e) => setStudentID(e.target.value)}
-            type="number"
-            placeholder="Enter your name"
-          />
-          <input
-            onChange={(e) => setStudentFirstName(e.target.value)}
-            type="name"
-            placeholder="Enter your name"
-          />
-          <input
-            onChange={(e) => setStudentLastName(e.target.value)}
-            type="name"
-            placeholder="Enter your name"
-          />
-          <input
-            onChange={(e) => setStudentFaculty(e.target.value)}
-            type="name"
-            placeholder="Enter your Faculty"
-          />
-          <input
-            onChange={(e) => setStudentField(e.target.value)}
-            type="name"
-            placeholder="Enter your Field"
-          />
-          <input
-            onChange={(e) => setStudentCurriculum(e.target.value)}
-            type="name"
-            placeholder="Enter your Curriculum"
-          />
-          <input
-            onChange={(e) => setStudentYear(e.target.value)}
-            type="password"
-            placeholder="Enter your Year"
-          />
-          <input
-            onChange={(e) => setStudentEmail(e.target.value)}
-            type="email"
-            placeholder="Confirm your email"
-          />
-          <input
-            onChange={(e) => setStudentPhone(e.target.value)}
-            type="number"
-            placeholder="Confirm your phone"
-          />
+      <div className="max-w-lg mx-auto p-6 mt-10 bg-white rounded-lg shadow-lg">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">Register Scholarship</h3>
+          {error && <div className="text-red-500 text-sm">{error}</div>}
+          {success && <div className="text-green-500 text-sm">{success}</div>}
+          
+          <div>
+            <h3>ปีการศึกษา</h3>
+            <input
+              onChange={(e) => setAcademicYear(e.target.value)}
+              type="number"
+              placeholder="ปีการศึกษา"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
-          <button type="submit">submit</button>
+          <div>
+          <h3>เทอมการศึกษา</h3>
+            <input
+              onChange={(e) => setAcademicTerm(e.target.value)}
+              type="number"
+              placeholder="เทอมการศึกษา"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+          <h3>วันที่เริ่มต้น</h3>
+            <input
+              onChange={(e) => setApplicationStartDate(e.target.value)}
+              type="date"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <h3>วันที่สิ้นสุด</h3>
+            <input
+              onChange={(e) => setApplicationEndDate(e.target.value)}
+              type="date"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300"
+            >
+              ตกลง
+            </button>
+          </div>
         </form>
       </div>
     </div>
   );
 }
 
-export default ScholarshipsPage
+export default ScholarshipsForm;
