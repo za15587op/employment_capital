@@ -2,10 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import Navber from '@/app/components/Navber';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 function ShowScholarships() {
   const [scholarships, setScholarships] = useState([]);
   const [error, setError] = useState("");
+
+  const { data: session, status } = useSession();
 
   const router = useRouter();
 
@@ -59,12 +62,13 @@ function ShowScholarships() {
 
   return (
     <div className=" bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-      <Navber />
+      <Navber session = {session}/>
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
           <h3 className="text-2xl font-bold mb-6 text-center">Scholarships List</h3>
           <a href='/scholarships/create' className="text-blue-500 underline mb-4 block text-center">เพิ่มทุน</a>
+          <button className="bg-blue-500 text-white px-3 py-1 rounded-lg mr-2 hover:bg-blue-600">เพิ่มทุน</button>
           {error && <div className="text-red-500 text-center mb-4">{error}</div>}
           <div className="overflow-x-auto">
             <table className="min-w-full bg-white border border-gray-200 rounded-lg">

@@ -22,7 +22,7 @@ function LoginPage() {
 
   if (session) {
     if (session.user.role === 'admin') {
-      router.replace("/profile");
+      router.replace("/homeAdmin");
     } else if (session.user.role === 'student') {
       router.replace("/welcome");
     }

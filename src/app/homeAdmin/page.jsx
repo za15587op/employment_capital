@@ -27,10 +27,11 @@ function ProfilePage() {
 
   return (
     <div>
-        {/* <Navber session = {session}/> */}
+        <Navber session = {session}/>
         <div>
             <p>Welcome, {session.user.name}!</p>
             <p>Role: {session.user.role}</p>
+            <a href='/scholarships'>เพิ่มแก้ไขทุน</a>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Earum corporis iure suscipit quia mollitia accusantium maiores, consequuntur placeat odio autem quasi illo libero perspiciatis molestias porro quibusdam in quae neque?</p>
         </div>
         </div>
