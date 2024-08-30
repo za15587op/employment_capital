@@ -4,7 +4,7 @@ import Navber from '@/app/components/Navber';
 import { useRouter } from 'next/navigation';
 
 function ScholarshipsForm() {
-  const [scholarship_id, setscholarshipID] = useState("");
+  // const [scholarship_id, setscholarshipID] = useState("");
   const [application_start_date, setApplicationStartDate] = useState("");
   const [application_end_date, setApplicationEndDate] = useState("");
   const [academic_year, setAcademicYear] = useState("");
@@ -28,7 +28,7 @@ function ScholarshipsForm() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            scholarship_id,
+            // scholarship_id,
             application_start_date,
             application_end_date,
             academic_year,
@@ -57,7 +57,7 @@ function ScholarshipsForm() {
       <Navber />
       <div className="max-w-lg mx-auto p-6 mt-10 bg-white rounded-lg shadow-lg">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <h3 className="text-2xl font-semibold text-gray-800 mb-4">Register Scholarship</h3>
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4"> Scholarship</h3>
           {error && <div className="text-red-500 text-sm">{error}</div>}
           {success && <div className="text-green-500 text-sm">{success}</div>}
           
