@@ -2,9 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import Navber from '@/app/components/Navber';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react'; // Import useSession to get session data
 
+function StudentForm({params}) { // ถ้ามี student ให้ถือว่าเป็นการแก้ไข
 
-function StudentForm() { // ถ้ามี student ให้ถือว่าเป็นการแก้ไข
+  const router = useRouter();
+  const { data: session, status } = useSession(); // Get session data and status
+  const { id: std_id } = params;
   const [student_id, setStudentID] = useState("");
   const [student_firstname, setStudentFirstName] = useState("");
   const [student_lastname, setStudentLastName] = useState("");
@@ -18,7 +22,7 @@ function StudentForm() { // ถ้ามี student ให้ถือว่า�
   const [success, setSuccess] = useState("");
 
 
-  const router = useRouter();
+ 
   // const { data: session } = useSession();
   // if (session) router.replace("/welcome");
 
@@ -36,6 +40,7 @@ function StudentForm() { // ถ้ามี student ให้ถือว่า�
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            user_id: session.user.id,
             student_id,
             student_firstname,
             student_lastname,
@@ -51,12 +56,12 @@ function StudentForm() { // ถ้ามี student ให้ถือว่า�
         if (res.ok) {
           const form = e.target;
           setError("");
-          setSuccess("User registration successfully!");
+          setSuccess("Student registration successfully!");
           form.reset();
           router.refresh();
-          router.push("/student/show");
+          router.push("/welcome");
         } else {
-          console.log("User registration failed");
+          console.log("student registration failed");
         }
       } catch (error) {
         console.log("error", error);
@@ -80,12 +85,12 @@ function StudentForm() { // ถ้ามี student ให้ถือว่า�
           <input
             onChange={(e) => setStudentFirstName(e.target.value)}
             type="name"
-            placeholder="Enter your name"
+            placeholder="Enter your FirstName"
           />
           <input
             onChange={(e) => setStudentLastName(e.target.value)}
             type="name"
-            placeholder="Enter your name"
+            placeholder="Enter your LastName"
           />
           <input
             onChange={(e) => setStudentFaculty(e.target.value)}

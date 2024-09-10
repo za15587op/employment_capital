@@ -1,9 +1,37 @@
 "use client"
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 
 function Navber({ session }) {
+
+  // useEffect(() => {
+  //   const fetchStudent = async () => {
+  //     try {
+  //       const res = await fetch(`http://localhost:3000/api/scholarships/${scholarship_id}`, {
+  //         method: "GET",
+  //         cache: "no-store",
+  //       });
+  //       if (res.ok) {
+  //         const data = await res.json();
+  //         console.log("Fetched data student:", data);
+          
+  //       } else {
+  //         setError('Failed to fetch scholarships data');
+  //       }
+  //     } catch (error) {
+  //       setError('An error occurred while fetching scholarships data');
+  //     }
+  //   };
+
+  //   fetchStudent();
+  // }, []);
+    
+
+  // const Profile = (student_id) => {
+  //   router.push(`/student/${student_id}`);
+  // };
+
   return (
     <nav className="bg-blue-600 shadow-lg">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -22,9 +50,9 @@ function Navber({ session }) {
             </>
           ) : (
             <>
-              <li>
-                <Link href="/welcome" className="text-white hover:text-gray-200 transition duration-300">Profile</Link>
-              </li>
+              {/* <li onClick={Profile(student_id)}>
+                
+              </li> */}
               <li>
                 <button
                   onClick={() => signOut()}

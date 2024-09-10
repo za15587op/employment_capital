@@ -25,7 +25,7 @@ class User {
   }
 
   // เมธอดเพื่อค้นหาผู้ใช้โดย id
-  static async findById(user_id) {
+  static async findByStudentId(user_id) {
     const [rows] = await promisePool.query('SELECT * FROM user WHERE user_id = ?', [user_id]);
     return rows[0];
   }

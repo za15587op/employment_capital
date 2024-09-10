@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 function EditStudentPage({ params }) {
-  const { id: std_id } = params;
+  const { id: student_id } = params;
   const [postData, setPostData] = useState({});
   const router = useRouter();
 
@@ -18,9 +18,9 @@ function EditStudentPage({ params }) {
   const [newstudent_gpa, setNewStudentGpa] = useState("");
   const [newstudent_phone, setNewStudentPhone] = useState("");
 
-  const getDataById = async (std_id) => {
+  const getDataById = async (student_id) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/student/${std_id}`, {
+      const res = await fetch(`http://localhost:3000/api/student/${student_id}`, {
         method: "GET",
         cache: "no-store",
       });
@@ -49,16 +49,16 @@ function EditStudentPage({ params }) {
   };
 
   useEffect(() => {
-    if (std_id) {
-      getDataById(std_id);
+    if (student_id) {
+      getDataById(student_id);
     }
-  }, [std_id]);
+  }, [student_id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`http://localhost:3000/api/student/${std_id}`, {
+      const res = await fetch(`http://localhost:3000/api/student/${student_id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -81,7 +81,7 @@ function EditStudentPage({ params }) {
       }
 
       router.refresh();
-      router.push("/student/show");
+      router.push("/welcome");
     } catch (error) {
       console.log(error);
     }
@@ -90,7 +90,7 @@ function EditStudentPage({ params }) {
   return (
     <div>
       <h3>Edit Student Page</h3>
-      {std_id && <div>Editing Student ID: {std_id}</div>}
+      {student_id && <div>Editing Student ID: {student_id}</div>}
       <form onSubmit={handleSubmit}>
         <input
           onChange={(e) => setNewStudentID(e.target.value)}

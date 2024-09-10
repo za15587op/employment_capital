@@ -52,7 +52,7 @@ function RegisterPage() {
 
   return (
     <div>
-      <Navber />
+      <Navber session={session}/>
       <div>
         <form onSubmit={handleSubmit}>
           {error && <div>{error}</div>}

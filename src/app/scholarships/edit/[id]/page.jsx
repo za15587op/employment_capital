@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Navber from '@/app/components/Navber';
 
 function EditScholarshipsPage({ params }) {
   const { id: scholarship_id } = params;
@@ -77,7 +78,7 @@ function EditScholarshipsPage({ params }) {
       console.log(res, 'res');
   
       router.refresh();
-      router.push("/scholarships");
+      router.push("/welcome");
     } catch (error) {
       console.log(error);
     }
@@ -85,6 +86,7 @@ function EditScholarshipsPage({ params }) {
   
 
   return (
+    <div>
     <div className=" min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-3 sm:skew-y-0 sm:-rotate-3 sm:rounded-3xl"></div>
@@ -126,6 +128,7 @@ function EditScholarshipsPage({ params }) {
           </form>
         </div>
       </div>
+    </div>
     </div>
   );
 }

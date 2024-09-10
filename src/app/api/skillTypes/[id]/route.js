@@ -3,16 +3,16 @@ import promisePool from "../../../../../lib/db";
 
 export async function GET(req, { params }) {
   try {
-    const student_id = params.id; // ตรวจสอบให้แน่ใจว่านี่ตรงกับพารามิเตอร์ URL
+    const skill_type_id = params.id; // ตรวจสอบให้แน่ใจว่านี่ตรงกับพารามิเตอร์ URL
 
     console.log(params);
     
 
-    if (!student_id) {
+    if (!skill_type_id) {
       return NextResponse.json({ message: 'Student ID is required' }, { status: 400 });
     }
 
-    const [rows] = await promisePool.query('SELECT * FROM student WHERE student_id = ?', [student_id]);
+    const [rows] = await promisePool.query('SELECT * FROM skilltypes WHERE skill_type_id = ?', [skill_type_id]);
 
     if (rows.length === 0) {
       return NextResponse.json({ message: 'Student not found' }, { status: 404 });
@@ -26,19 +26,11 @@ export async function GET(req, { params }) {
 }
 
   export async function PUT(req, { params }) {
-    const  id   = params.id;
-    console.log(id);
+    const  skill_type_id   = params.id;
+    console.log(skill_type_id);
     
     const {
-      newstudent_id: student_id,
-      newstudent_firstname: student_firstname,
-      newstudent_lastname: student_lastname,
-      newstudent_faculty: student_faculty,
-      newstudent_field: student_field,
-      newstudent_curriculum: student_curriculum,
-      newstudent_year: student_year,
-      newstudent_gpa: student_gpa,
-      newstudent_phone: student_phone,
+        newskill_type_name: skill_type_name
     } = await req.json();
   
     // Connect to MySQL
@@ -47,8 +39,8 @@ export async function GET(req, { params }) {
     try {
       // Update the student record in MySQL
       const [result] = await connection.query(
-        'UPDATE student SET student_id = ?, student_firstname = ?, student_lastname = ?, student_faculty = ?, student_field = ?, student_curriculum = ?, student_year = ?, student_gpa = ?, student_phone = ? WHERE student_id  = ?',
-        [student_id, student_firstname, student_lastname, student_faculty, student_field, student_curriculum, student_year, student_gpa, student_phone, id ]
+        'UPDATE skilltypes SET skill_type_name = ? WHERE skill_type_id  = ?',
+        [skill_type_name, skill_type_id ]
       );
   
       if (result.affectedRows === 0) {

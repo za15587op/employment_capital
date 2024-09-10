@@ -1,5 +1,5 @@
 "use client"
-import React , {useState} from 'react'
+import React , {useState , useEffect } from 'react'
 import Navber from '../components/Navber'
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
@@ -16,17 +16,27 @@ function LoginPage() {
   const router = useRouter();
 
   const {data : session } = useSession();
+  console.log(session, "Session Data");
 
-  
-  // if(session) router.replace("/welcome");
 
-  if (session) {
-    if (session.user.role === 'admin') {
-      router.replace("/homeAdmin");
-    } else if (session.user.role === 'student') {
-      router.replace("/welcome");
+  useEffect(() => {
+    if (session && session.user) { // ตรวจสอบว่ามี session และ session.user ก่อน
+      if (session.user.role === 'admin') {
+        router.replace('/homeAdmin');
+      } else if (session.user.role === 'student') {
+        // router.replace('/welcome');
+        console.log(session, "student_id");
+        
+        if (!session.user.student_id) {
+          router.replace("/student/create"); // Redirect to create page if no student_id
+      } else {
+          router.replace(`/student/edit/${session.user.student_id}`); // Redirect to edit page if student_id exists
+      }
+      }
     }
-  }
+  }, [session, router]);
+
+
 
   const handlerSubmit = async (e) => {
     e.preventDefault();
@@ -69,7 +79,7 @@ function LoginPage() {
   
   return (
     <div>
-        <Navber/>
+       <Navber session={session}/>
         <div>
             <form onSubmit={handlerSubmit}>
 
