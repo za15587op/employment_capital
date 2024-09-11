@@ -78,7 +78,7 @@ function StudentForm({ params }) {
     <div>
       <Navber />
       <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-md mt-10">
-        <h3 className="text-2xl font-bold mb-6 text-center">Register Page</h3>
+        <h3 className="text-2xl font-bold mb-6 text-center">Profile Page</h3>
 
         {error && <div className="bg-red-100 text-red-600 p-2 rounded mb-4">{error}</div>}
         {success && <div className="bg-green-100 text-green-600 p-2 rounded mb-4">{success}</div>}

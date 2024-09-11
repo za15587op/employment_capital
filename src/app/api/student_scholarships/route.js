@@ -51,6 +51,9 @@ export async function POST(req) {
       studentSkills,
     } = await req.json();
 
+    console.log(student_id,'req');
+    
+
     // รับการเชื่อมต่อจากพูล
     connection = await promisePool.getConnection();
 
@@ -177,3 +180,50 @@ for (const studentSkill of studentSkills) {
     if (connection) connection.release();
   }
 }
+
+
+// // สร้างแผนที่เพื่อเก็บ skill_id ที่ได้รับการแทรกใหม่และจับคู่กับ skill_id เก่า
+// const skillIdMap = {};
+
+// // วนลูปเพื่อแทรกข้อมูลทักษะ (skills) เข้าในตาราง skills
+// for (const skill of skills) {
+//   const [skillResult] = await connection.query(
+//     `INSERT INTO skills (skill_name) VALUES (?)`,
+//     [skill.skill_name]
+//   );
+
+//   if (skillResult) {
+//     const skill_id = skillResult.insertId; // ใช้ insertId เพื่อรับ skill_id ที่เพิ่งเพิ่มเข้าไป
+//     skillIdMap[skill.skill_id] = skill_id; // สร้างแผนที่จาก skill_id เก่าไปยัง skill_id ใหม่
+//     console.log(skill_id, "skill_id");
+//   }
+// }
+
+// // แทรกข้อมูลหลายค่าลงในตาราง studentskills โดยใช้ skill_id จากข้อมูล skill เอง เพื่อไม่ให้ซ้ำ
+// for (const studentSkill of studentSkills) {
+//   // ใช้ skill_id จาก skill เอง หรือจาก skillIdMap หากมีการเปลี่ยนแปลง
+//   const actualSkillId = skillIdMap[studentSkill.skill_id]
+//   console.log(actualSkillId,"actualSkillId");
+  
+//   // ตรวจสอบว่า actualSkillId มีค่าหรือไม่
+//   if (actualSkillId) {
+//     // ตรวจสอบว่าทักษะนี้มีอยู่แล้วในตารางหรือไม่
+//     const [existingSkill] = await connection.query(
+//       `SELECT * FROM studentskills WHERE student_id = ? AND skill_id = ?`,
+//       [student_id, actualSkillId]
+//     );
+
+//     if (!existingSkill.length) {
+//       // เพิ่มข้อมูลทักษะใหม่ในตาราง studentskills
+//       await connection.query(
+//         `INSERT INTO studentskills (student_id, skill_id, skill_level) VALUES (?, ?, ?)`,
+//         [student_id, actualSkillId, studentSkill.skill_level]
+//       );
+//       console.log('เพิ่มทักษะใหม่:', actualSkillId);
+//     } else {
+//       console.log('ทักษะนี้ถูกเพิ่มให้กับนักเรียนแล้ว:', student_id, 'และทักษะ:', actualSkillId);
+//     }
+//   } else {
+//     console.error("Skill ID not found in map:", studentSkill.skill_id);
+//   }
+// }

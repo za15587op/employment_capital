@@ -2,13 +2,17 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export default function ScholarshipRegistration({ params }) {
-  const { id: scholarship_id } = params;
-
   const { data: session, status } = useSession();
+  const { id: scholarship_id } = params || {};
+  // const searchParams = usePathname();
+  
+
   console.log(session, "session");
-  console.log(scholarship_id, "scholarship_id");
+  // console.log(scholarship_id, "scholarship_id");
 
   const [skills, setSkills] = useState([{ skill_name: "" }]);
   const [studentSkills, setStudentSkills] = useState([{ skill_level: "" }]);
@@ -19,6 +23,13 @@ export default function ScholarshipRegistration({ params }) {
   const [selectedSkillTypes, setSelectedSkillTypes] = useState([
     { skill_type_id: "", skill_type_name: "" },
   ]);
+
+  if(!scholarship_id){
+    const parts = pathname.split('/');
+    const scholarship_id = parts[parts.length - 1];
+    
+  }
+
 
   useEffect(() => {
     const fetchSkillTypes = async () => {
@@ -98,6 +109,18 @@ export default function ScholarshipRegistration({ params }) {
           studentSkills,
         }),
       });
+
+      // if (!event.target.files || event.target.files.length === 0) {
+      //   return; // User canceled file selection
+      // }
+      // const file = event.target.files[0];
+      // const formData = new FormData();
+      // formData.append('file', file);
+  
+      // await fetch('/api/upload', {
+      //   method: 'POST',
+      //   body: formData,
+      // });
 
       if (!response.ok) {
         throw new Error("การส่งฟอร์มล้มเหลว");
