@@ -37,7 +37,8 @@ class Student {
   static async findByStudentId(user_id) {
     try {
       // คิวรีเพื่อค้นหาข้อมูลนักเรียนตาม user_id
-      const [rows] = await promisePool.query("SELECT student_id FROM student WHERE user_id = ?", [user_id]);
+      const [rows] = await promisePool.query
+      ("SELECT student_id FROM student WHERE user_id = ?", [user_id]);
       
       // คืนค่าข้อมูลที่พบ หรือ null หากไม่มีข้อมูล
       return rows[0] || null;

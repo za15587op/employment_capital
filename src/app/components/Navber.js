@@ -1,71 +1,96 @@
-"use client"
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { signOut } from 'next-auth/react';
+import React from "react";
+import Link from "next/link";
+import { signOut } from "next-auth/react";
+import Image from "next/image";
 
 function Navber({ session }) {
-
-  // useEffect(() => {
-  //   const fetchStudent = async () => {
-  //     try {
-  //       const res = await fetch(`http://localhost:3000/api/scholarships/${scholarship_id}`, {
-  //         method: "GET",
-  //         cache: "no-store",
-  //       });
-  //       if (res.ok) {
-  //         const data = await res.json();
-  //         console.log("Fetched data student:", data);
-          
-  //       } else {
-  //         setError('Failed to fetch scholarships data');
-  //       }
-  //     } catch (error) {
-  //       setError('An error occurred while fetching scholarships data');
-  //     }
-  //   };
-
-  //   fetchStudent();
-  // }, []);
-    
-
-  // const Profile = (student_id) => {
-  //   router.push(`/student/${student_id}`);
-  // };
-
   return (
-    <nav className="bg-blue-600 shadow-lg">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div className="text-white font-bold text-xl">
-          <Link href="/">NextAuth</Link>
+    <header className="header relative flex flex-col items-end">
+      <div
+        className="nav relative w-full h-[30px] to-[#0F1035] mt-[60px]"
+      >
+        <div className="logo absolute top-[50px] right-[30px] z-20">
+          <Image src="/tsu.png" width={150} height={100} alt="logo" />
         </div>
-        <ul className="flex space-x-4">
+      </div>
+      <nav className="relative z-10 flex items-center justify-between p-4 bg-gray-800 w-full">
+        <div
+          className="absolute top-[-35px] left-0 flex items-center space-x-2 bg-[#0F1035] px-4 py-2 rounded-t-lg shadow-md"
+          style={{
+            clipPath: "polygon(0 0, 95% 0, 100% 100%, 0 100%)",
+            zIndex: 10,
+          }}
+        >
           {!session ? (
-            <>
-              <li>
-                <Link href="/login" className="text-white hover:text-gray-200 transition duration-300">เข้าสู่ระบบ</Link>
-              </li>
-              <li>
-                <Link href="/register" className="text-white hover:text-gray-200 transition duration-300">สมัครสมาชิก</Link>
-              </li>
-            </>
+            <button
+              className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100 "
+              style={{ fontSize: "22px" }}
+            >
+              <Link href="/login">เข้าสู่ระบบ</Link>
+            </button>
           ) : (
             <>
-              {/* <li onClick={Profile(student_id)}>
-                
-              </li> */}
-              <li>
+              <Link href="/scholarships">
                 <button
-                  onClick={() => signOut()}
-                  className="text-white hover:text-gray-200 transition duration-300 focus:outline-none"
+                  className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                  style={{ fontSize: "20px" }}
                 >
-                  ออกจากระบบ
+                  หน้าหลัก
                 </button>
-              </li>
+              </Link>
+              <Link href="/organization">
+                <button
+                  className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                  style={{ fontSize: "20px" }}
+                >
+                  เพิ่ม-แก้ไขข้อมูล
+                </button>
+              </Link>
+              <Link href="/matching_admin">
+                <button
+                  className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                  style={{ fontSize: "20px" }}
+                >
+                  ดูผลการจับคู่
+                </button>
+              </Link>
+              <Link href="/report_admin">
+                <button
+                  className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                  style={{ fontSize: "20px" }}
+                >
+                  ออกรายงาน
+                </button>
+              </Link>
+
+              <div className="flex items-center justify-between px-4 py-2">
+                <div className="flex-grow flex justify-center items-center space-x-4">
+                  <div className="text-center">
+                    <Link href="/homeAdmin">
+                      <button
+                        className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                        style={{ fontSize: "20px" }}
+                      >
+                        โปรไฟล์
+                      </button>
+                    </Link>
+                  </div>
+                  <div className="text-center">
+                    <button
+                      className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                      style={{ fontSize: "20px" }}
+                      onClick={() => signOut()}
+                    >
+                      LogOut
+                    </button>
+                  </div>
+                </div>
+              </div>
             </>
           )}
-        </ul>
-      </div>
-    </nav>
+        </div>
+      </nav>
+    </header>
   );
 }
 

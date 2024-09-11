@@ -1,8 +1,9 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Navber from '@/app/components/Navber';
+import Foter from '@/app/components/Foter';
 import { useRouter } from 'next/navigation';
-
+import { useSession } from 'next-auth/react';
 function ScholarshipsForm() {
   // const [scholarship_id, setscholarshipID] = useState("");
   const [application_start_date, setApplicationStartDate] = useState("");
@@ -11,8 +12,14 @@ function ScholarshipsForm() {
   const [academic_term, setAcademicTerm] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
+  const { data: session, status } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+    if (status === "loading") return; // Wait until session status is determined
+    if (!session) router.push("/login"); // Redirect to login page if not authenticated
+  }, [status, session, router]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,6 +54,7 @@ function ScholarshipsForm() {
           console.log("เพิ่มทุนไม่สำเร็จ");
         }
       } catch (error) {
+        setError("An error occurred during submission.");
         console.log("error", error);
       }
     }
@@ -54,14 +62,16 @@ function ScholarshipsForm() {
 
   return (
     <div>
+      <Navber session={session} />
+      <div className="แถบสี"></div>
       <div className="max-w-lg mx-auto p-6 mt-10 bg-white rounded-lg shadow-lg">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <h3 className="text-2xl font-semibold text-gray-800 mb-4"> Scholarship</h3>
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">Register Scholarship</h3>
           {error && <div className="text-red-500 text-sm">{error}</div>}
           {success && <div className="text-green-500 text-sm">{success}</div>}
           
           <div>
-            <h3>ปีการศึกษา</h3>
+            <h3 className="text-gray-700">ปีการศึกษา</h3>
             <input
               onChange={(e) => setAcademicYear(e.target.value)}
               type="number"
@@ -71,7 +81,7 @@ function ScholarshipsForm() {
           </div>
 
           <div>
-          <h3>เทอมการศึกษา</h3>
+            <h3 className="text-gray-700">เทอมการศึกษา</h3>
             <input
               onChange={(e) => setAcademicTerm(e.target.value)}
               type="number"
@@ -81,33 +91,32 @@ function ScholarshipsForm() {
           </div>
 
           <div>
-          <h3>วันที่เริ่มต้น</h3>
+            <h3 className="text-gray-700">วันที่เริ่มต้น</h3>
             <input
               onChange={(e) => setApplicationStartDate(e.target.value)}
               type="date"
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-
           <div>
-            <h3>วันที่สิ้นสุด</h3>
+            <h3 className="text-gray-700">วันที่สิ้นสุด</h3>
             <input
               onChange={(e) => setApplicationEndDate(e.target.value)}
               type="date"
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-
           <div>
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300"
+              className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300"
             >
-              ตกลง
+              ยืนยัน
             </button>
           </div>
         </form>
       </div>
+      <Foter/>
     </div>
   );
 }

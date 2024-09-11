@@ -1,18 +1,17 @@
-"use client";
+
 import Navber from "./components/Navber";
-import { useSession } from "next-auth/react";
-
+import Foter from "./components/Foter";
+import Image from "next/image";
 export default function Home() {
-  const {data: session} = useSession();
-
-
   return (
-    <main >
-      <Navber session={session}/>
-      <div>
-        <h1>Welcome TO Web</h1>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe ab dolorem eos adipisci mollitia modi laudantium et dignissimos tenetur unde. Molestiae, officia. Nesciunt, atque. Possimus odit nam pariatur temporibus libero.
-      </div>
-    </main>
+    <>
+      <Navber/> 
+      <h1 className="หน้าแรกแอดมิน">บริการด้านทุนจ้างงานนิสิต มหาวิทยาลัยทักษิณ</h1>
+            <br />
+      <div className="logohome">
+                <Image src="/logohome.jpg" width={1000} height={100} alt="logohome" />
+            </div>
+      <Foter/>
+    </>
   );
 }
