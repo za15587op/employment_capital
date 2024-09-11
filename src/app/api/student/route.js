@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Student from "../../../../models/student"; // Importing the Student model
 
+
 // POST: Create a new student
 export async function POST(req) {
   try {
@@ -21,76 +22,77 @@ export async function POST(req) {
   }
 }
 
-// PUT: Update a student
-export async function PUT(req) {
-  try {
-    const {
-      std_id,
-      student_id,
-      student_firstname,
-      student_lastname,
-      student_faculty,
-      student_field,
-      student_curriculum,
-      student_year,
-      student_gpa,
-      student_phone,
-    } = await req.json(); // Get the student data from the request
+// // PUT: Update a student
+// export async function PUT(req) {
+//   try {
+//     const {
+//       student_id,
+//       student_firstname,
+//       student_lastname,
+//       student_faculty,
+//       student_field,
+//       student_curriculum,
+//       student_year,
+//       student_gpa,
+//       student_phone,
+//       user_id
+//     } = await req.json(); // Get the student data from the request
 
-    // Use the update method from the Student model
-    await Student.update(std_id, {
-      student_id,
-      student_firstname,
-      student_lastname,
-      student_faculty,
-      student_field,
-      student_curriculum,
-      student_year,
-      student_gpa,
-      student_phone,
-    });
+//     // Use the update method from the Student model
+//     await Student.update(student_id, {
+//       student_id,
+//       student_firstname,
+//       student_lastname,
+//       student_faculty,
+//       student_field,
+//       student_curriculum,
+//       student_year,
+//       student_gpa,
+//       student_phone,
+//       user_id
+//     });
 
-    return NextResponse.json(
-      { message: "อัปเดตข้อมูลนักเรียนสำเร็จ." },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("เกิดข้อผิดพลาดระหว่างการอัปเดต:", error);
-    return NextResponse.json(
-      { message: "เกิดข้อผิดพลาดระหว่างการอัปเดต." },
-      { status: 500 }
-    );
-  }
-}
+//     return NextResponse.json(
+//       { message: "อัปเดตข้อมูลนักเรียนสำเร็จ." },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("เกิดข้อผิดพลาดระหว่างการอัปเดต:", error);
+//     return NextResponse.json(
+//       { message: "เกิดข้อผิดพลาดระหว่างการอัปเดต." },
+//       { status: 500 }
+//     );
+//   }
+// }
 
 
-// DELETE: Delete a student
-export async function DELETE(req) {
-  try {
-    const url = new URL(req.url);
-    const std_id = url.searchParams.get('std_id'); // Get std_id from URL query parameter
+// // DELETE: Delete a student
+// export async function DELETE(req) {
+//   try {
+//     const url = new URL(req.url);
+//     const student_id = url.searchParams.get('student_id'); // Get student_id from URL query parameter
 
-    if (!std_id) {
-      return NextResponse.json(
-        { message: "Student ID is required." },
-        { status: 400 }
-      );
-    }
+//     if (!student_id) {
+//       return NextResponse.json(
+//         { message: "Student ID is required." },
+//         { status: 400 }
+//       );
+//     }
 
-    await Student.delete(std_id); // Use the delete method from the Student model
+//     await Student.delete(student_id); // Use the delete method from the Student model
 
-    return NextResponse.json(
-      { message: "ลบข้อมูลนักเรียนสำเร็จ." },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("เกิดข้อผิดพลาดระหว่างการลบ:", error);
-    return NextResponse.json(
-      { message: "เกิดข้อผิดพลาดระหว่างการลบ." },
-      { status: 500 }
-    );
-  }
-}
+//     return NextResponse.json(
+//       { message: "ลบข้อมูลนักเรียนสำเร็จ." },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("เกิดข้อผิดพลาดระหว่างการลบ:", error);
+//     return NextResponse.json(
+//       { message: "เกิดข้อผิดพลาดระหว่างการลบ." },
+//       { status: 500 }
+//     );
+//   }
+// }
 
 // GET: Fetch all students
 export async function GET(req) {

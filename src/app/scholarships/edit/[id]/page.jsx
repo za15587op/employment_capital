@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Navber from '@/app/components/Navber';
 
 function EditScholarshipsPage({ params }) {
   const { id: scholarship_id } = params;
@@ -31,7 +32,7 @@ function EditScholarshipsPage({ params }) {
       }
 
       const data = await res.json();
-      console.log(data, "data");
+     
       setPostData(data);
 
       // Set state with formatted dates
@@ -39,6 +40,8 @@ function EditScholarshipsPage({ params }) {
       setNewApplicationEndDate(formatDateToYYYYMMDD(data.application_end_date) || "");
       setNewAcademicYear(data.academic_year || "");
       setNewAcademicTerm(data.academic_term || "");
+
+      console.log(data, "data");
       
     } catch (error) {
       console.log(error);
@@ -53,7 +56,7 @@ function EditScholarshipsPage({ params }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const res = await fetch(`http://localhost:3000/api/scholarships/${scholarship_id}`, {
         method: "PUT",
@@ -67,19 +70,23 @@ function EditScholarshipsPage({ params }) {
           academic_term: newacademic_term,
         }),
       });
-
+  
       if (!res.ok) {
         throw new Error("Fail to update");
       }
-
+  
+      console.log(res, 'res');
+  
       router.refresh();
-      router.push("/scholarships");
+      router.push("/welcome");
     } catch (error) {
       console.log(error);
     }
   };
+  
 
   return (
+    <div>
     <div className=" min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-3 sm:skew-y-0 sm:-rotate-3 sm:rounded-3xl"></div>
@@ -121,6 +128,7 @@ function EditScholarshipsPage({ params }) {
           </form>
         </div>
       </div>
+    </div>
     </div>
   );
 }

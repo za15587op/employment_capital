@@ -2,6 +2,7 @@ import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from 'bcryptjs';
 import User from "../../../../../models/user"; // ใช้โมเดล MySQL
+import Student from "../../../../../models/student";
 
 const authOptions = {
     providers: [
@@ -26,12 +27,18 @@ const authOptions = {
                         return null; // รหัสผ่านไม่ถูกต้อง
                     }
 
+                      // Fetch student information
+                      const student = await Student.findByStudentId(user.user_id);
+                      console.log(student,"student");
+                      
+
                     // คืนค่าผู้ใช้ (ไม่รวมรหัสผ่าน)
                     return {
                         id: user.user_id,
                         name: user.username,
                         email: user.username, // เปลี่ยนเป็น username แทน email
-                        role: user.user_role
+                        role: user.user_role,
+                        student_id: student ? student.student_id : null // Ensure student_id is added here
                     };
                 } catch (error) {
                     console.log("Error: ", error);
@@ -51,11 +58,12 @@ const authOptions = {
         async jwt({ token, user }) {
             if (user) {
                 return {
-                    ...token,
-                    id: user.id,
-                    role: user.role
+                  ...token,
+                  id: user.id,
+                  role: user.role,
+                  student_id: user.student_id // Pass student_id from user to token
                 };
-            }
+              }
             return token;
         },
         async session({ session, token }) {
@@ -64,7 +72,8 @@ const authOptions = {
                 user: {
                     ...session.user,
                     id: token.id,
-                    role: token.role
+                    role: token.role,
+                    student_id: token.student_id, // Include student_id in session
                 }
             };
         }

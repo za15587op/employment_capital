@@ -21,7 +21,7 @@ export async function POST(req) {
   }
 }
 
-// PUT: Update a scholarship
+// // PUT: Update a scholarship
 export async function PUT(req) {
   try {
     const {
