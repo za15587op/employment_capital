@@ -44,6 +44,7 @@ function RegisterPage() {
 
         if (res.ok) {
           setError("");
+          router.push("/scholarships");
           setSuccess("ลงทะเบียนผู้ใช้สำเร็จ!");
           e.target.reset(); // รีเซ็ตฟอร์มหลังจากลงทะเบียนสำเร็จ
         } else {

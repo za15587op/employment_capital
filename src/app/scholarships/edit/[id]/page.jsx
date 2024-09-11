@@ -80,7 +80,7 @@ function EditScholarshipsPage({ params }) {
       console.log(res, 'res');
   
       router.refresh();
-      router.push("/welcome");
+      router.push("/scholarships");
     } catch (error) {
       console.log(error);
     }

@@ -11,9 +11,11 @@ function EditorganizationPage({ params }) {
   const router = useRouter();
   const { data: session, status } = useSession();
 
-  const [newOrganizationName, setNewOrganizationName] = useState(""); 
-  const [newContactPhone, setNewContactPhone] = useState(""); 
-  const [newContactEmail, setNewContactEmail] = useState(""); 
+  const [newOrganizationName, setNewOrganizationName] = useState("");
+  const [newContactPhone, setNewContactPhone] = useState("");
+  const [newContactEmail, setNewContactEmail] = useState("");
+  const [amount, setAmount] = useState(""); // เพิ่ม state สำหรับ amount
+  const [requiredParttime, setRequiredParttime] = useState("ได้"); // เพิ่ม state สำหรับ required_parttime
 
   useEffect(() => {
     if (status === "loading") return;
@@ -34,14 +36,13 @@ function EditorganizationPage({ params }) {
       }
 
       const data = await res.json();
-      console.log(data, "data");
       setPostData(data);
 
-      // Set state with data
       setNewOrganizationName(data.organization_name || "");
       setNewContactPhone(data.contactPhone || "");
       setNewContactEmail(data.contactEmail || "");
-
+      setAmount(data.amount || ""); // ตั้งค่าเริ่มต้น amount
+      setRequiredParttime(data.required_parttime || "ได้"); // ตั้งค่าเริ่มต้น required_parttime
     } catch (error) {
       console.log(error);
     }
@@ -63,9 +64,11 @@ function EditorganizationPage({ params }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          organization_name: newOrganizationName, // เปลี่ยนชื่อตัวแปรให้ตรงกัน
-          contactPhone: newContactPhone, // เปลี่ยนชื่อตัวแปรให้ตรงกัน
-          contactEmail: newContactEmail, // เปลี่ยนชื่อตัวแปรให้ตรงกัน
+          organization_name: newOrganizationName,
+          contactPhone: newContactPhone,
+          contactEmail: newContactEmail,
+          amount, // ส่งค่า amount
+          required_parttime: requiredParttime, // ส่งค่า required_parttime
         }),
       });
 
@@ -97,7 +100,7 @@ function EditorganizationPage({ params }) {
                 onChange={(e) => setNewOrganizationName(e.target.value)}
                 type="text"
                 placeholder="ชื่อหน่วยงานที่ต้องการ"
-                value={newOrganizationName} // ใช้ตัวแปรที่แก้ไขแล้ว
+                value={newOrganizationName}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
               />
             </div>
@@ -107,7 +110,7 @@ function EditorganizationPage({ params }) {
                 onChange={(e) => setNewContactPhone(e.target.value)}
                 type="text"
                 placeholder="เบอร์โทรศัพท์ติดต่อหน่วยงาน"
-                value={newContactPhone} // ใช้ตัวแปรที่แก้ไขแล้ว
+                value={newContactPhone}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
               />
             </div>
@@ -117,9 +120,30 @@ function EditorganizationPage({ params }) {
                 onChange={(e) => setNewContactEmail(e.target.value)}
                 type="email"
                 placeholder="อีเมลติดต่อ"
-                value={newContactEmail} // ใช้ตัวแปรที่แก้ไขแล้ว
+                value={newContactEmail}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
               />
+            </div>
+            <div>
+              <h3 className="text-gray-700">จำนวนนิสิตที่รับ</h3>
+              <input
+                onChange={(e) => setAmount(e.target.value)}
+                type="number"
+                placeholder="จำนวนนิสิตที่รับ"
+                value={amount}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <h3 className="text-gray-700">ทำงานนอกเวลาได้หรือไม่</h3>
+              <select
+                onChange={(e) => setRequiredParttime(e.target.value)}
+                value={requiredParttime}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              >
+                <option value="ได้">ได้</option>
+                <option value="ไม่ได้">ไม่ได้</option>
+              </select>
             </div>
             <div>
               <button

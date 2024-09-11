@@ -97,8 +97,9 @@ function Showorganization() {
             }
         }
     };
-
-    
+    const handleUpdate = (organization_id) => {
+        router.push(`/organization/edit/${organization_id}`);
+      };
     return (
         <>
             <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
@@ -165,7 +166,7 @@ function Showorganization() {
                                                         {org.contactEmail}
                                                     </td>
                                                     <td className="py-2 px-4 whitespace-nowrap">
-                                                        {org.amount} {/* แสดงจำนวนเงิน */}
+                                                        {org.amount} {/* แสดงจำนวน */}
                                                     </td>
                                                     <td className="py-2 px-4 whitespace-nowrap">
                                                         {org.required_parttime} {/* แสดง Required Part-time */}

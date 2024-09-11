@@ -8,16 +8,14 @@ import { useSession } from "next-auth/react";
 function OrganizationPage({ params }) {
   const { id: organization_id } = params || {};
   const { id: scholarship_organ_id } = params || {}; // ดึง scholarship_organ_id จาก params
-
-  const [postData, setPostData] = useState({});
   const [organization_name, setOrganizationName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [amount, setAmount] = useState(""); // state สำหรับ amount
-  const [required_parttime, setRequiredParttime] = useState(""); // state สำหรับ required_parttime
+  const [required_parttime, setRequiredParttime] = useState("ได้"); // ตั้งค่าเริ่มต้นเป็น "ได้"
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  
+
   const router = useRouter();
   const { data: session, status } = useSession();
 
@@ -29,24 +27,20 @@ function OrganizationPage({ params }) {
     }
   }, [status, session, router]);
 
-  // ดึงข้อมูล Organization เมื่อ organization_id เปลี่ยนแปลง
+  // ดึงข้อมูล Organization และ Scholarship Organization เมื่อ component ถูก mount
   useEffect(() => {
     if (organization_id) {
-      getDataById(organization_id);
+      getDataById(organization_id); // ดึงข้อมูล organization
     }
-  }, [organization_id]);
-
-  // ดึงข้อมูล Scholarship Organization เมื่อ scholarship_organ_id เปลี่ยนแปลง
-  useEffect(() => {
     if (scholarship_organ_id) {
-      getDataByScholarshipId(scholarship_organ_id);
+      getDataByScholarshipId(scholarship_organ_id); // ดึงข้อมูล scholarship organization
     }
-  }, [scholarship_organ_id]);
+  }, [organization_id, scholarship_organ_id]);
 
   // ฟังก์ชันดึงข้อมูล Organization
   const getDataById = async (organization_id) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/organization${organization_id ? `/${organization_id}` : ""}`, {
+      const res = await fetch(`http://localhost:3000/api/organization/${organization_id}`, {
         method: "GET",
         cache: "no-store",
       });
@@ -56,19 +50,18 @@ function OrganizationPage({ params }) {
       }
 
       const data = await res.json();
-      setPostData(data);
       setOrganizationName(data.organization_name || "");
       setContactPhone(data.contactPhone || "");
       setContactEmail(data.contactEmail || "");
     } catch (error) {
-      console.log(error);
+      setError("เกิดข้อผิดพลาดระหว่างการดึงข้อมูล");
     }
   };
 
   // ฟังก์ชันดึงข้อมูล Scholarship Organization
   const getDataByScholarshipId = async (scholarship_organ_id) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/scholarshiporganization${scholarship_organ_id ? `/${scholarship_organ_id}` : ""}`, {
+      const res = await fetch(`http://localhost:3000/api/scholarshiporganization/${scholarship_organ_id}`, {
         method: "GET",
         cache: "no-store",
       });
@@ -78,14 +71,14 @@ function OrganizationPage({ params }) {
       }
 
       const data = await res.json();
-      setAmount(data.amount || "");
-      setRequiredParttime(data.required_parttime || "");
+      setAmount(data.amount || ""); // ดึงจำนวนนิสิตที่รับ
+      setRequiredParttime(data.required_parttime || "ได้"); // ตั้งค่าเริ่มต้นเป็น "ได้" หากไม่มีข้อมูล
     } catch (error) {
-      console.log(error);
+      setError("เกิดข้อผิดพลาดระหว่างการดึงข้อมูล");
     }
   };
 
-  // ฟังก์ชันบันทึกข้อมูล
+  // ฟังก์ชันบันทึกข้อมูล Organization และ Scholarship Organization พร้อมกัน
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -95,7 +88,8 @@ function OrganizationPage({ params }) {
     }
 
     try {
-      const res = await fetch(
+      // บันทึกข้อมูล Organization
+      const organizationRes = await fetch(
         `http://localhost:3000/api/organization${organization_id ? `/${organization_id}` : ""}`,
         {
           method: organization_id ? "PUT" : "POST",
@@ -110,37 +104,46 @@ function OrganizationPage({ params }) {
         }
       );
 
-      if (res.ok) {
-        // บันทึกข้อมูลลงในตาราง scholarshiporganization
-        await fetch(`http://localhost:3000/api/scholarshiporganization${scholarship_organ_id ? `/${scholarship_organ_id}` : ""}`,
-          {
-            method: scholarship_organ_id ? "PUT" : "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              scholarship_organ_id, // ใช้ scholarship_organ_id จากการสร้างหรือแก้ไข
-              amount,
-              required_parttime,
-            }),
-          }
-        );
-
-        setError("");
-        setSuccess("บันทึกข้อมูลสำเร็จ");
-        e.target.reset();
-        router.refresh();
-        router.push("/organization");
-      } else {
-        setError("บันทึกข้อมูลไม่สำเร็จ");
+      if (!organizationRes.ok) {
+        throw new Error("Failed to save organization data");
       }
+
+      const orgData = await organizationRes.json(); // รับข้อมูล organization กลับมาหลังการบันทึก
+
+      const updatedOrganizationId = orgData.organization_id || organization_id; // ใช้ organization_id ที่ได้หลังการบันทึกหรือค่าที่มีอยู่
+
+      // บันทึกข้อมูล Scholarship Organization ที่เชื่อมโยงกับ Organization
+      const scholarshipRes = await fetch(
+        `http://localhost:3000/api/scholarshiporganization${
+          scholarship_organ_id ? `/${scholarship_organ_id}` : ""
+        }`,
+        {
+          method: scholarship_organ_id ? "PUT" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            organization_id: updatedOrganizationId, // เชื่อมโยง scholarship กับ organization ที่บันทึกแล้ว
+            amount,
+            required_parttime,
+          }),
+        }
+      );
+
+      if (!scholarshipRes.ok) {
+        throw new Error("Failed to save scholarship organization data");
+      }
+
+      setError("");
+      setSuccess("บันทึกข้อมูลสำเร็จ");
+      e.target.reset();
+      router.refresh();
+      router.push("/organization");
     } catch (error) {
-      console.log("error", error);
       setError("เกิดข้อผิดพลาดระหว่างการส่งข้อมูล");
     }
   };
 
-  
   return (
     <div>
       <Navber session={session} />
