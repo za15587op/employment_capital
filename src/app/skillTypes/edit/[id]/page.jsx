@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-function EditStudentPage({ params }) {
+function EditSkillTypePage({ params }) {
   const { id: skill_type_id } = params;
   const [postData, setPostData] = useState({});
   const router = useRouter();
@@ -12,22 +12,23 @@ function EditStudentPage({ params }) {
 
   const getDataById = async (skill_type_id) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/skillTypes/${skill_type_id}`, {
-        method: "GET",
-        cache: "no-store",
-      });
+      const res = await fetch(
+        `http://localhost:3000/api/skillTypes/${skill_type_id}`,
+        {
+          method: "GET",
+          cache: "no-store",
+        }
+      );
 
       if (!res.ok) {
         throw new Error("Failed to fetch");
       }
 
       const data = await res.json();
-      console.log(data, "data");
       setPostData(data);
 
       // ตั้งค่า state ด้วยข้อมูลที่ดึงมา
       setNewSkillTypeName(data.skill_type_name || "");
-
     } catch (error) {
       console.log(error);
     }
@@ -43,42 +44,55 @@ function EditStudentPage({ params }) {
     e.preventDefault();
 
     try {
-      const res = await fetch(`http://localhost:3000/api/skillTypes/${skill_type_id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            newskill_type_name
-        }),
-      });
+      const res = await fetch(
+        `http://localhost:3000/api/skillTypes/${skill_type_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            newskill_type_name,
+          }),
+        }
+      );
 
       if (!res.ok) {
         throw new Error("Fail to update");
       }
 
       router.refresh();
-    router.push("/skillTypes");
+      router.push("/skillTypes");
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <div>
-      <h3>Edit Student Page</h3>
-      {skill_type_id && <div>Editing Student ID: {skill_type_id}</div>}
-      <form onSubmit={handleSubmit}>
+    <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-md mt-10">
+      <h3 className="text-2xl font-bold mb-6 text-center">แก้ไขประเภททักษะ</h3>
+      {skill_type_id && (
+        <div className="text-center mb-4 text-gray-600">
+          Editing Skill Type ID: {skill_type_id}
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
-            onChange={(e) => setNewSkillTypeName(e.target.value)}
-            type="text"
-            value={newskill_type_name}
-            placeholder="Enter your Skill Types Name"
+          onChange={(e) => setNewSkillTypeName(e.target.value)}
+          type="text"
+          value={newskill_type_name}
+          placeholder="ชื่อประเภททักษะ"
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
-        <button type="submit">Submit</button>
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600"
+        >
+          บันทึก
+        </button>
       </form>
     </div>
   );
 }
 
-export default EditStudentPage;
+export default EditSkillTypePage;

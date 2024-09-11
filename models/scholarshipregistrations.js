@@ -1,21 +1,22 @@
 import promisePool from '../lib/db';
 
 class ScholarshipRegistrations {
-  constructor(std_id, scholarship_id, is_parttime, is_parttimedate, related_works) {
+  constructor(std_id, scholarship_id, is_parttime, is_parttimedate, related_works, student_status = 'Pending') {
     this.std_id = std_id;
     this.scholarship_id = scholarship_id;
     this.is_parttime = is_parttime;
     this.is_parttimedate = is_parttimedate;
     this.related_works = related_works;
+    this.student_status = student_status;
   }
 
-  static async registerScholarship(studentId, parttime, parttimeDates, relatedWorks) {
-    await promisePool.query(
-      `INSERT INTO ScholarshipRegistrations (std_id, is_parttime, is_parttimedate, related_works) 
-       VALUES (?, ?, ?, ?)`,
-      [studentId, parttime.join(','), parttimeDates.join(','), relatedWorks.join(',')]
-    );
-  }
+  // static async registerScholarship(studentId, parttime, parttimeDates, relatedWorks) {
+  //   await promisePool.query(
+  //     `INSERT INTO ScholarshipRegistrations (std_id, is_parttime, is_parttimedate, related_works) 
+  //      VALUES (?, ?, ?, ?)`,
+  //     [studentId, parttime.join(','), parttimeDates.join(','), relatedWorks.join(',')]
+  //   );
+  // }
 
   // // Method to create a new scholarship registration entry
   // static async create(registrationData) {

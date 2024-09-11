@@ -42,10 +42,10 @@ function Navber({ session }) {
           {!session ? (
             <>
               <li>
-                <Link href="/login" className="text-white hover:text-gray-200 transition duration-300">Login</Link>
+                <Link href="/login" className="text-white hover:text-gray-200 transition duration-300">เข้าสู่ระบบ</Link>
               </li>
               <li>
-                <Link href="/register" className="text-white hover:text-gray-200 transition duration-300">Register</Link>
+                <Link href="/register" className="text-white hover:text-gray-200 transition duration-300">สมัครสมาชิก</Link>
               </li>
             </>
           ) : (
@@ -58,7 +58,7 @@ function Navber({ session }) {
                   onClick={() => signOut()}
                   className="text-white hover:text-gray-200 transition duration-300 focus:outline-none"
                 >
-                  Log Out
+                  ออกจากระบบ
                 </button>
               </li>
             </>

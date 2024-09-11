@@ -4,26 +4,28 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Navber from '@/app/components/Navber';
 export default function ShowScholarship({ params }) {
-  const { id: scholarship_id } = params;
+  const { id: student_id } = params;
   const [scholarshipData, setScholarshipData] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
     const fetchScholarshipData = async () => {
       try {
-        const response = await fetch(`/api/showStudentScholarships/${scholarship_id}`);
+        const response = await fetch(`/api/showStudentScholarships/${student_id}`);
         if (!response.ok) {
           throw new Error('ไม่สามารถดึงข้อมูลทุนการศึกษาได้');
         }
         const data = await response.json();
         setScholarshipData(data);
+        console.log(data,"data");
+        
       } catch (error) {
         console.error('เกิดข้อผิดพลาดในการดึงข้อมูลทุนการศึกษา:', error);
       }
     };
 
     fetchScholarshipData();
-  }, [scholarship_id]);
+  }, [student_id]);
 
   const handleUpdate = (student_id) => {
     router.push(`/welcome/editstudent_scholarships/${student_id}`);
@@ -82,6 +84,7 @@ export default function ShowScholarship({ params }) {
           <p><strong>ชั้นปี:</strong> {item.student_year}</p>
           <p><strong>เบอร์โทร:</strong> {item.student_phone}</p>
           <p><strong>เกรด:</strong> {item.student_gpa}</p>
+          <p><strong>สถานะทุน</strong> {item.student_status}</p>
           <button onClick={() => handleUpdate(item.student_id)}>แก้ไข</button>
           <button onClick={() => handleDelete(item.student_id)}>ลบ</button>
         </div>

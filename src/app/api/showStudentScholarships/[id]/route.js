@@ -21,7 +21,8 @@ export async function GET(req, { params }) {
         student.student_curriculum	,
         student.student_year	,
         student.student_phone	,
-        student.student_gpa	
+        student.student_gpa	,
+        scholarshipregistrations.student_status	
       FROM scholarshipregistrations
       JOIN student ON scholarshipregistrations.student_id = student.student_id
       JOIN scholarships ON scholarshipregistrations.scholarship_id = scholarships.scholarship_id

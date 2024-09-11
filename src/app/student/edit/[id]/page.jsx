@@ -7,7 +7,6 @@ function EditStudentPage({ params }) {
   const [postData, setPostData] = useState({});
   const router = useRouter();
 
-  // ตั้งค่า state ด้วยข้อมูลที่ดึงมา
   const [newstudent_id, setNewStudentID] = useState("");
   const [newstudent_firstname, setNewStudentFirstName] = useState("");
   const [newstudent_lastname, setNewStudentLastName] = useState("");
@@ -30,10 +29,8 @@ function EditStudentPage({ params }) {
       }
 
       const data = await res.json();
-      console.log(data, "data");
       setPostData(data);
 
-      // ตั้งค่า state ด้วยข้อมูลที่ดึงมา
       setNewStudentID(data.student_id || "");
       setNewStudentFirstName(data.student_firstname || "");
       setNewStudentLastName(data.student_lastname || "");
@@ -88,65 +85,79 @@ function EditStudentPage({ params }) {
   };
 
   return (
-    <div>
-      <h3>Edit Student Page</h3>
-      {student_id && <div>Editing Student ID: {student_id}</div>}
-      <form onSubmit={handleSubmit}>
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-md mt-10">
+      <h3 className="text-2xl font-bold mb-6 text-center">Edit Student</h3>
+      {student_id && <div className="text-center mb-4 text-gray-600">Editing Student ID: {student_id}</div>}
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
           onChange={(e) => setNewStudentID(e.target.value)}
           type="number"
-          placeholder={"Student ID"}
+          placeholder="รหัสนิสิต"
           value={newstudent_id}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
         <input
           onChange={(e) => setNewStudentFirstName(e.target.value)}
           type="text"
-          placeholder={"First Name"}
+          placeholder="ชื่อ"
           value={newstudent_firstname}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
         <input
           onChange={(e) => setNewStudentLastName(e.target.value)}
           type="text"
-          placeholder={"Last Name"}
+          placeholder="นามสกุล"
           value={newstudent_lastname}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
         <input
           onChange={(e) => setNewStudentFaculty(e.target.value)}
           type="text"
-          placeholder={"Faculty"}
+          placeholder="คณะ"
           value={newstudent_faculty}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
         <input
           onChange={(e) => setNewStudentField(e.target.value)}
           type="text"
-          placeholder={"Field"}
+          placeholder="สาขา"
           value={newstudent_field}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
         <input
           onChange={(e) => setNewStudentCurriculum(e.target.value)}
           type="text"
-          placeholder={"Curriculum"}
+          placeholder="หลักสูตร"
           value={newstudent_curriculum}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
         <input
           onChange={(e) => setNewStudentYear(e.target.value)}
           type="number"
-          placeholder={"Year"}
+          placeholder="ชั้นปี"
           value={newstudent_year}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
         <input
           onChange={(e) => setNewStudentGpa(e.target.value)}
-          type="float"
-          placeholder={"Email"}
+          type="number"
+          step="0.01"
+          placeholder="เกรดเฉลี่ย GPA"
           value={newstudent_gpa}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
         <input
           onChange={(e) => setNewStudentPhone(e.target.value)}
           type="tel"
-          placeholder={"Phone"}
+          placeholder="เบอร์โทร"
           value={newstudent_phone}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
-        <button type="submit">Submit</button>
+        
+        <button type="submit" className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600">
+          บันทึก
+        </button>
       </form>
     </div>
   );
