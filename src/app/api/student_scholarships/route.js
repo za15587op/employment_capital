@@ -1,3 +1,5 @@
+import multer from 'multer';
+import { NextResponse } from 'next/server';
 import promisePool from "../../../../lib/db";
 
 export async function GET(req, { params }) {
@@ -34,6 +36,156 @@ export async function GET(req, { params }) {
     );
   }
 }
+
+
+// ตั้งค่า multer สำหรับการอัปโหลดไฟล์
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: './uploads/', // โฟลเดอร์สำหรับเก็บไฟล์
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + '-' + file.originalname); // ตั้งชื่อไฟล์โดยใช้เวลาปัจจุบันเพื่อไม่ให้ไฟล์ซ้ำกัน
+    }
+  })
+});
+
+// ฟังก์ชันเพื่อรัน middleware ของ multer
+function runMiddleware(req, res, fn) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
+      return resolve(result);
+    });
+  });
+}
+
+// // ตัวจัดการ POST request
+// export async function POST(req, res) {
+//   await runMiddleware(req, res, upload.single('file')); // ใช้ multer เพื่อจัดการไฟล์
+
+//   let connection;
+
+//   try {
+//     const student_status = "Pending";
+    
+//     // รับค่าจาก body หรือ form-data
+//     const {
+//       student_id,
+//       skills,
+//       scholarshipRegistrations,
+//       selectedSkillTypes,
+//       studentSkills,
+//     } = req.body;
+
+//     // รับไฟล์ที่อัปโหลด
+//     const uploadedFile = req.file;
+
+//     // รับการเชื่อมต่อจากพูล
+//     connection = await promisePool.getConnection();
+
+//     // เริ่มทำธุรกรรมฐานข้อมูล
+//     await connection.beginTransaction();
+
+//     const skillIdMap = {};
+
+//     // วนลูปเพื่อแทรกข้อมูลทักษะ (skills) เข้าในตาราง skills
+//     for (const skill of skills) {
+//       const [skillResult] = await connection.query(
+//         `INSERT INTO skills (skill_name) VALUES (?)`,
+//         [skill.skill_name]
+//       );
+
+//       if (skillResult) {
+//         const skill_id = skillResult.insertId;
+//         skillIdMap[skill.skill_id] = skill_id;
+//       }
+//     }
+
+//     // แทรกข้อมูลหลายค่าลงในตาราง studentskills โดยใช้ skill_id จากข้อมูล skill เอง
+//     for (const studentSkill of studentSkills) {
+//       const actualSkillId = skillIdMap[studentSkill.skill_id];
+
+//       if (actualSkillId) {
+//         const [existingSkill] = await connection.query(
+//           `SELECT * FROM studentskills WHERE student_id = ? AND skill_id = ?`,
+//           [student_id, actualSkillId]
+//         );
+
+//         if (!existingSkill.length) {
+//           await connection.query(
+//             `INSERT INTO studentskills (student_id, skill_id, skill_level) VALUES (?, ?, ?)`,
+//             [student_id, actualSkillId, studentSkill.skill_level]
+//           );
+//         }
+//       }
+//     }
+
+//     // เพิ่มข้อมูลการลงทะเบียนทุนการศึกษา พร้อมเก็บ path ของไฟล์ที่อัปโหลด (ถ้ามี)
+//     for (const registration of scholarshipRegistrations) {
+//       await connection.query(
+//         `INSERT INTO scholarshipregistrations (student_id, scholarship_id, is_parttime, monday, related_works, student_status) VALUES (?, ?, ?, ?, ?, ?)`,
+//         [
+//           student_id,
+//           registration.scholarship_id,
+//           registration.is_parttime,
+//           registration.monday,
+//           uploadedFile ? uploadedFile.path : registration.related_works, // ใช้ path ของไฟล์ที่อัปโหลด
+//           student_status
+//         ]
+//       );
+//     }
+
+//     // แทรกข้อมูล skill type
+//     for (const skill of skills) {
+//       const actualSkillId = skillIdMap[skill.skill_id];
+
+//       for (const selectedSkillType of selectedSkillTypes) {
+//         if (actualSkillId && selectedSkillType.skill_type_id) {
+//           const [existingSkillType] = await connection.query(
+//             `SELECT * FROM skills_skilltypes WHERE skill_id = ? AND skill_type_id = ?`,
+//             [actualSkillId, selectedSkillType.skill_type_id]
+//           );
+
+//           if (!existingSkillType.length) {
+//             await connection.query(
+//               `INSERT INTO skills_skilltypes (skill_id, skill_type_id) VALUES (?, ?)`,
+//               [actualSkillId, selectedSkillType.skill_type_id]
+//             );
+//           }
+//         }
+//       }
+//     }
+
+//     // ยืนยันธุรกรรม
+//     await connection.commit();
+
+//     return NextResponse.json({ success: true }, { status: 200 });
+//   } catch (error) {
+//     console.error("Error inserting data:", error);
+
+//     if (connection) await connection.rollback();
+
+//     return NextResponse.json(
+//       {
+//         success: false,
+//         message: "Error submitting the scholarship registration.",
+//       },
+//       { status: 500 }
+//     );
+//   } finally {
+//     if (connection) connection.release();
+//   }
+// }
+
+// // ปิดการใช้งาน bodyParser เพื่อใช้ multer แทน
+// export const config = {
+//   api: {
+//     bodyParser: false, // ปิดการใช้งาน bodyParser เพราะเรากำลังใช้ multer
+//   }
+// };
+
+
 
 export async function POST(req) {
   let connection;
@@ -110,13 +262,19 @@ for (const studentSkill of studentSkills) {
     // เพิ่มข้อมูลการลงทะเบียนทุนการศึกษา
     for (const registration of scholarshipRegistrations) {
       await connection.query(
-        `INSERT INTO scholarshipregistrations (student_id, scholarship_id, is_parttime, is_parttimedate, related_works, student_status) VALUES (?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO scholarshipregistrations (student_id, scholarship_id, is_parttime, monday, related_works, student_status, tuesday, wednesday, thursday, friday, saturday, sunday) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           student_id,
           registration.scholarship_id,
           registration.is_parttime,
-          registration.is_parttimedate,
+          registration.monday,
           registration.related_works,
+          registration.tuesday, 
+          registration.wednesday, 
+          registration.thursday, 
+          registration.friday, 
+          registration.saturday, 
+          registration.sunday,
           student_status
         ]
       );

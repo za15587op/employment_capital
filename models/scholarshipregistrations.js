@@ -1,11 +1,10 @@
 import promisePool from '../lib/db';
 
 class ScholarshipRegistrations {
-  constructor(std_id, scholarship_id, is_parttime, is_parttimedate, related_works, student_status = 'Pending') {
-    this.std_id = std_id;
+  constructor(regist_id, student_id , scholarship_id, related_works, student_status = 'Pending') {
+    this.regist_id = regist_id;
+    this.student_id  = student_id ;
     this.scholarship_id = scholarship_id;
-    this.is_parttime = is_parttime;
-    this.is_parttimedate = is_parttimedate;
     this.related_works = related_works;
     this.student_status = student_status;
   }
