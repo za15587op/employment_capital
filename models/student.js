@@ -26,13 +26,6 @@ class Student {
     this.user_id = user_id;
   }
 
-  // static async getStudentById(student_id) {
-  //   const [result] = await promisePool.query(
-  //     `SELECT * FROM student WHERE student_id = ?`,
-  //     [student_id]
-  //   );
-  //   return result[0];
-  // }
 
   //ตอน เช็ค login
   static async findByStudentId(user_id) {

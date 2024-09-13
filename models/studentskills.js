@@ -7,14 +7,6 @@ class StudentSkills {
     this.skill_level = skill_level;
   }
 
-  // static async addStudentSkill(studentId, skillId, skillLevel) {
-  //   await promisePool.query(
-  //     `INSERT INTO StudentSkills (std_id, skill_id, skill_level) 
-  //      VALUES (?, ?, ?)`,
-  //     [studentId, skillId, skillLevel]
-  //   );
-  // }
-
  // สร้างข้อมูลทักษะของนักศึกษา
  static async create(studentSkillData) {
   const { student_id, skill_id, skill_level } = studentSkillData;
