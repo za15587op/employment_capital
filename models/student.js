@@ -79,6 +79,8 @@ class Student {
     }
   }
 
+
+  // ใช้ดึงข้อมูลedit ตอน student 
   static async findById(student_id) {
     try {
       // Query เพื่อดึงข้อมูลนักศึกษา พร้อมกับทักษะและระดับทักษะ
@@ -211,6 +213,22 @@ class Student {
       connection.release(); // ปิดการเชื่อมต่อ
     }
   }
+
+  // //ใช้ตอน showStudentScholarships
+  // static async findByIdALL(student_id) {
+  //   try {
+  //     // คิวรีเพื่อค้นหาข้อมูลนักเรียนตาม student_id
+  //     const [rows] = await promisePool.query("SELECT * FROM student WHERE student_id = ?", [student_id]);
+      
+  //     // คืนค่าข้อมูลที่พบ หรือ null หากไม่มีข้อมูล
+  //     return rows || null;
+  //   } catch (error) {
+  //     console.error('Error fetching student:', error);
+  //     return null;
+  //   }
+  // }
+
+
 
 }
 

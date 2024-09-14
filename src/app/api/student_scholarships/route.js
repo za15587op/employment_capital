@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import ScholarshipRegistrations from "../../../../models/scholarshipregistrations";
 import DateTimeAvailable from "../../../../models/datetimeavailable";
+import Scholarship from "../../../../models/scholarships";
 
 // กำหนดโฟลเดอร์ที่จะเก็บไฟล์ที่อัปโหลด
 const UPLOAD_DIR = path.resolve(process.cwd(), "uploads");
@@ -13,9 +14,13 @@ export const config = {
   },
 };
 
-// ฟังก์ชันช่วยจัดการอัปโหลดไฟล์
+// ฟังก์ชันช่วยจัดการอัปโหลดไฟล์และเปลี่ยนชื่อไฟล์
 async function handleFileUpload(formData) {
+  const scholarships = JSON.parse(formData.get("scholarships"));
+
   const file = formData.get("file");
+  const student_id = formData.get("student_id");
+  const scholarship_id = formData.get("scholarship_id");
 
   if (file) {
     const buffer = Buffer.from(await file.arrayBuffer());
@@ -25,12 +30,16 @@ async function handleFileUpload(formData) {
       fs.mkdirSync(UPLOAD_DIR, { recursive: true });
     }
 
+    // สร้างชื่อไฟล์ใหม่โดยใช้รหัสนิสิต, รหัสทุน, ปีการศึกษา และเทอม
+    const extension = path.extname(file.name); // นามสกุลไฟล์
+    const newFileName = `${student_id}_${scholarship_id}_${scholarships.academic_year}_${scholarships.academic_term}${extension}`;
+    const filePath = path.join(UPLOAD_DIR, newFileName);
+
     // บันทึกไฟล์ไปยังโฟลเดอร์ที่กำหนด
-    const filePath = path.join(UPLOAD_DIR, file.name);
     fs.writeFileSync(filePath, buffer);
 
     // ส่งคืนพาธไฟล์เพื่อนำไปเก็บในฐานข้อมูล
-    return `/uploads/${file.name}`;
+    return `/uploads/${newFileName}`;
   }
 
   return null; // กรณีที่ไม่มีการอัปโหลดไฟล์
@@ -41,22 +50,10 @@ export async function POST(req) {
     // แยกข้อมูลฟอร์มจากร่างกายคำขอ
     const formData = await req.formData();
 
-    console.log(formData, "formData");
-    
-
-    // จัดการการอัปโหลดไฟล์และได้พาธไฟล์
-    const filePath = await handleFileUpload(formData);
-
     const student_id = formData.get("student_id");
     const scholarship_id = formData.get("scholarship_id");
     const related_works = formData.get("related_works");
     const student_status = "Pending";
-
-   // ดึงและแปลงข้อมูล datetime_available จาก JSON string เป็น object
-   const datetime_available = JSON.parse(formData.get("datetime_available"));
-
-    console.log(datetime_available, "datetime_available");
-    
 
     // ตรวจสอบว่า student_id และ scholarship_id มีหรือไม่
     if (!student_id || !scholarship_id) {
@@ -66,18 +63,46 @@ export async function POST(req) {
       );
     }
 
+    // ตรวจสอบว่าผู้ใช้ได้สมัครทุนนี้ไปแล้วหรือยัง
+    const existingRegistration = await ScholarshipRegistrations.findOne({
+      where: { student_id, scholarship_id },
+    });
+
+    if (existingRegistration) {
+      return NextResponse.json(
+        { success: false, message: "คุณได้สมัครทุนนี้ไปแล้ว." },
+        { status: 400 }
+      );
+    }
+
+    // จัดการการอัปโหลดไฟล์และได้พาธไฟล์
+    const filePath = await handleFileUpload(formData);
+
+    const is_parttime = formData.get("is_parttime");
+    const date_available = JSON.parse(formData.get("date_available"));
+    const start_time = JSON.parse(formData.get("start_time"));
+    const end_time = JSON.parse(formData.get("end_time"));
+
+    // ตรวจสอบว่ามีการอัปโหลดไฟล์หรือไม่ ถ้ามี ให้ใช้พาธไฟล์ที่อัปโหลดจริง ๆ
+    const fileOrWorksPath = filePath || related_works;
+
     // เรียกใช้การสร้าง record ในฐานข้อมูล
-    const registration = await ScholarshipRegistrations.create(student_id, scholarship_id, related_works, student_status);
+    const registrationId = await ScholarshipRegistrations.create(
+      student_id,
+      scholarship_id,
+      fileOrWorksPath, // ใช้พาธไฟล์แทนที่ถ้ามีการอัปโหลดไฟล์
+      student_status
+    );
 
     // บันทึกข้อมูลวันเวลาที่สามารถทำงานในฐานข้อมูล
-    for (const day of datetime_available.date_available) {
-      await DateTimeAvailable.create({
-        regist_id: registration,
-        date_available: day,
-        is_parttime: datetime_available.is_parttime,
-        start_time: datetime_available.start_time[day] || null,
-        end_time: datetime_available.end_time[day] || null,
-      });
+    for (const day of date_available) {
+      await DateTimeAvailable.create(
+        registrationId,
+        day,
+        is_parttime,
+        start_time[day] || null,
+        end_time[day] || null
+      );
     }
 
     return NextResponse.json({
@@ -90,5 +115,28 @@ export async function POST(req) {
       { success: false, message: "เกิดข้อผิดพลาดระหว่างการลงทะเบียน.", error: error.message },
       { status: 500 }
     );
+  }
+}
+
+
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const student_id = searchParams.get('student_id');
+  const scholarship_id = searchParams.get('scholarship_id');
+
+  try {
+    const existingRegistration = await ScholarshipRegistrations.findOne({
+      student_id,
+      scholarship_id,
+    });
+
+    if (existingRegistration) {
+      return NextResponse.json({ exists: true });
+    } else {
+      return NextResponse.json({ exists: false });
+    }
+  } catch (error) {
+    console.error("Error checking registration:", error);
+    return NextResponse.json({ success: false, message: 'เกิดข้อผิดพลาดขณะตรวจสอบการสมัคร' }, { status: 500 });
   }
 }
