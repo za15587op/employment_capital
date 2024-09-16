@@ -18,11 +18,11 @@ function ShowStudentScholarshipsPage() {
     }
   }, [status, router]);
 
-  const student_id = session?.user?.student_id; // ตรวจสอบ session ก่อนเข้าถึง student_id
+  const student_id = session?.user?.student_id;
 
   // ฟังก์ชันดึงข้อมูลทุนที่สมัคร
   const fetchGetData = async () => {
-    if (!student_id) return; // ถ้าไม่มี student_id ให้หยุดการ fetch
+    if (!student_id) return;
     try {
       const res = await fetch(`/api/showStudentScholarships/${student_id}`, {
         method: 'GET',
@@ -43,15 +43,14 @@ function ShowStudentScholarshipsPage() {
     }
   };
 
-  // ใช้ useEffect เพื่อดึงข้อมูลทุนเมื่อ component ถูก mount
   useEffect(() => {
     if (student_id) {
-        fetchGetData();
+      fetchGetData();
     }
   }, [student_id]);
 
   if (status === 'loading') {
-    return <div>Loading...</div>; // แสดง loading เมื่อยังโหลด session ไม่เสร็จ
+    return <div>Loading...</div>;
   }
 
   const handleUpdate = (regist_id) => {
@@ -82,33 +81,36 @@ function ShowStudentScholarshipsPage() {
           {getData.length === 0 ? (
             <p className="text-center">ยังไม่มีข้อมูลทุนการศึกษาที่สมัคร</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                <thead>
-                  <tr className="bg-gray-100 border-b border-gray-300">
-                    <th className="text-left py-2 px-4">ลำดับที่</th>
-                    <th className="text-left py-2 px-4">รหัสนิสิต</th>
-                    <th className="text-left py-2 px-4">ปีการศึกษา</th>
-                    <th className="text-left py-2 px-4">เทอมการศึกษา</th>
-                    <th className="text-left py-2 px-4">สถานะการสมัคร</th>
-                    <th className="text-left py-2 px-4">แก้ไขการสมัคร</th>
-                    <th className="text-left py-2 px-4">ยกเลิกการสมัคร</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {getData.map((item, index) => (
-                    <tr key={item.scholarship_id} className="border-b border-gray-200 hover:bg-gray-50">
-                      <td className="py-2 px-4">{index + 1}</td>
-                      <td className="py-2 px-4">{item.student_id}</td>
-                      <td className="py-2 px-4">{item.academic_year}</td>
-                      <td className="py-2 px-4">{item.academic_term}</td>
-                      <td className="py-2 px-4">{item.student_status}</td>
-                      <td className="py-2 px-4"><button onClick={() => handleUpdate(item.regist_id)} className="bg-blue-500 text-white px-3 py-1 rounded-lg mr-2 hover:bg-blue-600">Edit</button></td>
-                      <td className="py-2 px-4"><button onClick={() => handleDelete(item.regist_id)} className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600">Delete</button></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="grid grid-cols-1 gap-6">
+              {getData.map((item, index) => (
+                <div key={item.scholarship_id} className="bg-white p-6 rounded-lg shadow-lg">
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-xl font-semibold text-gray-800">ทุนการศึกษา #{index + 1}</h4>
+                    <span className={`px-3 py-1 rounded-full text-sm ${item.student_status === 'approved' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'}`}>
+                      {item.student_status}
+                    </span>
+                  </div>
+                  <div className="text-gray-600">
+                    <p><strong>รหัสนิสิต:</strong> {item.student_id}</p>
+                    <p><strong>ปีการศึกษา:</strong> {item.academic_year}</p>
+                    <p><strong>เทอมการศึกษา:</strong> {item.academic_term}</p>
+                  </div>
+                  <div className="mt-4 flex justify-end space-x-4">
+                    <button
+                      onClick={() => handleUpdate(item.regist_id)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                    >
+                      แก้ไขการสมัคร
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item.regist_id)}
+                      className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                    >
+                      ยกเลิกการสมัคร
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

@@ -47,6 +47,7 @@ function Navber({ session }) {
               <li>
                 <Link href="/register" className="text-white hover:text-gray-200 transition duration-300">สมัครสมาชิก</Link>
               </li>
+              
             </>
           ) : (
             <>

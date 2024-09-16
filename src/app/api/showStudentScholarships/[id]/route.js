@@ -1,4 +1,3 @@
-
 import ScholarshipRegistrations from '../../../../../models/scholarshipregistrations';
 
 // ฟังก์ชันในการดึงข้อมูลทุนการศึกษาของนักเรียน

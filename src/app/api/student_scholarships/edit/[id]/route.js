@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import ScholarshipRegistrations from "../../../../../../models/scholarshipregistrations";
 import path from "path";
 import fs from "fs";
-import DateTimeAvailable from "../../../../../../models/datetimeavailable";
 
 export async function GET(req, { params }) {
   try {
@@ -25,7 +24,7 @@ export async function GET(req, { params }) {
   }
 }
 
-const UPLOAD_DIR = path.resolve(process.cwd(), "/public/uploads");
+const UPLOAD_DIR = path.resolve(process.cwd(), "public/uploads");
 
 export const config = {
   api: {
@@ -44,8 +43,6 @@ async function handleFileUpload(formData) {
   const file = formData.get("file");
   const student_id = formData.get("student_id");
   const scholarship_id = formData.get("scholarship_id");
-  console.log(scholarship_id,"scholarship_id");
-  
 
   if (file) {
     const buffer = Buffer.from(await file.arrayBuffer());
@@ -60,7 +57,7 @@ async function handleFileUpload(formData) {
 
     fs.writeFileSync(filePath, buffer);
 
-    return `/uploads/${newFileName}`;
+    return `public/uploads/${newFileName}`;
   }
 
   return null;
@@ -72,15 +69,8 @@ export async function PUT(req, { params }) {
   try {
     const formData = await req.formData();
 
-    const student_id = formData.get("student_id");
-    const scholarship_id = formData.get("scholarship_id");
     const related_works = formData.get("related_works");
     const is_parttime = formData.get("is_parttime");
-
-    const date_available = JSON.parse(formData.get("date_available"));
-    const start_time = JSON.parse(formData.get("start_time"));
-    const end_time = JSON.parse(formData.get("end_time"));
-
     const filePath = await handleFileUpload(formData);
     const fileOrWorksPath = filePath || related_works;
 
@@ -88,7 +78,7 @@ export async function PUT(req, { params }) {
       { regist_id: id },
       {
         related_works: fileOrWorksPath,
-        // is_parttime,
+        is_parttime
       },
       { new: true }
     );
@@ -96,30 +86,6 @@ export async function PUT(req, { params }) {
     if (!updatedScholarship) {
       return NextResponse.json({ success: false, message: "Scholarship registration not found" }, { status: 404 });
     }
-
-    for (const day of date_available) {
-      const existingDateTime = await DateTimeAvailable.findOne(id, day);
-
-      if (existingDateTime) {
-        await DateTimeAvailable.update(
-          existingDateTime.datetime_id,
-          id,
-          day,
-          is_parttime,
-          start_time[day] || null,
-          end_time[day] || null
-        );
-      } else {
-        await DateTimeAvailable.create(
-          id,
-          day,
-          is_parttime,
-          start_time[day] || null,
-          end_time[day] || null
-        );
-      }
-    }
-
     return NextResponse.json({
       success: true,
       message: "การอัปเดตข้อมูลทุนการศึกษาสำเร็จ.",
