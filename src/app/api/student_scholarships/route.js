@@ -3,10 +3,9 @@ import path from "path";
 import fs from "fs";
 import ScholarshipRegistrations from "../../../../models/scholarshipregistrations";
 import DateTimeAvailable from "../../../../models/datetimeavailable";
-import Scholarship from "../../../../models/scholarships";
 
 // กำหนดโฟลเดอร์ที่จะเก็บไฟล์ที่อัปโหลด
-const UPLOAD_DIR = path.resolve(process.cwd(), "uploads");
+const UPLOAD_DIR = path.resolve(process.cwd(), "/public/uploads");
 
 export const config = {
   api: {
@@ -138,5 +137,34 @@ export async function GET(req) {
   } catch (error) {
     console.error("Error checking registration:", error);
     return NextResponse.json({ success: false, message: 'เกิดข้อผิดพลาดขณะตรวจสอบการสมัคร' }, { status: 500 });
+  }
+}
+
+
+export async function DELETE(req) {
+  try {
+    const url = new URL(req.url);
+    const regist_id = url.searchParams.get('regist_id'); 
+
+    if (!regist_id) {
+      return NextResponse.json(
+        { message: "ID is required." },
+        { status: 400 }
+      );
+    }
+    await DateTimeAvailable.delete(regist_id);
+
+    await ScholarshipRegistrations.delete(regist_id); 
+
+    return NextResponse.json(
+      { message: "ScholarshipRegistrations deleted successfully." },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting ScholarshipRegistrations:", error);
+    return NextResponse.json(
+      { message: "An error occurred during ScholarshipRegistrations deletion." },
+      { status: 500 }
+    );
   }
 }

@@ -25,6 +25,22 @@ class DateTimeAvailable {
     }
   }
 
+   // Find a single DateTimeAvailable entry by regist_id and date_available
+static async findOne(regist_id, date_available) {
+  try {
+    const [rows] = await promisePool.query(
+      `SELECT * FROM datetimeavailable WHERE regist_id = ? AND date_available = ? LIMIT 1;`,
+      [regist_id, date_available]
+    );
+    return rows.length > 0 ? rows[0] : null; // Return the found record or null if not found
+  } catch (error) {
+    console.error('Error finding DateTimeAvailable entry:', error);
+    throw error;
+  }
+}
+
+
+
 
   // Find DateTimeAvailable by regist_id
   static async findByRegistId(regist_id) {
@@ -69,6 +85,27 @@ class DateTimeAvailable {
       throw error;
     }
   }
+
+   // Delete multiple DateTimeAvailable entries by regist_id
+   static async deleteMany(regist_id) {
+    try {
+      const [result] = await promisePool.query(
+        `DELETE FROM datetimeavailable WHERE regist_id = ?`,
+        [regist_id]
+      );
+      return result.affectedRows; // Return the number of affected rows
+    } catch (error) {
+      console.error('Error deleting DateTimeAvailable entries:', error);
+      throw error;
+    }
+  }
+
+   // Method to delete a scholarship by its ID
+   static async delete(regist_id) {
+    const [result] = await promisePool.query('DELETE FROM datetimeavailable WHERE regist_id = ?', [regist_id]);
+    return result;
+  }
+
 }
 
 export default DateTimeAvailable;

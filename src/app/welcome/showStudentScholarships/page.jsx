@@ -58,6 +58,19 @@ function ShowStudentScholarshipsPage() {
     router.push(`/welcome/editstudent_scholarships/${regist_id}`);
   };
 
+  const handleDelete = async (regist_id) => {
+    const confirmed = confirm("Are you sure?");
+    if (confirmed) {
+      const res = await fetch(`http://localhost:3000/api/student_scholarships/?regist_id=${regist_id}`, {
+        method: "DELETE"
+      });
+
+      if (res.ok) {
+        window.location.reload();
+      }
+    }
+  }
+
   return (
     <div className="bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <Navber session={session} />

@@ -110,8 +110,7 @@ export default function ScholarshipRegistration({ params }) {
 
     try {
       // เช็คว่าผู้ใช้เคยสมัครทุนนี้ไปแล้วหรือยัง
-      const checkRegistrationResponse = await fetch(
-        `/api/student_scholarships/check_registration?student_id=${session.user.student_id}&scholarship_id=${scholarship_id}`,
+      const checkRegistrationResponse = await fetch(`/api/student_scholarships/?student_id=${session.user.student_id}`,
         {
           method: "GET",
         }

@@ -16,12 +16,16 @@ export default function EditScholarshipRegistration({ params }) {
   }
 
   // สถานะที่ใช้ในฟอร์ม
-  const [relatedWorks, setRelatedWorks] = useState("");
+  const [relatedWorks, setRelatedWorks] = useState(""); // ใช้สำหรับเก็บพาธไฟล์ที่อัปโหลด
+  const [file, setFile] = useState(null); // ไฟล์ที่อัปโหลดใหม่
   const [isPartTime, setIsPartTime] = useState(""); // เก็บค่า fulltime หรือ parttime หรือ both
   const [dateAvailable, setDateAvailable] = useState([]); // เก็บวันที่สามารถทำงานได้
-  const [startTime, setStartTime] = useState({}); // เวลาเริ่มต้นในแต่ละวัน
-  const [endTime, setEndTime] = useState({}); // เวลาสิ้นสุดในแต่ละวัน
+  const [startTime, setStartTime] = useState({}); // เก็บเวลาเริ่มต้นในแต่ละวัน
+  const [endTime, setEndTime] = useState({}); // เก็บเวลาสิ้นสุดในแต่ละวัน
 
+  const [scholarship_id, setScholarshipId] = useState("");
+  const [academic_year, setAcademicYear] = useState("");
+  const [academic_term, setAcademicTerm] = useState("");
   // กำหนดวันต่างๆ
   const weekDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
   const weekendDays = ["เสาร์", "อาทิตย์"];
@@ -41,11 +45,25 @@ export default function EditScholarshipRegistration({ params }) {
       console.log(data, "data");
 
       // ตั้งค่าข้อมูลจากการดึง
-      setRelatedWorks(data.related_works);
-      setIsPartTime(data.is_parttime);
-      setDateAvailable(JSON.parse(data.date_available));
-      setStartTime(JSON.parse(data.start_time));
-      setEndTime(JSON.parse(data.end_time));
+      setRelatedWorks(data.related_works); // ตั้งค่าพาธไฟล์
+      setIsPartTime(data.datetime_available[0]?.is_parttime); // ตั้งค่า part-time หรือ full-time จากข้อมูลแรก
+      setDateAvailable(data.datetime_available.map(d => d.date_available)); // แยกวันที่ออก
+      setScholarshipId(data.scholarship_id);
+      setAcademicTerm(data.academic_year); // ตั้งค่าพาธไฟล์
+      setAcademicYear(data.academic_term); // ตั้งค่าพาธไฟล์
+      setStartTime(
+        data.datetime_available.reduce((acc, cur) => {
+          acc[cur.date_available] = cur.start_time;
+          return acc;
+        }, {})
+      );
+      setEndTime(
+        data.datetime_available.reduce((acc, cur) => {
+          acc[cur.date_available] = cur.end_time;
+          return acc;
+        }, {})
+      );
+      
     } catch (error) {
       console.log(error);
     }
@@ -58,32 +76,31 @@ export default function EditScholarshipRegistration({ params }) {
     }
   }, [regist_id]);
 
-  console.log(session.user.student_id,"student_id");
-  console.log(relatedWorks,"relatedWorks");
-  console.log(isPartTime,"isPartTime");
-
-
-  // ฟังก์ชันจัดการการส่งฟอร์ม
+  // ฟังก์ชันจัดการการส่งฟอร์มในฝั่ง edit
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const fileInput = event.target.querySelector('input[type="file"]');
     const formData = new FormData();
-    
 
     try {
       // เพิ่มข้อมูลลงใน FormData
-      formData.append("student_id", session.user.student_id);
-      formData.append("related_works", relatedWorks);
-      formData.append("is_parttime", isPartTime);
+      formData.append("student_id", session.user.student_id); // เหมือนใน create
+      formData.append("regist_id", regist_id); // ใช้ regist_id สำหรับการแก้ไข
+      formData.append("related_works", relatedWorks); // เหมือนกับที่ใช้ใน create
+      formData.append("is_parttime", isPartTime); // เหมือนใน create
       formData.append("date_available", JSON.stringify(dateAvailable));
       formData.append("start_time", JSON.stringify(startTime));
       formData.append("end_time", JSON.stringify(endTime));
+      formData.append("academic_year", academic_year); // เหมือนใน create
+      formData.append("academic_term", academic_term); // เหมือนใน create
+      formData.append("scholarship_id", scholarship_id); // เหมือนใน create
 
-      if (fileInput.files.length > 0) {
-        formData.append("file", fileInput.files[0]);
+      // อัปโหลดไฟล์
+      if (file) {
+        formData.append("file", file); // เพิ่มไฟล์ใหม่หากมีการเลือกไฟล์
       }
 
-      const response = await fetch(`/api/student_scholarships/update_registration`, {
+      // ส่งข้อมูลผ่าน API
+      const response = await fetch(`/api/student_scholarships/edit/${regist_id}`, {
         method: "PUT",
         body: formData,
       });
@@ -105,7 +122,23 @@ export default function EditScholarshipRegistration({ params }) {
     }
   };
 
-  // ฟังก์ชันจัดการการเลือกวันที่
+  // ฟังก์ชันจัดการการเปลี่ยนแปลงในเวลาทำงาน (fulltime, parttime, both)
+  const handlePartTimeChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      if (value === "in_time" && isPartTime === "parttime") {
+        setIsPartTime("both");
+      } else if (value === "out_time" && isPartTime === "fulltime") {
+        setIsPartTime("both");
+      } else {
+        setIsPartTime(value === "in_time" ? "fulltime" : "parttime");
+      }
+    } else {
+      setIsPartTime(""); // reset when none is selected
+    }
+  };
+
+  // ฟังก์ชันจัดการการเปลี่ยนแปลงวันที่
   const handleDaySelectionChange = (e, day) => {
     const { checked } = e.target;
     if (checked) {
@@ -124,22 +157,6 @@ export default function EditScholarshipRegistration({ params }) {
       setStartTime({ ...startTime, [day]: value });
     } else {
       setEndTime({ ...endTime, [day]: value });
-    }
-  };
-
-  // ฟังก์ชันจัดการการเปลี่ยนแปลงในเวลาทำงาน (fulltime, parttime, both)
-  const handlePartTimeChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      if (value === "in_time" && isPartTime === "parttime") {
-        setIsPartTime("both");
-      } else if (value === "out_time" && isPartTime === "fulltime") {
-        setIsPartTime("both");
-      } else {
-        setIsPartTime(value === "in_time" ? "fulltime" : "parttime");
-      }
-    } else {
-      setIsPartTime(""); // reset when none is selected
     }
   };
 
@@ -198,13 +215,20 @@ export default function EditScholarshipRegistration({ params }) {
       <h1>แก้ไขข้อมูลการสมัครทุนการศึกษา</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="file">Upload File:</label>
-          <input
-            type="file"
-            id="file"
-            name="file"
-            onChange={(e) => setRelatedWorks(e.target.value)}
-          />
+          {relatedWorks && (
+            <>
+              <label htmlFor="file">ไฟล์ที่อัปโหลดแล้ว:</label>{" "}
+              <a href={relatedWorks} target="_blank" rel="noopener noreferrer">
+                ดูไฟล์ที่อัปโหลด
+              </a>
+              <input
+                type="file"
+                id="file"
+                name="file"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+            </>
+          )}
         </div>
 
         <div>
@@ -233,8 +257,8 @@ export default function EditScholarshipRegistration({ params }) {
           </label>
         </div>
 
-        {/* แสดง checkbox วันจันทร์ - อาทิตย์ และ input เวลาเริ่ม-สิ้นสุด */}
-        {isPartTime && renderDaysCheckboxes()}
+        {/* แสดงข้อมูล dateAvailable, startTime, endTime */}
+        {renderDaysCheckboxes()}
 
         <button type="submit">บันทึกการแก้ไข</button>
       </form>
