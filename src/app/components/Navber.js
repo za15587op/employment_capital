@@ -1,36 +1,45 @@
-"use client"
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { signOut } from 'next-auth/react';
+"use client";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 function Navber({ session }) {
+  const router = useRouter();
+  const { data: sessionData, status } = useSession();
+  const [student, setStudent] = useState(null); // State to store student info
+  const [error, setError] = useState(null);
 
-  // useEffect(() => {
-  //   const fetchStudent = async () => {
-  //     try {
-  //       const res = await fetch(`http://localhost:3000/api/scholarships/${scholarship_id}`, {
-  //         method: "GET",
-  //         cache: "no-store",
-  //       });
-  //       if (res.ok) {
-  //         const data = await res.json();
-  //         console.log("Fetched data student:", data);
-          
-  //       } else {
-  //         setError('Failed to fetch scholarships data');
-  //       }
-  //     } catch (error) {
-  //       setError('An error occurred while fetching scholarships data');
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchStudent = async () => {
+      if (sessionData?.user?.student_id) {
+        try {
+          const res = await fetch(`/api/student/${sessionData.user.student_id}`, {
+            method: "GET",
+            cache: "no-store",
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setStudent(data); // Store student info in state
+            console.log("Fetched student data:", data);
+          } else {
+            setError("Failed to fetch student data");
+          }
+        } catch (error) {
+          setError("An error occurred while fetching student data");
+        }
+      }
+    };
 
-  //   fetchStudent();
-  // }, []);
-    
+    fetchStudent();
+  }, [sessionData]);
 
-  // const Profile = (student_id) => {
-  //   router.push(`/student/${student_id}`);
-  // };
+  const handleProfileClick = () => {
+    if (student?.student_id) {
+      router.push(`/student/edit/${student.student_id}`);
+    }
+  };
 
   return (
     <nav className="bg-blue-600 shadow-lg">
@@ -39,21 +48,36 @@ function Navber({ session }) {
           <Link href="/">NextAuth</Link>
         </div>
         <ul className="flex space-x-4">
-          {!session ? (
+          {status === "loading" ? (
+            <li className="text-white">Loading...</li>
+          ) : !sessionData ? (
             <>
               <li>
-                <Link href="/login" className="text-white hover:text-gray-200 transition duration-300">เข้าสู่ระบบ</Link>
+                <Link href="/login" className="text-white hover:text-gray-200 transition duration-300">
+                  เข้าสู่ระบบ
+                </Link>
               </li>
               <li>
-                <Link href="/register" className="text-white hover:text-gray-200 transition duration-300">สมัครสมาชิก</Link>
+                <Link href="/register" className="text-white hover:text-gray-200 transition duration-300">
+                  สมัครสมาชิก
+                </Link>
               </li>
-              
             </>
           ) : (
             <>
-              {/* <li onClick={Profile(student_id)}>
-                
-              </li> */}
+              <li>
+                <button
+                  onClick={handleProfileClick}
+                  className="text-white hover:text-gray-200 transition duration-300 focus:outline-none"
+                >
+                  โปรไฟล์
+                </button>
+              </li>
+              <li>
+                <Link href="/welcome" className="text-white hover:text-gray-200 transition duration-300">
+                  สมัครทุน
+                </Link>
+              </li>
               <li>
                 <button
                   onClick={() => signOut()}

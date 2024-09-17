@@ -63,7 +63,7 @@
 //           return acc;
 //         }, {})
 //       );
-      
+
 //     } catch (error) {
 //       console.log(error);
 //     }
@@ -270,21 +270,22 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import Navber from "@/app/components/Navber";
 
 export default function EditScholarshipRegistration({ params }) {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const router = useRouter();
-
+  
   let regist_id = params?.id;
   if (!regist_id) {
     const parts = pathname.split("/");
     regist_id = parts[parts.length - 1];
   }
 
-  const [relatedWorks, setRelatedWorks] = useState(""); 
-  const [file, setFile] = useState(null); 
-  const [isPartTime, setIsPartTime] = useState(""); 
+  const [relatedWorks, setRelatedWorks] = useState("");
+  const [file, setFile] = useState(null);
+  const [isPartTime, setIsPartTime] = useState("");
 
   const [scholarship_id, setScholarshipId] = useState("");
   const [academic_year, setAcademicYear] = useState("");
@@ -301,12 +302,11 @@ export default function EditScholarshipRegistration({ params }) {
       }
 
       const data = await res.json();
-      setRelatedWorks(data.related_works); 
-      setIsPartTime(data.is_parttime); 
+      setRelatedWorks(data.related_works);
+      setIsPartTime(data.is_parttime);
       setScholarshipId(data.scholarship_id);
       setAcademicYear(data.academic_year);
       setAcademicTerm(data.academic_term);
-      
     } catch (error) {
       console.log(error);
     }
@@ -335,10 +335,13 @@ export default function EditScholarshipRegistration({ params }) {
         formData.append("file", file);
       }
 
-      const response = await fetch(`/api/student_scholarships/edit/${regist_id}`, {
-        method: "PUT",
-        body: formData,
-      });
+      const response = await fetch(
+        `/api/student_scholarships/edit/${regist_id}`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error("การส่งฟอร์มล้มเหลว");
@@ -358,17 +361,32 @@ export default function EditScholarshipRegistration({ params }) {
   };
 
   return (
+    <>
+    <Navber session={session}/>
     <div className="min-h-screen bg-gradient-to-r from-teal-400 to-blue-500 flex items-center justify-center">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">แก้ไขข้อมูลการสมัครทุนการศึกษา</h1>
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          แก้ไขข้อมูลการสมัครทุนการศึกษา
+        </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             {relatedWorks && (
               <>
-                <label htmlFor="file" className="block text-gray-700 font-medium mb-2">ไฟล์ที่อัปโหลดแล้ว:</label>
-                <a href={relatedWorks} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                <label
+                  htmlFor="file"
+                  className="block text-gray-700 font-medium mb-2"
+                >
+                  ไฟล์ที่อัปโหลดแล้ว:
+                </label>
+                <a
+                  href={`/${relatedWorks}`} // แก้ไขให้ URL ชี้ตรงไปที่โฟลเดอร์ uploads
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 underline"
+                >
                   ดูไฟล์ที่อัปโหลด
                 </a>
+
                 <input
                   type="file"
                   id="file"
@@ -381,29 +399,35 @@ export default function EditScholarshipRegistration({ params }) {
           </div>
 
           <div className="flex flex-col space-y-4">
-            <label className="font-medium text-gray-700">เลือกประเภทงาน:</label>
+            <label className="font-medium text-gray-700">
+              ปฎิบัติงานนอกเวลาได้หรือไม่
+            </label>
             <div className="flex items-center space-x-4">
               <div>
                 <input
                   type="radio"
                   id="in_time"
-                  value="fulltime"
-                  checked={isPartTime === "fulltime"}
+                  value="Yes"
+                  checked={isPartTime === "Yes"}
                   onChange={(e) => setIsPartTime(e.target.value)}
                   className="focus:ring-blue-500"
                 />
-                <label htmlFor="in_time" className="ml-2 text-gray-600">ในเวลา</label>
+                <label htmlFor="in_time" className="ml-2 text-gray-600">
+                  ปฎิบัติงานนอกเวลาได้
+                </label>
               </div>
               <div>
                 <input
                   type="radio"
                   id="out_time"
-                  value="parttime"
-                  checked={isPartTime === "parttime"}
+                  value="No"
+                  checked={isPartTime === "No"}
                   onChange={(e) => setIsPartTime(e.target.value)}
                   className="focus:ring-blue-500"
                 />
-                <label htmlFor="out_time" className="ml-2 text-gray-600">นอกเวลา</label>
+                <label htmlFor="out_time" className="ml-2 text-gray-600">
+                  ปฎิบัติงานนอกเวลาไม่ได้
+                </label>
               </div>
             </div>
           </div>
@@ -417,5 +441,6 @@ export default function EditScholarshipRegistration({ params }) {
         </form>
       </div>
     </div>
+    </>
   );
 }

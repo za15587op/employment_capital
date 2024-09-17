@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from "react";
 import Navber from "@/app/components/Navber";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 function ShowSkillTypes() {
   const [skillTypes, setSkillTypes] = useState([]);
   const [error, setError] = useState("");
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const fetchSkillTypes = async () => {
@@ -48,7 +50,7 @@ function ShowSkillTypes() {
 
   return (
     <div>
-      <Navber />
+      <Navber session={session}/>
       <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md mt-10">
         <h3 className="text-2xl font-bold mb-6 text-center">รายการประเภททักษะ</h3>
         {error && <div className="bg-red-100 text-red-600 p-2 rounded mb-4">{error}</div>}

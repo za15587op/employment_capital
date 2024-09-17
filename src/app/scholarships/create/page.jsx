@@ -2,16 +2,16 @@
 import React, { useState } from 'react';
 import Navber from '@/app/components/Navber';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 function ScholarshipsForm() {
-  // const [scholarship_id, setscholarshipID] = useState("");
   const [application_start_date, setApplicationStartDate] = useState("");
   const [application_end_date, setApplicationEndDate] = useState("");
   const [academic_year, setAcademicYear] = useState("");
   const [academic_term, setAcademicTerm] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -54,6 +54,7 @@ function ScholarshipsForm() {
 
   return (
     <div>
+      <Navber session = {session}/>
       <div className="max-w-lg mx-auto p-6 mt-10 bg-white rounded-lg shadow-lg">
         <form onSubmit={handleSubmit} className="space-y-4">
           <h3 className="text-2xl font-semibold text-gray-800 mb-4"> Scholarship</h3>

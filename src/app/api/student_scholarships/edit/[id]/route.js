@@ -57,7 +57,7 @@ async function handleFileUpload(formData) {
 
     fs.writeFileSync(filePath, buffer);
 
-    return `public/uploads/${newFileName}`;
+    return `uploads/${newFileName}`;
   }
 
   return null;

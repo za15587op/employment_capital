@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navber from "@/app/components/Navber";
+import { useSession } from "next-auth/react";
 
 function EditStudentPage({ params }) {
+  const { data: session, status } = useSession();
   const { id: student_id } = params;
   const [postData, setPostData] = useState({});
   const router = useRouter();
@@ -161,7 +163,7 @@ function EditStudentPage({ params }) {
 
   return (
     <>
-    <Navber />
+    <Navber session = {session}/>
     <div className="min-h-screen bg-gradient-to-r from-blue-500 to-teal-400 p-6 flex flex-col items-center justify-center">
       <div className="max-w-3xl w-full bg-white shadow-lg rounded-md p-8">
         <h3 className="text-3xl font-bold text-center text-gray-700 mb-8">Edit Student</h3>

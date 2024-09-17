@@ -210,7 +210,7 @@ async function handleFileUpload(formData) {
     fs.writeFileSync(filePath, buffer);
 
     // ส่งคืนพาธไฟล์เพื่อนำไปเก็บในฐานข้อมูล
-    return `public/uploads/${newFileName}`;
+    return `uploads/${newFileName}`;
   }
 
   return null; // กรณีที่ไม่มีการอัปโหลดไฟล์

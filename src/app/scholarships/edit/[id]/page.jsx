@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navber from '@/app/components/Navber';
+import { useSession } from "next-auth/react";
 
 function EditScholarshipsPage({ params }) {
   const { id: scholarship_id } = params;
   const [postData, setPostData] = useState({});
   const router = useRouter();
-
+  const { data: session, status } = useSession();
   // Initialize state with empty strings
   const [newapplication_start_date, setNewApplicationStartDate] = useState("");
   const [newapplication_end_date, setNewApplicationEndDate] = useState("");
@@ -87,6 +88,7 @@ function EditScholarshipsPage({ params }) {
 
   return (
     <div>
+      <Navber session={session}/>
     <div className=" min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-3 sm:skew-y-0 sm:-rotate-3 sm:rounded-3xl"></div>

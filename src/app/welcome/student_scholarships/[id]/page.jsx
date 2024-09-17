@@ -272,6 +272,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import Navber from "@/app/components/Navber";
 
 export default function ScholarshipRegistration({ params }) {
   const { data: session } = useSession();
@@ -385,6 +386,8 @@ export default function ScholarshipRegistration({ params }) {
   };
   
   return (
+    <>
+    <Navber session={session}/> 
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-teal-500">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
         <h1 className="text-2xl font-bold text-center mb-6">สมัครทุนการศึกษา</h1>
@@ -401,31 +404,31 @@ export default function ScholarshipRegistration({ params }) {
           </div>
 
           <div className="flex flex-col space-y-2">
-            <label className="font-medium text-gray-700">เลือกประเภทงาน:</label>
+            <label className="font-medium text-gray-700">ปฎิบัติงานนอกเวลาได้หรือไม่</label>
             <div className="flex items-center space-x-4">
               <div>
                 <input
                   type="radio"
                   id="in_time"
-                  value="fulltime"
+                  value="Yes"
                   name="is_parttime"
-                  checked={isPartTime === "fulltime"}
+                  checked={isPartTime === "Yes"}
                   onChange={(e) => setIsPartTime(e.target.value)}
                   className="focus:ring-blue-500"
                 />
-                <label htmlFor="in_time" className="ml-2 text-gray-600">ในเวลา</label>
+                <label htmlFor="in_time" className="ml-2 text-gray-600">ปฎิบัติงานนอกเวลาได้</label>
               </div>
               <div>
                 <input
                   type="radio"
                   id="out_time"
-                  value="parttime"
+                  value="No"
                   name="is_parttime"
-                  checked={isPartTime === "parttime"}
+                  checked={isPartTime === "No"}
                   onChange={(e) => setIsPartTime(e.target.value)}
                   className="focus:ring-blue-500"
                 />
-                <label htmlFor="out_time" className="ml-2 text-gray-600">นอกเวลา</label>
+                <label htmlFor="out_time" className="ml-2 text-gray-600">ปฎิบัติงานนอกเวลาไม่ได้</label>
               </div>
             </div>
           </div>
@@ -439,5 +442,6 @@ export default function ScholarshipRegistration({ params }) {
         </form>
       </div>
     </div>
+    </>
   );
 }

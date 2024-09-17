@@ -116,7 +116,7 @@ function StudentForm({ params }) {
 
   return (
     <>
-      <Navber />
+      <Navber session = {session}/>
     <div className="min-h-screen bg-gradient-to-r from-blue-500 to-teal-400 p-6 flex flex-col items-center justify-center">
       <div className="max-w-lg w-full bg-white shadow-lg rounded-lg p-8">
         <h3 className="text-3xl font-bold mb-6 text-center text-gray-700">โปรไฟล์นักศึกษา</h3>

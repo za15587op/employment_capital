@@ -259,7 +259,7 @@ class ScholarshipRegistrations {
         FROM scholarshipregistrations
         JOIN scholarships ON scholarshipregistrations.scholarship_id = scholarships.scholarship_id
         JOIN student ON scholarshipregistrations.student_id = student.student_id
-        WHERE scholarshipregistrations.student_status = 'pass'
+        WHERE scholarshipregistrations.student_status = 'Pass'
       `);
       return rows;
     } catch (error) {

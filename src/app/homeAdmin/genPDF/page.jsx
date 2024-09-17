@@ -4,9 +4,12 @@ import "jspdf-autotable";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "@/fonts/THSarabunNew-normal.js"; // นำฟอนต์เข้ามาเพื่อใช้ภาษาไทย
+import Navber from "@/app/components/Navber";
+import { useSession } from "next-auth/react";
 
 function ShowScholarshipGenPDF() {
   const [getData, setGetData] = useState([]);
+  const { data: session, status } = useSession();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true); // เพิ่มสถานะการโหลด
   const router = useRouter();
@@ -77,7 +80,7 @@ function ShowScholarshipGenPDF() {
       styles: { font: "THSarabunNew", fontSize: 14 }, // เพิ่มการตั้งค่าฟอนต์และขนาดในตาราง
       didDrawPage: (data) => {
         doc.setFontSize(10);
-        doc.text(`หน้าที่ ${doc.internal.getNumberOfPages()}`, pageWidth - 20, 285); // แสดงหน้าที่มุมขวาล่าง
+        doc.text(`${doc.internal.getNumberOfPages()}`, pageWidth - 20, 285); // แสดงหน้าที่มุมขวาล่าง
       },
     });
 
@@ -86,6 +89,8 @@ function ShowScholarshipGenPDF() {
   };
 
   return (
+    <>
+    <Navber session = {session}/>
     <div className="min-h-screen flex flex-col items-center justify-center">
       <div className="max-w-2xl w-full bg-white p-6 shadow-md rounded-md">
         <h1 className="text-2xl font-bold mb-4">รายชื่อนักศึกษาทั้งหมด</h1>
@@ -128,6 +133,7 @@ function ShowScholarshipGenPDF() {
         )}
       </div>
     </div>
+    </>
   );
 }
 
