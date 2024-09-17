@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import ScholarshipRegistrations from "../../../../../../models/scholarshipregistrations";
+import DateTimeAvailable from "../../../../../../models/datetimeavailable";
 import path from "path";
 import fs from "fs";
 
@@ -71,6 +72,8 @@ export async function PUT(req, { params }) {
 
     const related_works = formData.get("related_works");
     const is_parttime = formData.get("is_parttime");
+    const date_available = JSON.parse(formData.get("date_available")); // ได้รับค่า date_available
+    
     const filePath = await handleFileUpload(formData);
     const fileOrWorksPath = filePath || related_works;
 
@@ -82,6 +85,13 @@ export async function PUT(req, { params }) {
       },
       { new: true }
     );
+
+    // อัปเดตข้อมูลในตาราง DateTimeAvailable
+    // คุณอาจจะลบข้อมูลเก่าออกก่อนและสร้างข้อมูลใหม่ หรือทำการอัปเดตตามความต้องการของระบบ
+    await DateTimeAvailable.deleteMany(id); // ลบข้อมูลเก่าทั้งหมดที่เกี่ยวข้องกับ regist_id
+    for (const day of date_available) {
+      await DateTimeAvailable.create(id, day, is_parttime); // เพิ่มข้อมูลใหม่
+    }
 
     if (!updatedScholarship) {
       return NextResponse.json({ success: false, message: "Scholarship registration not found" }, { status: 404 });

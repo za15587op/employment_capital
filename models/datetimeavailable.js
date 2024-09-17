@@ -1,22 +1,20 @@
 import promisePool from '../lib/db';
 
 class DateTimeAvailable {
-  constructor(datetime_id, regist_id, date_available, is_parttime, start_time, end_time) {
+  constructor(datetime_id, regist_id, date_available, is_parttime) {
     this.datetime_id = datetime_id;
     this.regist_id = regist_id;
     this.date_available = date_available;
     this.is_parttime = is_parttime;
-    this.start_time = start_time;
-    this.end_time = end_time;
   }
 
    // Create a new DateTimeAvailable entry
-   static async create(regist_id, date_available, is_parttime, start_time, end_time) {
+   static async create(regist_id, date_available, is_parttime) {
     try {
       const [result] = await promisePool.query(
-        `INSERT INTO datetimeavailable (regist_id, date_available, is_parttime, start_time, end_time) 
-         VALUES (?, ?, ?, ?, ?)`,
-        [regist_id, date_available, is_parttime, start_time || null, end_time || null]
+        `INSERT INTO datetimeavailable (regist_id, date_available, is_parttime) 
+         VALUES (?, ?, ?)`,
+        [regist_id, date_available, is_parttime]
       );
       return result.insertId; // Return the ID of the created entry
     } catch (error) {
@@ -57,13 +55,13 @@ static async findOne(regist_id, date_available) {
   }
 
   // Update an existing DateTimeAvailable entry
-  static async update(datetime_id, regist_id, date_available, is_parttime, start_time, end_time) {
+  static async update(datetime_id, regist_id, date_available, is_parttime) {
     try {
       const [result] = await promisePool.query(
         `UPDATE datetimeavailable 
-         SET regist_id = ?, date_available = ?, is_parttime = ?, start_time = ?, end_time = ? 
+         SET regist_id = ?, date_available = ?, is_parttime = ? 
          WHERE datetime_id = ?`,
-        [regist_id, date_available, is_parttime, start_time, end_time, datetime_id]
+        [regist_id, date_available, is_parttime, datetime_id]
       );
       return result.affectedRows; // Return the number of affected rows
     } catch (error) {
@@ -86,19 +84,19 @@ static async findOne(regist_id, date_available) {
     }
   }
 
-   // Delete multiple DateTimeAvailable entries by regist_id
-   static async deleteMany(regist_id) {
+  static async deleteMany(regist_id) {
     try {
       const [result] = await promisePool.query(
         `DELETE FROM datetimeavailable WHERE regist_id = ?`,
         [regist_id]
       );
-      return result.affectedRows; // Return the number of affected rows
+      return result.affectedRows;
     } catch (error) {
       console.error('Error deleting DateTimeAvailable entries:', error);
       throw error;
     }
   }
+
 
    // Method to delete a scholarship by its ID
    static async delete(regist_id) {

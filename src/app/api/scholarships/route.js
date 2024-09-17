@@ -21,37 +21,37 @@ export async function POST(req) {
   }
 }
 
-// // PUT: Update a scholarship
-export async function PUT(req) {
-  try {
-    const {
-      application_start_date,
-      application_end_date,
-      academic_year,
-      academic_term,
-    } = await req.json(); // Get the scholarship data from the request
+// // // PUT: Update a scholarship
+// export async function PUT(req) {
+//   try {
+//     const {
+//       application_start_date,
+//       application_end_date,
+//       academic_year,
+//       academic_term,
+//     } = await req.json(); // Get the scholarship data from the request
 
-    // Use the update method from the Scholarship model
-    await Scholarship.update(scholarship_id, {
-      scholarship_name,
-      application_start_date,
-      application_end_date,
-      academic_year,
-      academic_term,
-    });
+//     // Use the update method from the Scholarship model
+//     await Scholarship.update(scholarship_id, {
+//       scholarship_name,
+//       application_start_date,
+//       application_end_date,
+//       academic_year,
+//       academic_term,
+//     });
 
-    return NextResponse.json(
-      { message: "Scholarship updated successfully." },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error updating scholarship:", error);
-    return NextResponse.json(
-      { message: "An error occurred during scholarship update." },
-      { status: 500 }
-    );
-  }
-}
+//     return NextResponse.json(
+//       { message: "Scholarship updated successfully." },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("Error updating scholarship:", error);
+//     return NextResponse.json(
+//       { message: "An error occurred during scholarship update." },
+//       { status: 500 }
+//     );
+//   }
+// }
 
 // DELETE: Delete a scholarship
 export async function DELETE(req) {

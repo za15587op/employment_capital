@@ -65,6 +65,11 @@ function Navber({ session }) {
             </>
           ) : (
             <>
+            <li>
+                <Link href="/welcome/showStudentScholarships" className="text-white hover:text-gray-200 transition duration-300">
+                  ติดตามผลการสมัคร
+                </Link>
+              </li>
               <li>
                 <button
                   onClick={handleProfileClick}
