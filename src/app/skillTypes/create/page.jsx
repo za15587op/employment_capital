@@ -2,12 +2,13 @@
 import React, { useState } from 'react';
 import Navber from '@/app/components/Navber';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 function SkillTypesForm() {
   const [skill_type_name, setSkillTypeName] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -46,7 +47,7 @@ function SkillTypesForm() {
 
   return (
     <div>
-      <Navber />
+      <Navber session={session}/>
       <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-md mt-10">
         <h3 className="text-2xl font-bold mb-6 text-center">เพิ่มประเภททักษะ</h3>
 

@@ -1,12 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 function EditSkillTypePage({ params }) {
   const { id: skill_type_id } = params;
   const [postData, setPostData] = useState({});
   const router = useRouter();
-
+  const { data: session, status } = useSession();
+  
   // ตั้งค่า state ด้วยข้อมูลที่ดึงมา
   const [newskill_type_name, setNewSkillTypeName] = useState("");
 
@@ -69,6 +71,7 @@ function EditSkillTypePage({ params }) {
   };
 
   return (
+    <>
     <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-md mt-10">
       <h3 className="text-2xl font-bold mb-6 text-center">แก้ไขประเภททักษะ</h3>
       {skill_type_id && (
@@ -92,6 +95,7 @@ function EditSkillTypePage({ params }) {
         </button>
       </form>
     </div>
+    </>
   );
 }
 

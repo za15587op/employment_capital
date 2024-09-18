@@ -4,10 +4,17 @@ import Navber from '../components/Navber';
 import Foter from '../components/Foter';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
+<<<<<<< HEAD
 import Image from 'next/image';
+=======
+import { useRouter } from 'next/navigation';
+
+// import { authOption } from '../api/auth/[...nextauth]/route';
+>>>>>>> origin/New_P
 
 function ProfilePage() {
   const { data: session, status } = useSession();
+<<<<<<< HEAD
 console.log(session, "session2");
   if (!session) redirect("/login");
 
@@ -28,6 +35,31 @@ console.log(session, "session2");
             alt="logohome"
             className="rounded-xl shadow-2xl transform hover:scale-110 transition duration-500 ease-in-out"
           />
+=======
+  const router = useRouter();
+  
+  if(!session) redirect("/login");
+
+  // if (session.user.role === 'student') {
+  //   redirect('/login');
+  // } else if (session.user.role === 'admin') {
+  //   redirect('/profile');
+  // }
+
+  const genPDF = () => {
+    router.push(`/homeAdmin/genPDF`);
+  };
+
+  return (
+    <div>
+        <Navber session = {session}/>
+        <div>
+            <p>Welcome, {session.user.name}!</p>
+            <p>Role: {session.user.role}</p>
+            <a href='/scholarships'>เพิ่มแก้ไขทุน</a> <br />
+            <button onClick={() => genPDF()}>ออกรายงาน</button>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Earum corporis iure suscipit quia mollitia accusantium maiores, consequuntur placeat odio autem quasi illo libero perspiciatis molestias porro quibusdam in quae neque?</p>
+>>>>>>> origin/New_P
         </div>
         <h1 className="text-4xl md:text-5xl font-extrabold text-center mt-10 tracking-wide text-white animate-pulse">
           บริการด้านทุนจ้างงานนิสิต มหาวิทยาลัยทักษิณ
