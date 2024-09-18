@@ -1,28 +1,77 @@
 import { NextResponse } from "next/server";
-import scholarshiporganization from "../../../../models/scholarshiporganization"; // ตรวจสอบการ import ให้แน่ใจว่า path ถูกต้อง
+import promisePool from "../../../../lib/db"; // Import connection to MySQL
+import ScholarshipOrganization from "../../../../models/scholarshiporganization";
+import Scholarship from "../../../../models/scholarships";
+// ตรวจสอบการ import ให้แน่ใจว่า path ถูกต้อง
 
-// POST: Create a new scholarship organization
 export async function POST(req) {
-  try {
-    const scholarshiporganizationData = await req.json(); // Get the scholarship organization data from the request
+  const connection = await promisePool.getConnection(); // เริ่มการเชื่อมต่อกับฐานข้อมูล
 
-    await scholarshiporganization.create(scholarshiporganizationData); // Use the create method from the scholarshiporganization model
+  try {
+    const scholarshipData = await req.json(); // รับข้อมูลทุนการศึกษาจาก request
+    const { scholarship_id, organization_id, amount, workType, workTime } = scholarshipData;
+    console.log(scholarshipData);
+   
+    let scholarship_organ_id;
+
+    // ตรวจสอบว่ามีข้อมูลอยู่แล้วหรือไม่
+    const [rows] = await connection.query(
+      `SELECT scholarship_organ_id, amount, workType, workTime 
+       FROM scholarshiporganization 
+       WHERE organization_id = ? AND scholarship_id = ?`,
+      [organization_id, scholarship_id]
+    );
+    
+    if (rows.length > 0) {
+      const existingData = rows[0];
+      scholarship_organ_id = existingData.scholarship_organ_id; // ดึง scholarship_organ_id ที่มีอยู่
+      // ตรวจสอบว่ามีข้อมูลใน amount, workType, workTime อยู่หรือไม่
+      if (existingData.amount !== null || existingData.workType !== null || existingData.workTime !== null) {
+        return NextResponse.json(
+          { message: "ข้อมูลนี้มีอยู่แล้ว ไม่สามารถอัปเดตได้" },
+          { status: 400 }
+        );
+      }
+
+      // ทำการอัปเดตข้อมูลที่มีอยู่
+      await connection.query(
+        `UPDATE scholarshiporganization
+         SET amount = ?, workType = ?, workTime = ?
+         WHERE organization_id = ? AND scholarship_id = ?`,
+        [amount, workType, workTime, organization_id, scholarship_id]
+      );
+    } else {
+      // ถ้าไม่มีข้อมูลอยู่แล้ว ให้ทำการเพิ่มข้อมูลใหม่ และรับ scholarship_organ_id
+      const [result] = await connection.query(
+        'INSERT INTO scholarshiporganization (scholarship_id, organization_id, amount, workType, workTime) VALUES (?, ?, ?, ?, ?)',
+        [scholarship_id, organization_id, amount, workType, workTime]
+      );
+      scholarship_organ_id = result.insertId; // รับ scholarship_organ_id ที่เพิ่งสร้างใหม่
+    }
 
     return NextResponse.json(
-      { message: "Scholarshiporganization created successfully." },
+      { message: "บันทึก scholarship_id ลงในตารางที่เกี่ยวข้องเรียบร้อยแล้ว", scholarship_organ_id },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating scholarshiporganization:", error);
+    // Rollback transaction ถ้ามีข้อผิดพลาด
+    await connection.rollback();
+    console.error("Error creating scholarship:", error);
     return NextResponse.json(
-      { message: "An error occurred during scholarshiporganization creation." },
-      { status: 501 }
+      { message: "เกิดข้อผิดพลาดระหว่างการสร้างทุนการศึกษา" },
+      { status: 500 }
     );
+  } finally {
+    connection.release(); // ปล่อย connection เมื่อเสร็จสิ้น
   }
 }
 
+
+
 // PUT: Update a scholarship organization
 export async function PUT(req) {
+  const connection = await promisePool.getConnection(); // เริ่มการเชื่อมต่อกับฐานข้อมูล
+
   try {
     const url = new URL(req.url);
     const scholarship_organ_id = url.searchParams.get("scholarship_organ_id"); // ดึง scholarship_organ_id จาก URL query parameter
@@ -34,34 +83,44 @@ export async function PUT(req) {
       );
     }
 
-    const { scholarship_id, organization_id, amount, required_parttime } = await req.json(); // Get the scholarship organization data from the request
+    const { scholarship_id, organization_id, amount, workType, workTime } = await req.json(); // รับข้อมูล scholarship organization จาก request
 
-    // Use the update method from the scholarshiporganization model
-    await scholarshiporganization.update(scholarship_organ_id, {
-      scholarship_id,
-      organization_id,
-      amount,
-      required_parttime,
-    });
+    // เริ่มต้น Transaction
+    await connection.beginTransaction();
+
+    // อัปเดตข้อมูลในตาราง `scholarshiporganization`
+    await connection.query(
+      'UPDATE scholarshiporganization SET scholarship_id = ?, organization_id = ?, amount = ?, workType = ?, workTime = ? WHERE scholarship_organ_id = ?',
+      [scholarship_id, organization_id, amount, workType, workTime, scholarship_organ_id]
+    );
+
+    // Commit transaction ถ้าขั้นตอนทั้งหมดสำเร็จ
+    await connection.commit();
 
     return NextResponse.json(
-      { message: "Scholarshiporganization updated successfully." },
+      { message: "Scholarship organization updated successfully." },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error updating scholarshiporganization:", error);
+    // Rollback transaction ถ้ามีข้อผิดพลาด
+    await connection.rollback();
+    console.error("Error updating scholarship organization:", error);
     return NextResponse.json(
-      { message: "An error occurred during scholarshiporganization update." },
+      { message: "An error occurred during scholarship organization update." },
       { status: 500 }
     );
+  } finally {
+    connection.release(); // ปล่อย connection เมื่อเสร็จสิ้น
   }
 }
 
 // DELETE: Delete a scholarship organization
 export async function DELETE(req) {
+  const connection = await promisePool.getConnection(); // เริ่มการเชื่อมต่อกับฐานข้อมูล
+
   try {
     const url = new URL(req.url);
-    const scholarship_organ_id = url.searchParams.get("scholarship_organ_id"); // Get scholarship_organ_id from URL query parameter
+    const scholarship_organ_id = url.searchParams.get("scholarship_organ_id"); // ดึง scholarship_organ_id จาก URL query parameter
 
     if (!scholarship_organ_id) {
       return NextResponse.json(
@@ -70,38 +129,41 @@ export async function DELETE(req) {
       );
     }
 
-    await scholarshiporganization.delete(scholarship_organ_id); // Use the delete method from the scholarshiporganization model
+    // เริ่มต้น Transaction
+    await connection.beginTransaction();
+
+    // ลบข้อมูลจากตาราง `scholarshiporganization`
+    await connection.query(
+      'DELETE FROM scholarshiporganization WHERE scholarship_organ_id = ?',
+      [scholarship_organ_id]
+    );
+
+    // Commit transaction ถ้าขั้นตอนทั้งหมดสำเร็จ
+    await connection.commit();
 
     return NextResponse.json(
-      { message: "Scholarshiporganization deleted successfully." },
+      { message: "Scholarship organization deleted successfully." },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error deleting scholarshiporganization:", error);
+    // Rollback transaction ถ้ามีข้อผิดพลาด
+    await connection.rollback();
+    console.error("Error deleting scholarship organization:", error);
     return NextResponse.json(
-      { message: "An error occurred during scholarshiporganization deletion." },
+      { message: "An error occurred during scholarship organization deletion." },
       { status: 500 }
     );
+  } finally {
+    connection.release(); // ปล่อย connection เมื่อเสร็จสิ้น
   }
 }
 
-// GET: Fetch all scholarship organizations
-// export async function GET(req) {
-//   try {
-//     const scholarshiporganizations = await scholarshiporganization.getAll(); // Use the getAll method from the scholarshiporganization model
-
-//     return NextResponse.json(scholarshiporganizations, { status: 200 });
-//   } catch (error) {
-//     console.error("Error fetching scholarshiporganizations:", error);
-//     return NextResponse.json(
-//       { message: "An error occurred while fetching scholarshiporganizations." },
-//       { status: 500 }
-//     );
-//   }
-// }
 
 // GET: Fetch all scholarship organizations
 export async function GET(req) {
+  console.log(req);
+  // return NextResponse.json("Test Something", { status: 200 });
+
   try {
     const scholarshiporganizations = await scholarshiporganization.getAll();
     console.log("Fetched Scholarship Organizations:", scholarshiporganizations); // ตรวจสอบข้อมูลที่ดึงมา

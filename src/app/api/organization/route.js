@@ -1,31 +1,105 @@
 import { NextResponse } from "next/server";
+import promisePool from "../../../../lib/db"; // ตรวจสอบว่า path ถูกต้องกับที่ใช้งาน
 import Organization from "../../../../models/organization"; // ตรวจสอบการ import ให้แน่ใจว่า path ถูกต้อง
 
-// POST: Create a new organization
 export async function POST(req) {
+  const connection = await promisePool.getConnection(); // เริ่มการเชื่อมต่อกับฐานข้อมูล
   try {
-    const organizationData = await req.json(); // Get the organization data from the request
+    const organizationData = await req.json(); // รับข้อมูลจาก request
+    const { organization_name, contactPhone, scholarship_id } = organizationData; // รับ scholarship_id จาก form
 
-    await Organization.create(organizationData); // Use the create method from the Organization model
+    // ตรวจสอบว่ามีชื่อหน่วยงานหรือเบอร์โทรศัพท์ซ้ำกันหรือไม่
+    const [existingOrganization] = await connection.query(
+      'SELECT * FROM organization WHERE organization_name = ? OR contactPhone = ?',
+      [organization_name, contactPhone]
+    );
+
+    let organizationId;
+    if (existingOrganization.length > 0) {
+      // ถ้าพบว่ามี organization ที่ซ้ำกัน ให้ใช้ organization_id ที่มีอยู่แล้ว
+      organizationId = existingOrganization[0].organization_id;
+    } else {
+      // ถ้าไม่มีข้อมูลซ้ำ ให้สร้าง organization ใหม่
+      const [resultOrganization] = await connection.query(
+        'INSERT INTO organization (organization_name, contactPhone) VALUES (?, ?)',
+        [organization_name, contactPhone]
+      );
+      organizationId = resultOrganization.insertId; 
+    }
+
+    // ตรวจสอบว่ามีแถวที่มี scholarship_id และ organization_id เป็น NULL อยู่ในตาราง scholarshiporganization หรือไม่
+    const [existingNullEntry] = await connection.query(
+      'SELECT * FROM scholarshiporganization WHERE scholarship_id = ? AND organization_id IS NULL',
+      [scholarship_id]
+    );
+
+    let scholarship_organ_id;
+    if (existingNullEntry.length > 0) {
+      // ถ้ามีแถวที่มี scholarship_id และ organization_id เป็น NULL ให้ทำการอัปเดตแถวนั้น
+      await connection.query(
+        'UPDATE scholarshiporganization SET organization_id = ? WHERE scholarship_organ_id = ?',
+        [organizationId, existingNullEntry[0].scholarship_organ_id]
+      );
+      scholarship_organ_id = existingNullEntry[0].scholarship_organ_id;
+    } else {
+      // ตรวจสอบว่ามี scholarship_id และ organization_id อยู่ในตาราง scholarshiporganization หรือไม่
+      const [existingEntry] = await connection.query(
+        'SELECT * FROM scholarshiporganization WHERE scholarship_id = ? AND organization_id = ?',
+        [scholarship_id, organizationId]
+      );
+
+      if (existingEntry.length > 0) {
+        // ถ้ามี scholarship_id และ organization_id อยู่แล้ว ไม่ต้องทำอะไรเพิ่มเติม
+        return NextResponse.json(
+          { message: "organization_id นี้มีอยู่แล้วใน scholarshiporganization" },
+          { status: 400 }
+        );
+      } else {
+        // ถ้าไม่มี ให้ทำการเพิ่ม organization_id ใหม่ลงในตาราง scholarshiporganization
+        const [resultScholarshipOrg] = await connection.query(
+          'INSERT INTO scholarshiporganization (scholarship_id, organization_id) VALUES (?, ?)',
+          [scholarship_id, organizationId]
+        );
+        scholarship_organ_id = resultScholarshipOrg.insertId;
+      }
+    }
+
+    // // ทำการบันทึก scholarship_organ_id ลงในตาราง scholarshiprequirement
+    await connection.query(
+      'INSERT INTO scholarshiprequirement (scholarship_organ_id) VALUES (?)',
+      [scholarship_organ_id]
+    );
+
+    // Commit transaction ถ้าขั้นตอนทั้งหมดสำเร็จ
+    await connection.commit();
 
     return NextResponse.json(
-      { message: "Organization created successfully." },
+      { message: "เพิ่มหรืออัปเดต organization_id สำเร็จแล้ว" },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating organization:", error);
+    // Rollback transaction ถ้ามีข้อผิดพลาด
+    await connection.rollback();
+    console.error("Error adding organization:", error);
     return NextResponse.json(
-      { message: "An error occurred during organization creation." },
+      { message: "เกิดข้อผิดพลาดระหว่างการเพิ่ม organization_id ใน scholarshiporganization", error: error.message },
       { status: 500 }
     );
+  } finally {
+    connection.release(); // ปล่อย connection เมื่อเสร็จสิ้น
   }
 }
+
+
+
+
+
 
 // PUT: Update an organization
 export async function PUT(req) {
   try {
     const url = new URL(req.url);
-    const organization_id = url.searchParams.get("organization_id"); // ดึง organization_id จาก URL query parameter หรือจะดึงจาก body ก็ได้ตามการตั้งค่า
+    const organization_id = url.searchParams.get("organization_id"); // ดึง organization_id จาก URL query parameter
 
     if (!organization_id) {
       return NextResponse.json(
@@ -34,13 +108,27 @@ export async function PUT(req) {
       );
     }
 
-    const { organization_name, contactPhone, contactEmail } = await req.json(); // Get the organization data from the request
+    const { organization_name, contactPhone, scholarship_id } = await req.json(); // Get the organization data from the request
 
-    // Use the update method from the Organization model
+    // ตรวจสอบว่ามีชื่อหน่วยงานหรือเบอร์โทรศัพท์ซ้ำกันหรือไม่ โดยไม่รวมข้อมูลของ organization_id ปัจจุบัน
+    const [existingOrganization] = await promisePool.query(
+      'SELECT * FROM organization WHERE (organization_name = ? OR contactPhone = ?) AND organization_id != ?',
+      [organization_name, contactPhone, organization_id]
+    );
+
+    // ถ้าข้อมูลซ้ำให้แจ้งกลับไป
+    if (existingOrganization.length > 0) {
+      return NextResponse.json(
+        { message: "ชื่อหน่วยงานหรือเบอร์โทรศัพท์ซ้ำกัน" },
+        { status: 400 }
+      );
+    }
+
+    // ถ้าไม่มีข้อมูลซ้ำให้ทำการอัปเดตข้อมูลในฐานข้อมูล
     await Organization.update(organization_id, {
       organization_name,
       contactPhone,
-      contactEmail,
+      scholarship_id,
     });
 
     return NextResponse.json(
@@ -56,11 +144,14 @@ export async function PUT(req) {
   }
 }
 
-// DELETE: Delete an organization
+
+// DELETE: Delete an organization and related data
 export async function DELETE(req) {
+  const connection = await promisePool.getConnection(); // เริ่มการเชื่อมต่อกับฐานข้อมูล
+
   try {
     const url = new URL(req.url);
-    const organization_id = url.searchParams.get("organization_id"); // Get organization_id from URL query parameter
+    const organization_id = url.searchParams.get('organization_id'); // รับ organization_id จาก URL query parameter
 
     if (!organization_id) {
       return NextResponse.json(
@@ -69,20 +160,67 @@ export async function DELETE(req) {
       );
     }
 
-    await Organization.delete(organization_id); // Use the delete method from the Organization model
+    // เริ่มต้น Transaction
+    await connection.beginTransaction();
+
+    // ลบข้อมูลจากตาราง `scholarshiprequirement` ที่อ้างอิงกับ `scholarship_organ_id` ผ่าน `scholarshiporganization`
+    const deleteScholarshipRequirement = `
+      DELETE sr
+      FROM scholarshiprequirement sr
+      JOIN scholarshiporganization so ON sr.scholarship_organ_id = so.scholarship_organ_id
+      WHERE so.organization_id = ?
+    `;
+    await connection.query(deleteScholarshipRequirement, [organization_id]);
+
+    // ลบข้อมูลจากตาราง `skilltypes` ที่ไม่มีการอ้างอิงจาก `scholarshiprequirement`
+    const deleteSkillTypes = `
+    DELETE st
+    FROM skilltypes st
+    LEFT JOIN scholarshiprequirement sr ON st.skill_type_id = sr.skill_type_id
+    WHERE sr.skill_type_id IS NULL
+  `;
+  await connection.query(deleteSkillTypes);
+    // ลบข้อมูลจากตาราง `scholarshiporganization` ที่เกี่ยวข้องกับ `organization_id`
+    const deleteScholarshipOrganization = `
+      DELETE FROM scholarshiporganization WHERE organization_id = ?
+    `;
+    await connection.query(deleteScholarshipOrganization, [organization_id]);
+
+    // ลบข้อมูลจากตาราง `organization`
+    const deleteOrganization = `
+      DELETE FROM organization WHERE organization_id = ?
+    `;
+    const [organizationResult] = await connection.query(deleteOrganization, [organization_id]);
+
+    // ตรวจสอบว่าข้อมูลถูกลบจริงหรือไม่
+    if (organizationResult.affectedRows === 0) {
+      await connection.rollback();
+      return NextResponse.json(
+        { message: "Failed to delete organization." },
+        { status: 400 }
+      );
+    }
+
+    // Commit transaction ถ้าขั้นตอนทั้งหมดสำเร็จ
+    await connection.commit();
 
     return NextResponse.json(
-      { message: "Organization deleted successfully." },
+      { message: "Organization and related data deleted successfully." },
       { status: 200 }
     );
   } catch (error) {
+    // Rollback transaction ถ้ามีข้อผิดพลาด
+    await connection.rollback();
     console.error("Error deleting organization:", error);
     return NextResponse.json(
-      { message: "An error occurred during organization deletion." },
+      { message: "An error occurred during organization deletion.", error: error.message },
       { status: 500 }
     );
+  } finally {
+    connection.release(); // ปล่อย connection เมื่อเสร็จสิ้น
   }
 }
+
 
 // GET: Fetch all organization
 export async function GET(req) {

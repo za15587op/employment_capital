@@ -10,7 +10,6 @@ function ShowScholarships() {
   const [error, setError] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
-
   const formatDateToYYYYMMDD = (dateString) => {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0]; // "yyyy-MM-dd"
@@ -23,7 +22,7 @@ function ShowScholarships() {
     } else {
       const fetchScholarships = async () => {
         try {
-          const res = await fetch('http://localhost:3000/api/scholarships');
+          const res = await fetch('/api/scholarships');
           if (res.ok) {
             const data = await res.json();
             console.log("Fetched data:", data);
@@ -37,6 +36,7 @@ function ShowScholarships() {
             setScholarships(formattedData);
           } else {
             setError('Failed to fetch scholarships data');
+            
           }
         } catch (error) {
           setError('An error occurred while fetching scholarships data');
@@ -51,10 +51,20 @@ function ShowScholarships() {
     router.push(`/scholarships/edit/${scholarship_id}`);
   };
 
+  const handleAddData = (organization_id) => {
+    router.push(`/organization/create/${organization_id}`);
+      };
+  const handleorganization = (organization_id) => {
+      router.push(`/organization/show/${organization_id}`);
+      };
+      
+
+
+
   const handleDelete = async (scholarship_id) => {
     const confirmed = confirm("ต้องการลบทุนนี้ใช่หรือไม่?");
     if (confirmed) {
-      const res = await fetch(`http://localhost:3000/api/scholarships/?scholarship_id=${scholarship_id}`, {
+    const res = await fetch(`/api/scholarships/?scholarship_id=${scholarship_id}`, {
         method: "DELETE"
       });
 
@@ -80,9 +90,9 @@ function ShowScholarships() {
           </a>
         </div>
         <br />
-        <div class="flex flex-col md:flex-row bg-blue-600 p-2 rounded">
-                <div class="w-full md:w-1/4 bg-blue-400 p-2 rounded">
-                <ul class=" space-y-2">
+        <div className="flex flex-col md:flex-row bg-blue-600 p-2 rounded">
+                <div className="w-full md:w-1/4 bg-blue-400 p-2 rounded">
+                <ul className=" space-y-2">
                 <li>สิทธิ์ของ Admin</li>
                 <li>1. เปิดรับสมัครทุน</li>
                 <li>2. แก้ไข/ลบ/ทำสำเนาทุน</li>
@@ -91,7 +101,7 @@ function ShowScholarships() {
                 <li>5. ออกรายงาน</li>
             </ul>
             </div>
-            <div class="w-full  bg-blue-800 p-2 rounded">
+            <div className="w-full  bg-blue-800 p-2 rounded">
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-400 rounded-lg">
@@ -112,6 +122,14 @@ function ShowScholarships() {
                   <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_start_date}</td>
                   <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_end_date}</td>
                   <td className="py-2 px-4 text-right">
+                  <button
+                     onClick={() => handleAddData(scholarship.scholarship_id)}
+                      className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 mr-2" >
+                      เพิ่มหน่วยงาน
+                      </button>
+                      <button onClick={() => handleorganization(scholarship.scholarship_id)} className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 mr-2">
+                      ดูหน่วยงาน
+                    </button>
                     <button onClick={() => handleUpdate(scholarship.scholarship_id)} className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 mr-2">
                       Edit
                     </button>

@@ -5,7 +5,6 @@ import Foter from '@/app/components/Foter';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 function ScholarshipsForm() {
-  // const [scholarship_id, setscholarshipID] = useState("");
   const [application_start_date, setApplicationStartDate] = useState("");
   const [application_end_date, setApplicationEndDate] = useState("");
   const [academic_year, setAcademicYear] = useState("");
@@ -51,7 +50,8 @@ function ScholarshipsForm() {
           router.refresh();
           router.push("/scholarships");
         } else {
-          console.log("เพิ่มทุนไม่สำเร็จ");
+          setError("เพิ่มทุนไม่สำเร็จ เนื่องจากปีการศึกษาทุนซ้ำกัน");
+          console.log("เพิ่มทุนไม่สำเร็จ เนื่องจากปีการศึกษาทุนซ้ำกัน");
         }
       } catch (error) {
         setError("An error occurred during submission.");

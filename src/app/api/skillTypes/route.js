@@ -1,23 +1,53 @@
 import { NextResponse } from "next/server";
+import promisePool from "../../../../lib/db"; // ปรับตามเส้นทางของฐานข้อมูลของคุณ
 import SkillTypes from "../../../../models/skilltypes";
 
-// POST: Create a new student
 export async function POST(req) {
-  try {
-    const skillTypesData = await req.json(); // Get the student data from the request
+  const connection = await promisePool.getConnection(); 
 
-    await SkillTypes.create(skillTypesData); // Use the create method from the Student model
+  try {
+    // รับข้อมูลจาก request
+    const skilltypesData  = await req.json(); 
+    const { skill_type_name,scholarship_organ_id } = skilltypesData;
+
+    console.log("Received skilltypesData:", skilltypesData);
+    
+    // เริ่มต้น Transaction
+    await connection.beginTransaction();
+
+    // เพิ่มข้อมูลใหม่ลงในตาราง `skilltypes`
+    const [resultSkillType] = await connection.query(
+      'INSERT INTO skilltypes (skill_type_name) VALUES (?)',
+      [skill_type_name]
+    );
+
+    const skill_type_id = resultSkillType.insertId; // รับ `skill_type_id` ที่เพิ่งสร้างใหม่
+    console.log(`New skill created with skill_type_id: ${skill_type_id}`);
+    
+     connection.query(
+      `UPDATE scholarshiprequirement 
+       SET skill_type_id = ? 
+       WHERE scholarship_organ_id = ?`,
+      [skill_type_id,scholarship_organ_id]
+    );
+
+    // Commit transaction ถ้าขั้นตอนทั้งหมดสำเร็จ
+    await connection.commit();
 
     return NextResponse.json(
-      { message: "User registered successfully." },
+      { message: "สร้างทักษะและบันทึกข้อมูลสำเร็จ", skill_type_id },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error during registration:", error);
+    // Rollback transaction ถ้ามีข้อผิดพลาด
+    if (connection) await connection.rollback();
+    console.error("Error creating skill and scholarship requirement:", error);
     return NextResponse.json(
-      { message: "An error occurred during registration." },
+      { message: "เกิดข้อผิดพลาดระหว่างการสร้างทักษะและบันทึกข้อมูล", error: error.message },
       { status: 500 }
     );
+  } finally {
+    if (connection) connection.release(); // ปล่อย connection เมื่อเสร็จสิ้น
   }
 }
 

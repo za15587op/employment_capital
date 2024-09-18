@@ -1,11 +1,10 @@
 import promisePool from '../lib/db';
 
 class Organization {
-  constructor(organization_id, organization_name, contactPhone, contactEmail) {
+  constructor(organization_id, organization_name, contactPhone) {
     this.organization_id = organization_id;
     this.organization_name = organization_name;
     this.contactPhone = contactPhone;
-    this.contactEmail = contactEmail;
   }
 
   // Method to get all organizations
@@ -21,11 +20,11 @@ class Organization {
 
   // Method to create a new organization entry
   static async create(organizationData) {
-    const { organization_id, organization_name, contactPhone, contactEmail } = organizationData;
+    const { organization_id, organization_name, contactPhone } = organizationData;
     try {
       const [result] = await promisePool.query(
-        'INSERT INTO organization (organization_id, organization_name, contactPhone, contactEmail) VALUES (?, ?, ?, ?)',
-        [organization_id, organization_name, contactPhone, contactEmail]
+        'INSERT INTO organization (organization_id, organization_name, contactPhone) VALUES (?, ?, ?)',
+        [organization_id, organization_name, contactPhone]
       );
       return result;
     } catch (error) {
@@ -50,11 +49,11 @@ class Organization {
 
   // Method to update an organization by its ID
   static async update(organization_id, updatedData) {
-    const { organization_name, contactPhone, contactEmail } = updatedData;
+    const { organization_name, contactPhone} = updatedData;
     try {
       const [result] = await promisePool.query(
-        'UPDATE organization SET organization_name = ?, contactPhone = ?, contactEmail = ? WHERE organization_id = ?',
-        [organization_name, contactPhone, contactEmail, organization_id]
+        'UPDATE organization SET organization_name = ?, contactPhone = ? WHERE organization_id = ?',
+        [organization_name, contactPhone, organization_id]
       );
       if (result.affectedRows === 0) {
         throw new Error(`No organization found with ID ${organization_id} to update.`);

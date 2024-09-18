@@ -1,34 +1,36 @@
 import { NextResponse } from "next/server";
 import promisePool from "../../../../../lib/db";
 
-// GET request to fetch organization details
 export async function GET(req, { params }) {
   try {
-    const organization_id = params.id; // Ensure this matches the URL parameter
+    const scholarship_id = params.id;
 
-    if (!organization_id) {
+    if (!scholarship_id) {
       return NextResponse.json(
-        { message: "Organization ID is required" },
+        { message: "Scholarship ID is required" },
         { status: 400 }
       );
     }
 
-    // Query to fetch the specified columns only
+    // Query เพื่อดึงข้อมูลหน่วยงานที่เกี่ยวข้องกับ scholarship_id
     const [rows] = await promisePool.query(
-      "SELECT organization_id, organization_name, contactPhone, contactEmail FROM organization WHERE organization_id = ?",
-      [organization_id]
+      `SELECT o.organization_id, o.organization_name, o.contactPhone
+       FROM organization o
+       JOIN scholarshiporganization so ON o.organization_id = so.organization_id
+       WHERE so.scholarship_id = ?`,
+      [scholarship_id]
     );
 
     if (rows.length === 0) {
       return NextResponse.json(
-        { message: "Organization not found" },
+        { message: "No organizations found for this scholarship" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(rows[0], { status: 200 });
+    return NextResponse.json(rows, { status: 200 });
   } catch (error) {
-    console.error("Error fetching organization data:", error);
+    console.error("Error fetching organizations:", error);
     return NextResponse.json(
       { message: "Internal Server Error", error: error.message },
       { status: 500 }
@@ -36,26 +38,55 @@ export async function GET(req, { params }) {
   }
 }
 
-// PUT request to update organization details
 export async function PUT(req, { params }) {
   const organization_id = params.id;
 
   try {
-    const { organization_name, contactPhone, contactEmail } = await req.json();
-
-    const [result] = await promisePool.query(
-      "UPDATE organization SET organization_name = ?, contactPhone = ?, contactEmail = ? WHERE organization_id = ?",
-      [organization_name, contactPhone, contactEmail, organization_id]
-    );
-
-    if (result.affectedRows === 0) {
-      return NextResponse.json({ message: "Organization not found" }, { status: 404 });
+    // ตรวจสอบว่า organization_id ถูกส่งมาหรือไม่
+    if (!organization_id) {
+      return NextResponse.json(
+        { message: "Organization ID is required." },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ message: "Organization updated successfully" }, { status: 200 });
+    // รับข้อมูลจาก body ของ request
+    const { organization_name, contactPhone } = await req.json();
+
+    // ตรวจสอบว่า organization_name และ contactPhone ถูกส่งมาหรือไม่
+    if (!organization_name || !contactPhone) {
+      return NextResponse.json(
+        { message: "organization_name and contactPhone are required." },
+        { status: 400 }
+      );
+    }
+
+    // อัปเดตข้อมูลในฐานข้อมูล
+    const [result] = await promisePool.query(
+      "UPDATE organization SET organization_name = ?, contactPhone = ? WHERE organization_id = ?",
+      [organization_name, contactPhone, organization_id]
+    );
+
+    // ตรวจสอบว่าอัปเดตสำเร็จหรือไม่
+    if (result.affectedRows === 0) {
+      return NextResponse.json(
+        { message: "Organization not found" },
+        { status: 404 }
+      );
+    }
+
+    // ส่งข้อความตอบกลับเมื่ออัปเดตสำเร็จ
+    return NextResponse.json(
+      { message: "Organization updated successfully" },
+      { status: 200 }
+    );
   } catch (error) {
+    // จัดการข้อผิดพลาดในกรณีที่เกิดข้อผิดพลาดในการทำงาน
     console.error("Error updating organization data:", error);
-    return NextResponse.json({ message: "Internal Server Error", error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "Internal Server Error", error: error.message },
+      { status: 500 }
+    );
   }
 }
 

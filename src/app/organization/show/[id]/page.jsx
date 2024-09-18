@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from 'next/link';
 
-function ShowogzPage({ params }) {
+function ShowPage({ params }) {
     const [organization, setOrganization] = useState([]);
-    const { id:scholarship_id, id:scholarship_organ_id } = params || {}; 
+    const { id:scholarship_id } = params || {}; 
     const [newacademic_year, setNewAcademicYear] = useState("");
     const [newacademic_term, setNewAcademicTerm] = useState("");
     const [error, setError] = useState("");
@@ -23,19 +23,19 @@ function ShowogzPage({ params }) {
           return;
         }
       
-        fetchOrganization(); // เรียกใช้ฟังก์ชันที่แยกออกมา
+        fetchOrganization(); 
       }, [status, session, router]);
-      
+
       const fetchOrganization = async () => {
         try {
-          const resOrganization = await fetch("/api/organization", {
+          const resOrganization = await fetch(`/api/organization/${scholarship_id}`, {
             method: "GET",
           });
-    
+      
           if (!resOrganization.ok) {
             throw new Error("Failed to fetch organization data");
           }
-    
+      
           const orgData = await resOrganization.json();
           setOrganization(orgData);
           setLoading(false); // ตั้งค่าสถานะว่าโหลดเสร็จแล้ว
@@ -45,6 +45,8 @@ function ShowogzPage({ params }) {
           setLoading(false); // ตั้งค่าสถานะว่าโหลดเสร็จแล้ว แม้ว่าจะมี error
         }
       };
+      
+    
       const getDataById = async (scholarship_id) => {
         try {
           const res = await fetch(`http://localhost:3000/api/scholarships/${scholarship_id}`, {
@@ -118,9 +120,12 @@ function ShowogzPage({ params }) {
         router.push(`/organization/editt/${scholarship_id}/${organization_id}`);
     };
 
+    const handleAddData = (organization_id) => {
+        router.push(`/organization/createogz/${scholarship_id}/${organization_id}`);
+    };
 
     const handleedit_add = (organization_id) => {
-        router.push(`/organization/showogz/${scholarship_id}/${organization_id}/${scholarship_organ_id}`);
+        router.push(`/organization/showogz/${scholarship_id}/${organization_id}`);
         
     };
     
@@ -138,6 +143,12 @@ function ShowogzPage({ params }) {
                 </div>
                     <div className="flex justify-between items-center p-4">
                         <div className="flex-grow"></div>
+                        <Link
+                                href={`/organization/create/${scholarship_id}`} // ใช้ org.organization_id เพื่อสร้าง dynamic URL
+                                className="inline-block bg-blue-500 text-white px-8 py-4 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 "
+                                >
+                                เพิ่มหน่วยงาน
+                                </Link>
                         
                         <Link
                             href="/scholarshiporganization"
@@ -169,6 +180,12 @@ function ShowogzPage({ params }) {
                                                 <td className="py-2 px-4 whitespace-nowrap">{org.contactPhone}</td>
                                                 <td className="py-2 px-4 text-right">
                                                 
+                                                <button
+                                                        onClick={() => handleAddData(org.organization_id)}
+                                                        className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 ml-2"
+                                                    >
+                                                        เพิ่มข้อมูลหน่วยงาน
+                                                    </button>
                                                     <button
                                                         onClick={() => handleedit_add(org.organization_id)}
                                                         className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 ml-2 "
@@ -209,4 +226,4 @@ function ShowogzPage({ params }) {
     );
 }
 
-export default ShowogzPage;
+export default ShowPage;

@@ -25,31 +25,53 @@ export async function GET(req, { params }) {
   }
 }
 
-export async function PUT(req, { params }) {
-  const scholarship_id = params.id;
-
-  const {
-    application_start_date,
-    application_end_date,
-    academic_year,
-    academic_term,
-  } = await req.json();
-
-  // Connect to MySQL
-  const connection = await promisePool;
+export async function PUT(req) {
+  const connection = await promisePool.getConnection(); // เริ่มการเชื่อมต่อกับฐานข้อมูล
 
   try {
-    const [result] = await connection.query(
+    const scholarshipData = await req.json(); // รับข้อมูลทุนการศึกษาจาก request
+    const { scholarship_id, application_start_date, application_end_date, academic_year, academic_term } = scholarshipData;
+
+    // ตรวจสอบว่ามีทุนการศึกษาที่ใช้ academic_year และ academic_term ซ้ำกันหรือไม่
+    const [existingScholarships] = await connection.query(
+      'SELECT * FROM scholarships WHERE academic_year = ? AND academic_term = ? AND scholarship_id != ?',
+      [academic_year, academic_term, scholarship_id]
+    );
+
+    // ถ้ามีทุนการศึกษาซ้ำกัน ให้ส่งสถานะ 400 กลับมา
+    if (existingScholarships.length > 0) {
+      return NextResponse.json(
+        { message: "ไม่สามารถแก้ไขทุนการศึกษาได้ เนื่องจากปีการศึกษาและภาคการศึกษาไม่สามารถซ้ำกันได้" },
+        { status: 400 }
+      );
+    }
+
+    // เริ่มต้น Transaction
+    await connection.beginTransaction();
+
+    // อัปเดตข้อมูลในตาราง `scholarships`
+    await connection.query(
       'UPDATE scholarships SET application_start_date = ?, application_end_date = ?, academic_year = ?, academic_term = ? WHERE scholarship_id = ?',
       [application_start_date, application_end_date, academic_year, academic_term, scholarship_id]
     );
 
-    if (result.affectedRows === 0) {
-      return NextResponse.json({ message: "scholarships not found" }, { status: 404 });
-    }
+    // Commit transaction ถ้าขั้นตอนทั้งหมดสำเร็จ
+    await connection.commit();
 
-    return NextResponse.json({ message: "scholarships updated" }, { status: 200 });
+    return NextResponse.json(
+      { message: "แก้ไขข้อมูลทุนการศึกษาและข้อมูลที่เกี่ยวข้องเรียบร้อยแล้ว" },
+      { status: 200 }
+    );
   } catch (error) {
-    return NextResponse.json({ message: "Internal Server Error", error: error.message }, { status: 500 });
+    // Rollback transaction ถ้ามีข้อผิดพลาด
+    await connection.rollback();
+    console.error("Error updating scholarship:", error);
+    return NextResponse.json(
+      { message: "เกิดข้อผิดพลาดระหว่างการแก้ไขทุนการศึกษา" },
+      { status: 500 }
+    );
+  } finally {
+    connection.release(); // ปล่อย connection เมื่อเสร็จสิ้น
   }
 }
+
