@@ -1,29 +1,22 @@
 "use client";
-<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import Navber from '@/app/components/Navber';
 import Foter from '../components/Foter';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-=======
-import React, { useEffect, useState } from "react";
-import Navber from "@/app/components/Navber";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
->>>>>>> origin/New_P
 
 function ShowScholarships() {
   const [scholarships, setScholarships] = useState([]);
   const [error, setError] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
+
   const formatDateToYYYYMMDD = (dateString) => {
     const date = new Date(dateString);
-    return date.toISOString().split("T")[0]; // "yyyy-MM-dd"
+    return date.toISOString().split('T')[0]; // "yyyy-MM-dd"
   };
 
   useEffect(() => {
-<<<<<<< HEAD
     if (status === "loading") return;
     if (!session) {
       router.push("/login");
@@ -33,8 +26,8 @@ function ShowScholarships() {
           const res = await fetch('/api/scholarships');
           if (res.ok) {
             const data = await res.json();
-            console.log("Fetched data:", data);
-
+            console.log("Fetched data:", data); // ตรวจสอบข้อมูลที่ดึงมา
+  
             const formattedData = data.map(scholarship => ({
               ...scholarship,
               application_start_date: formatDateToYYYYMMDD(scholarship.application_start_date),
@@ -44,44 +37,16 @@ function ShowScholarships() {
             setScholarships(formattedData);
           } else {
             setError('Failed to fetch scholarships data');
-            
           }
         } catch (error) {
           setError('An error occurred while fetching scholarships data');
         }
       };
-=======
-    const fetchScholarships = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/scholarships");
-        if (res.ok) {
-          const data = await res.json();
-          const formattedData = data.map((scholarship) => ({
-            ...scholarship,
-            application_start_date: formatDateToYYYYMMDD(
-              scholarship.application_start_date
-            ),
-            application_end_date: formatDateToYYYYMMDD(
-              scholarship.application_end_date
-            ),
-          }));
-          setScholarships(formattedData);
-        } else {
-          setError("Failed to fetch scholarships data");
-        }
-      } catch (error) {
-        setError("An error occurred while fetching scholarships data");
-      }
-    };
->>>>>>> origin/New_P
-
+  
       fetchScholarships();
     }
   }, [session, status, router]);
-
-  const handleCreate = () => {
-    router.push(`/scholarships/create`);
-  };
+  
 
   const handleUpdate = (scholarship_id) => {
     router.push(`/scholarships/edit/${scholarship_id}`);
@@ -93,25 +58,24 @@ function ShowScholarships() {
   const handleorganization = (organization_id) => {
       router.push(`/organization/show/${organization_id}`);
       };
-      
+
+  // useEffect(() => {
+  //   if (scholarship_id) {
+  //     getDataById(scholarship_id);
+  //   }
+  // }, [scholarship_id]);
+  // const handleCreate = () => {
+  //   router.push(`/scholarships/create`);
+  // };
 
 
 
   const handleDelete = async (scholarship_id) => {
     const confirmed = confirm("ต้องการลบทุนนี้ใช่หรือไม่?");
     if (confirmed) {
-<<<<<<< HEAD
     const res = await fetch(`/api/scholarships/?scholarship_id=${scholarship_id}`, {
         method: "DELETE"
       });
-=======
-      const res = await fetch(
-        `http://localhost:3000/api/scholarships/?scholarship_id=${scholarship_id}`,
-        {
-          method: "DELETE",
-        }
-      );
->>>>>>> origin/New_P
 
       if (res.ok) {
         window.location.reload();
@@ -148,7 +112,6 @@ function ShowScholarships() {
   };  
 
   return (
-<<<<<<< HEAD
     <>
       <Navber session={session} />
       <div className="แถบสี"></div> 
@@ -194,7 +157,21 @@ function ShowScholarships() {
                   <td className="py-2 px-4 whitespace-nowrap">{scholarship.academic_year}</td>
                   <td className="py-2 px-4 whitespace-nowrap">{scholarship.academic_term}</td>
                   <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_start_date}</td>
-                  <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_end_date}</td>
+                  <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_end_date}</td> 
+                  <td className="py-2 px-4">
+                      <button
+                        onClick={() =>
+                          toggleStatus(scholarship.scholarship_id, scholarship.scholarship_status)
+                        }
+                        className={`${
+                          scholarship.scholarship_status === 1
+                            ? "bg-green-500"
+                            : "bg-red-500"
+                        } text-white px-3 py-1 rounded-lg`}
+                      >
+                        {scholarship.scholarship_status === 1 ? "เปิด" : "ปิด"}
+                      </button>
+                    </td>
                   <td className="py-2 px-4 text-right">
                   <button
                      onClick={() => handleAddData(scholarship.scholarship_id)}
@@ -215,78 +192,6 @@ function ShowScholarships() {
               ))}
             </tbody>
           </table>
-=======
-    <div className="bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-      <Navber session={session} />
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-          <h3 className="text-2xl font-bold mb-6 text-center">Scholarships List</h3>
-          <button
-            onClick={handleCreate}
-            className="bg-blue-500 text-white px-3 py-1 rounded-lg mr-2 hover:bg-blue-600 text-center"
-          >
-            เพิ่มทุน
-          </button>
-          {error && <div className="text-red-500 text-center mb-4">{error}</div>}
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-              <thead>
-                <tr className="bg-gray-100 border-b border-gray-300">
-                  <th className="text-left py-2 px-4">ปีการศึกษา</th>
-                  <th className="text-left py-2 px-4">เทอมการศึกษา</th>
-                  <th className="text-left py-2 px-4">วันที่เริ่มต้น</th>
-                  <th className="text-left py-2 px-4">วันที่สิ้นสุด</th>
-                  <th className="text-left py-2 px-4">สถานะ</th>
-                  <th className="text-left py-2 px-4">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {scholarships.map((scholarship) => (
-                  <tr
-                    key={scholarship.scholarship_id}
-                    className="border-b border-gray-200 hover:bg-gray-50"
-                  >
-                    <td className="py-2 px-4">{scholarship.academic_year}</td>
-                    <td className="py-2 px-4">{scholarship.academic_term}</td>
-                    <td className="py-2 px-4">
-                      {scholarship.application_start_date}
-                    </td>
-                    <td className="py-2 px-4">{scholarship.application_end_date}</td>
-                    <td className="py-2 px-4">
-                      <button
-                        onClick={() =>
-                          toggleStatus(scholarship.scholarship_id, scholarship.scholarship_status)
-                        }
-                        className={`${
-                          scholarship.scholarship_status === 1
-                            ? "bg-green-500"
-                            : "bg-red-500"
-                        } text-white px-3 py-1 rounded-lg`}
-                      >
-                        {scholarship.scholarship_status === 1 ? "เปิด" : "ปิด"}
-                      </button>
-                    </td>
-                    <td className="py-2 px-4">
-                      <button
-                        onClick={() => handleUpdate(scholarship.scholarship_id)}
-                        className="bg-blue-500 text-white px-3 py-1 rounded-lg mr-2 hover:bg-blue-600"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(scholarship.scholarship_id)}
-                        className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
->>>>>>> origin/New_P
         </div>
       </div>
       </div>   
@@ -296,5 +201,6 @@ function ShowScholarships() {
     </>
   );
 }
+
 
 export default ShowScholarships;

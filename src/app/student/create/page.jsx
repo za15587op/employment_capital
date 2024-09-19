@@ -115,18 +115,11 @@ function StudentForm({ params }) {
   };
 
   return (
-<<<<<<< HEAD
-    <div>
-      <Navber />
-      <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-md mt-10">
-        <h3 className="text-2xl font-bold mb-6 text-center">Profile Page</h3>
-=======
     <>
       <Navber session = {session}/>
     <div className="min-h-screen bg-gradient-to-r from-blue-500 to-teal-400 p-6 flex flex-col items-center justify-center">
       <div className="max-w-lg w-full bg-white shadow-lg rounded-lg p-8">
         <h3 className="text-3xl font-bold mb-6 text-center text-gray-700">โปรไฟล์นักศึกษา</h3>
->>>>>>> origin/New_P
 
         {error && <div className="bg-red-100 text-red-600 p-2 rounded mb-4">{error}</div>}
         {success && <div className="bg-green-100 text-green-600 p-2 rounded mb-4">{success}</div>}

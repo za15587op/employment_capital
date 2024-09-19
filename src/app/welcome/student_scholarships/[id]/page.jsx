@@ -2,19 +2,6 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-<<<<<<< HEAD
-import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
-
-export default function ScholarshipRegistration({ params }) {
-  const { data: session, status } = useSession();
-  const { id: scholarship_id } = params || {};
-  // const searchParams = usePathname();
-  
-
-  console.log(session, "session");
-  // console.log(scholarship_id, "scholarship_id");
-=======
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
@@ -24,6 +11,7 @@ export default function ScholarshipRegistration({ params }) {
   const router = useRouter();
   const student_id = session.user.student_id;
 
+  console.log(student_id, "student_id");
   let scholarship_id = params?.id;
   if (!scholarship_id) {
     const parts = pathname.split("/");
@@ -31,33 +19,12 @@ export default function ScholarshipRegistration({ params }) {
   }
 
   console.log(scholarship_id, "scholarship_id");
->>>>>>> origin/New_P
 
   // สถานะที่ต้องใช้ในฟอร์ม
   const [related_works, setRelatedWorks] = useState("");
   const [isPartTime, setIsPartTime] = useState(""); // เก็บค่า fulltime หรือ parttime หรือ both
   const [dateAvailable, setDateAvailable] = useState([]); // เก็บวันที่สามารถทำงานได้
 
-<<<<<<< HEAD
-  if(!scholarship_id){
-    const parts = pathname.split('/');
-    const scholarship_id = parts[parts.length - 1];
-    
-  }
-
-
-  useEffect(() => {
-    const fetchSkillTypes = async () => {
-      try {
-        const response = await fetch("/api/skillTypes");
-        if (!response.ok) {
-          throw new Error("ไม่สามารถดึงข้อมูลประเภททักษะได้");
-        }
-        const data = await response.json();
-        setSkillTypes(data);
-      } catch (error) {
-        console.error("เกิดข้อผิดพลาดในการดึงข้อมูลประเภททักษะ:", error);
-=======
   const [scholarships, setScholarships] = useState({});
   const [academic_year, setAcademicYear] = useState("");
   const [academic_term, setAcademicTerm] = useState("");
@@ -83,7 +50,6 @@ export default function ScholarshipRegistration({ params }) {
         setIsPartTime("both");
       } else {
         setIsPartTime(value === "in_time" ? "fulltime" : "parttime");
->>>>>>> origin/New_P
       }
     } else {
       setIsPartTime("");

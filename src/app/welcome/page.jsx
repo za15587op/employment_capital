@@ -20,7 +20,7 @@ function HomeStudentPage() {
   useEffect(() => {
     const fetchScholarships = async () => {
       try {
-        const res = await fetch('http://localhost:3000/api/scholarships');
+        const res = await fetch('http://localhost:3000/api/showScholarshipsStd');
         if (res.ok) {
           const data = await res.json();
           console.log("Fetched data:", data);

@@ -2,12 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navber from '@/app/components/Navber';
-<<<<<<< HEAD
 import Foter from "@/app/components/Foter";
 import { useSession } from 'next-auth/react';
-=======
-import { useSession } from "next-auth/react";
->>>>>>> origin/New_P
 
 function EditScholarshipsPage({ params }) {
   const { id: scholarship_id } = params;
@@ -18,21 +14,12 @@ function EditScholarshipsPage({ params }) {
   const [academic_term, setAcademicTerm] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
-<<<<<<< HEAD
   const [error, setError] = useState(""); 
   const [success, setSuccess] = useState(""); 
   useEffect(() => {
     if (status === "loading") return; // Wait until session status is determined
     if (!session) router.push("/login"); // Redirect to login page if not authenticated
   }, [status, session, router]);
-=======
-  const { data: session, status } = useSession();
-  // Initialize state with empty strings
-  const [newapplication_start_date, setNewApplicationStartDate] = useState("");
-  const [newapplication_end_date, setNewApplicationEndDate] = useState("");
-  const [newacademic_year, setNewAcademicYear] = useState("");
-  const [newacademic_term, setNewAcademicTerm] = useState("");
->>>>>>> origin/New_P
 
   // Utility function to format the date to "yyyy-MM-dd"
   const formatDateToYYYYMMDD = (dateString) => {
@@ -113,31 +100,15 @@ function EditScholarshipsPage({ params }) {
         setError("An error occurred during submission.");
         console.log("error", error);
       }
-<<<<<<< HEAD
-=======
-  
-      console.log(res, 'res');
-  
-      router.refresh();
-      router.push("/scholarships");
-    } catch (error) {
-      console.log(error);
->>>>>>> origin/New_P
     }
   };
   
   
   return (
-<<<<<<< HEAD
     <>
        <Navber session={session} />
       <div className="แถบสี"></div> 
       <br /><br />
-=======
-    <div>
-      <Navber session={session}/>
-    <div className=" min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
->>>>>>> origin/New_P
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-blue-500 text-white px-3 py-1 rounded-lg mr-2 hover:bg-blue-600 transform scale-110"></div>
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">

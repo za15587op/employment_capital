@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroicons/react": "^2.1.5",
     "bcryptjs": "^2.4.3",
     "formidable": "^3.5.1",
     "jspdf": "^2.5.1",

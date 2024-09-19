@@ -8,10 +8,10 @@ export async function POST(req) {
   try {
     // รับข้อมูลจาก request
     const skilltypesData  = await req.json(); 
-    const { skill_type_name,scholarship_organ_id } = skilltypesData;
+    const { skill_type_name, scholarship_organ_id } = skilltypesData;
 
     console.log("Received skilltypesData:", skilltypesData);
-    
+
     // เริ่มต้น Transaction
     await connection.beginTransaction();
 
@@ -23,13 +23,25 @@ export async function POST(req) {
 
     const skill_type_id = resultSkillType.insertId; // รับ `skill_type_id` ที่เพิ่งสร้างใหม่
     console.log(`New skill created with skill_type_id: ${skill_type_id}`);
-    
-     connection.query(
-      `UPDATE scholarshiprequirement 
-       SET skill_type_id = ? 
-       WHERE scholarship_organ_id = ?`,
-      [skill_type_id,scholarship_organ_id]
+
+    // ตรวจสอบว่ามีข้อมูลใน scholarshiprequirement สำหรับ scholarship_organ_id นี้อยู่แล้วหรือไม่
+    const [existingEntry] = await connection.query(
+      `SELECT * FROM scholarshiprequirement WHERE scholarship_organ_id = ? LIMIT 1`,
+      [scholarship_organ_id]
     );
+
+    if (existingEntry.length > 0) {
+      // ถ้ามีข้อมูลอยู่แล้ว ให้ทำการอัปเดต skill_type_id ตัวแรกที่เจอ
+      await connection.query(
+        `UPDATE scholarshiprequirement 
+         SET skill_type_id = ? 
+         WHERE scholarship_organ_id = ? LIMIT 1`,
+        [skill_type_id, scholarship_organ_id]
+      );
+    } else {
+      // ถ้ามีแค่การตรวจสอบและไม่ต้องการสร้างใหม่
+      console.log("Entry not found, skipping insert.");
+    }
 
     // Commit transaction ถ้าขั้นตอนทั้งหมดสำเร็จ
     await connection.commit();

@@ -4,10 +4,6 @@ import Navber from '@/app/components/Navber';
 import Foter from '@/app/components/Foter';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/New_P
 function ScholarshipsForm() {
   const [application_start_date, setApplicationStartDate] = useState("");
   const [application_end_date, setApplicationEndDate] = useState("");
@@ -66,12 +62,8 @@ function ScholarshipsForm() {
 
   return (
     <div>
-<<<<<<< HEAD
       <Navber session={session} />
       <div className="แถบสี"></div>
-=======
-      <Navber session = {session}/>
->>>>>>> origin/New_P
       <div className="max-w-lg mx-auto p-6 mt-10 bg-white rounded-lg shadow-lg">
         <form onSubmit={handleSubmit} className="space-y-4">
           <h3 className="text-2xl font-semibold text-gray-800 mb-4">Register Scholarship</h3>

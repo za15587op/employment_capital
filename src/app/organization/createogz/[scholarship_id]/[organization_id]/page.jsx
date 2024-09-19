@@ -4,18 +4,22 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Navber from "@/app/components/Navber";
 import Foter from "@/app/components/Foter";
+import { PlusIcon, MinusIcon } from "@heroicons/react/24/solid"; // นำเข้าไอคอนลบ
 
 function CreateogzPage({ params }) {
   const router = useRouter();
   const { data: session, status } = useSession();
   const { scholarship_id, organization_id, skill_type_id, scholarship_organ_id } = params;
+
+  // State สำหรับฟอร์มหลัก
   const [amount, setAmount] = useState("");
   const [workType, setWorkType] = useState("");
   const [workTime, setWorkTime] = useState([]);
-  const [skill_type_name, setSkilltypeName] = useState(""); // สำหรับทักษะ
-  const [required_level, setRequiredLevel] = useState(""); // สำหรับระดับทักษะ
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  // State สำหรับจัดการทักษะและระดับทักษะ
+  const [skills, setSkills] = useState([{ skill_type_name: "", required_level: "" }]);
 
   // ตัวเลือกเวลาทำการ
   const workTimeOptionsInTime = ["วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์"];
@@ -30,17 +34,16 @@ function CreateogzPage({ params }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // ตรวจสอบว่าข้อมูลที่จำเป็นถูกกรอกครบถ้วนหรือไม่
-    if (!amount || !workType || workTime.length === 0 || !skill_type_name || !required_level) {
+
+    if (!amount || !workType || workTime.length === 0 || skills.some(skill => !skill.skill_type_name || !skill.required_level)) {
       setError("กรุณากรอกข้อมูลให้ครบถ้วน!");
       return;
     }
-  
+
     const workTimeArray = JSON.stringify(workTime);
-  
+
     try {
-      // ส่งคำขอ POST ไปที่ API สำหรับเพิ่มข้อมูลลงในตาราง scholarshiporganization
+      // ส่งคำขอ POST ไปที่ API สำหรับข้อมูลหลัก
       const responseOrg = await fetch("/api/scholarshiporganization", {
         method: "POST",
         headers: {
@@ -54,56 +57,52 @@ function CreateogzPage({ params }) {
           workTime: workTimeArray,
         }),
       });
-  
-      const dataOrg = await responseOrg.json();
 
-      console.log("Response from scholarshiporganization:", dataOrg); // ตรวจสอบว่ามี scholarship_organ_id หรือไม่
-  
+      const dataOrg = await responseOrg.json();
       if (!responseOrg.ok || !dataOrg.scholarship_organ_id) {
-        throw new Error("ไม่สามารถสร้างได้ ข้อมูลนี้มีอยู่แล้ว ");
+        throw new Error("ไม่สามารถสร้างได้ ข้อมูลนี้มีอยู่แล้ว");
       }
 
       const scholarship_organ_id = dataOrg.scholarship_organ_id;
-  
-      // ส่งคำขอ POST ไปที่ API สำหรับเพิ่มข้อมูลทักษะใหม่ในตาราง skilltypes
-      const responseSkill = await fetch("/api/skillTypes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ 
-          skill_type_name,
-        }),
-      });
-  
-      const dataSkill = await responseSkill.json();
-  
-      if (!responseSkill.ok || !dataSkill.skill_type_id) {
-        throw new Error(dataSkill.message || "Failed to save skill type");
-      }
-  
-      // อัปเดต skill_type_id หลังจากสร้างเสร็จ
-      const skill_type_id = dataSkill.skill_type_id;
 
-      // ส่งคำขอ POST ไปที่ API สำหรับเพิ่มข้อมูลลงในตาราง scholarshiprequirement
-      const responseReq = await fetch("/api/scholarshiprequirement", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          scholarship_organ_id, 
-          skill_type_id, // ตอนนี้ skill_type_id มีค่าแล้ว
-          required_level,  
-        }),
-      });
-  
-      const dataReq = await responseReq.json();
-  
-      if (!responseReq.ok) {
-        throw new Error(dataReq.message || "Failed to save scholarship requirement data");
+      // เพิ่มข้อมูลทักษะใหม่ทั้งหมด
+      for (const skill of skills) {
+        const responseSkill = await fetch("/api/skillTypes", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            skill_type_name: skill.skill_type_name,
+          }),
+        });
+
+        const dataSkill = await responseSkill.json();
+        if (!responseSkill.ok || !dataSkill.skill_type_id) {
+          throw new Error(dataSkill.message || "Failed to save skill type");
+        }
+
+        const skill_type_id = dataSkill.skill_type_id;
+
+        // เพิ่มข้อมูลลงในตาราง scholarshiprequirement
+        const responseReq = await fetch("/api/scholarshiprequirement", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            scholarship_organ_id,
+            skill_type_id,
+            required_level: skill.required_level,
+          }),
+        });
+
+        const dataReq = await responseReq.json();
+        if (!responseReq.ok) {
+          throw new Error(dataReq.message || "Failed to save scholarship requirement data");
+        }
       }
-  
+
       setError("");
       setSuccess("บันทึกข้อมูลสำเร็จ");
       setTimeout(() => {
@@ -113,8 +112,7 @@ function CreateogzPage({ params }) {
       console.error("Error:", error);
       setError(`${error.message}`);
     }
-};
-
+  };
 
   const handleWorkTypeChange = (e) => {
     setWorkType(e.target.value);
@@ -139,6 +137,21 @@ function CreateogzPage({ params }) {
 
   const handleDeselectAllWorkTimes = () => {
     setWorkTime([]);
+  };
+
+  // เพิ่มทักษะใหม่
+  const handleAddSkill = () => {
+    setSkills([...skills, { skill_type_name: "", required_level: "" }]);
+  };
+// ฟังก์ชันลบทักษะ
+const handleRemoveSkill = (indexToRemove) => {
+  setSkills((prevSkills) => prevSkills.filter((_, index) => index !== indexToRemove));
+};
+  // จัดการการเปลี่ยนค่าทักษะและระดับทักษะ
+  const handleSkillChange = (index, field, value) => {
+    const newSkills = [...skills];
+    newSkills[index][field] = value;
+    setSkills(newSkills);
   };
 
   return (
@@ -219,39 +232,63 @@ function CreateogzPage({ params }) {
                     onClick={handleDeselectAllWorkTimes}
                     className="py-2 px-4 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition duration-300"
                   >
-                    ยกเลิกเลือกทั้งหมด
+                    ยกเลิกทั้งหมด
                   </button>
                 </div>
               )}
             </div>
           </div>
 
+  
           <div>
-            <h3 className="text-gray-700">ชื่อทักษะ</h3>
-            <input
-              onChange={(e) => setSkilltypeName(e.target.value)}
-              type="text"
-              placeholder="ชื่อทักษะ"
-              value={skill_type_name}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-            />
-          </div>
+    <h3 className="text-gray-700">ประเภททักษะที่ต้องการ</h3>
+    {skills.map((skill, index) => (
+      <div key={index} className="flex space-x-4 mb-4 items-center">
+        <div className="w-1/2">
+          <input
+            onChange={(e) => handleSkillChange(index, "skill_type_name", e.target.value)}
+            type="text"
+            placeholder="ประเภททักษะ"
+            value={skill.skill_type_name}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          />
+        </div>
+        <div className="w-2/4 flex items-center space-x-2">
+          <select
+            onChange={(e) => handleSkillChange(index, "required_level", e.target.value)}
+            value={skill.required_level}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          >
+            <option value="">ระดับทักษะ</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
 
-          <div>
-            <h3 className="text-gray-700">ระดับทักษะที่ต้องการ (จากน้อยไปมาก)</h3>
-            <select
-              onChange={(e) => setRequiredLevel(e.target.value)}
-              value={required_level}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-            >
-              <option value="">เลือกระดับทักษะ</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </div>
+          {/* ไอคอนเพิ่มทักษะ */}
+          <button
+            type="button"
+            onClick={handleAddSkill}
+            className="flex items-center justify-center w-10 h-10 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 transition duration-300"
+          >
+            <PlusIcon className="w-6 h-6" /> 
+          </button>
+
+          {/* ไอคอนลบทักษะ */}
+          <button
+            type="button"
+            onClick={() => handleRemoveSkill(index)}
+            className="flex items-center justify-center w-10 h-10 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600 transition duration-300"
+          >
+            <MinusIcon className="w-6 h-6" /> 
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+
 
           <div>
             <button

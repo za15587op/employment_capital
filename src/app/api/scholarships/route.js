@@ -22,15 +22,16 @@ export async function POST(req) {
 
     // เริ่มต้น Transaction
     await connection.beginTransaction();
-
+    const scholarship_status = 1;
     // ถ้าไม่มีทุนการศึกษาซ้ำกัน ทำการสร้างทุนการศึกษาใหม่ในตาราง `scholarships`
     const [resultScholarship] = await connection.query(
-      'INSERT INTO scholarships (application_start_date, application_end_date, academic_year, academic_term) VALUES (?, ?, ?, ?)',
+      'INSERT INTO scholarships (application_start_date, application_end_date, academic_year, academic_term,scholarship_status) VALUES (?, ?, ?, ?,?)',
       [
         scholarshipData.application_start_date,
         scholarshipData.application_end_date,
         academic_year,
-        academic_term
+        academic_term,
+        scholarship_status
       ]
     );
 
@@ -61,7 +62,6 @@ export async function POST(req) {
   }
 }
 
-<<<<<<< HEAD
 
 
 // // PUT: Update a scholarship
@@ -81,39 +81,19 @@ export async function PUT(req) {
       academic_year,
       academic_term,
     });
-=======
-// // // PUT: Update a scholarship
-// export async function PUT(req) {
-//   try {
-//     const {
-//       application_start_date,
-//       application_end_date,
-//       academic_year,
-//       academic_term,
-//     } = await req.json(); // Get the scholarship data from the request
 
-//     // Use the update method from the Scholarship model
-//     await Scholarship.update(scholarship_id, {
-//       scholarship_name,
-//       application_start_date,
-//       application_end_date,
-//       academic_year,
-//       academic_term,
-//     });
->>>>>>> origin/New_P
-
-//     return NextResponse.json(
-//       { message: "Scholarship updated successfully." },
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error("Error updating scholarship:", error);
-//     return NextResponse.json(
-//       { message: "An error occurred during scholarship update." },
-//       { status: 500 }
-//     );
-//   }
-// }
+    return NextResponse.json(
+      { message: "Scholarship updated successfully." },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error updating scholarship:", error);
+    return NextResponse.json(
+      { message: "An error occurred during scholarship update." },
+      { status: 500 }
+    );
+  }
+}
 
 // DELETE: Delete a scholarship
 export async function DELETE(req) {
@@ -166,10 +146,10 @@ export async function DELETE(req) {
 }
 
 
-// GET: Fetch all scholarships
+// GET: Fetch all scholarshipsโชวแอดมิน
 export async function GET(req) {
   try {
-    const scholarships = await Scholarship.getAll(); // Use the getAll method from the Scholarship model
+    const scholarships = await Scholarship.getAllShowAd(); // Use the getAll method from the Scholarship model
 
     return NextResponse.json(scholarships, { status: 200 });
   } catch (error) {

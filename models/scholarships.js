@@ -9,6 +9,16 @@ class Scholarship {
     this.academic_term = academic_term;
     this.scholarship_status = scholarship_status;
   }
+  static async getAllShowAd() {
+    try {
+      const [rows] = await promisePool.query("SELECT * FROM scholarships ");
+      return rows;
+    } catch (error) {
+      console.error("Error fetching scholarships:", error);
+      throw new Error("Could not retrieve scholarships.");
+    }
+  }
+
 
   static async getAll() {
     try {
@@ -75,10 +85,6 @@ class Scholarship {
     return result.affectedRows > 0;
   }
 }
-<<<<<<< HEAD
   
 export default Scholarship;
 
-=======
-export default Scholarship;
->>>>>>> origin/New_P
