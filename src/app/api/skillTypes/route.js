@@ -6,9 +6,8 @@ export async function POST(req) {
   const connection = await promisePool.getConnection(); 
 
   try {
-    // รับข้อมูลจาก request
-    const skilltypesData  = await req.json(); 
-    const { skill_type_name, scholarship_organ_id } = skilltypesData;
+    const skilltypesData = await req.json();
+    const { skill_type_name, scholarship_organ_id, required_level } = skilltypesData;
 
     console.log("Received skilltypesData:", skilltypesData);
 
@@ -24,27 +23,24 @@ export async function POST(req) {
     const skill_type_id = resultSkillType.insertId; // รับ `skill_type_id` ที่เพิ่งสร้างใหม่
     console.log(`New skill created with skill_type_id: ${skill_type_id}`);
 
-    // ตรวจสอบว่ามีข้อมูลใน scholarshiprequirement สำหรับ scholarship_organ_id นี้อยู่แล้วหรือไม่
+    // ตรวจสอบว่ามีข้อมูลใน `scholarshiprequirement` สำหรับ `scholarship_organ_id` และ `skill_type_id` หรือไม่
     const [existingEntry] = await connection.query(
-      `SELECT * FROM scholarshiprequirement WHERE scholarship_organ_id = ? LIMIT 1`,
-      [scholarship_organ_id]
+      `SELECT * FROM scholarshiprequirement WHERE scholarship_organ_id = ? AND skill_type_id = ?`,
+      [scholarship_organ_id, skill_type_id]
     );
 
-    if (existingEntry.length > 0) {
-      // ถ้ามีข้อมูลอยู่แล้ว ให้ทำการอัปเดต skill_type_id ตัวแรกที่เจอ
+    if (existingEntry.length === 0) {
+      // ถ้าไม่มีข้อมูลอยู่ ให้ทำการเพิ่มใหม่
+      console.log("Inserting new row into scholarshiprequirement");
+
       await connection.query(
-        `UPDATE scholarshiprequirement 
-         SET skill_type_id = ? 
-         WHERE scholarship_organ_id = ? LIMIT 1`,
-        [skill_type_id, scholarship_organ_id]
+        `INSERT INTO scholarshiprequirement (scholarship_organ_id, skill_type_id, required_level)
+         VALUES (?, ?, ?)`,
+        [scholarship_organ_id, skill_type_id, required_level]
       );
-    } else {
-      // ถ้ามีแค่การตรวจสอบและไม่ต้องการสร้างใหม่
-      console.log("Entry not found, skipping insert.");
     }
 
-    // Commit transaction ถ้าขั้นตอนทั้งหมดสำเร็จ
-    await connection.commit();
+    await connection.commit(); // ทำการ commit transaction เมื่อทุกอย่างสำเร็จ
 
     return NextResponse.json(
       { message: "สร้างทักษะและบันทึกข้อมูลสำเร็จ", skill_type_id },
