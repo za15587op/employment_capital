@@ -81,8 +81,8 @@ class Student {
   }
 
 
-  // ใช้ดึงข้อมูลedit ตอน student 
-  static async findById(student_id) {
+   // ใช้ดึงข้อมูลedit ตอน student 
+   static async findById(student_id) {
     try {
       // Query เพื่อดึงข้อมูลนักศึกษา พร้อมกับทักษะและระดับทักษะ
       const [rows] = await promisePool.query(`
@@ -92,10 +92,10 @@ class Student {
           studentskills.skill_level, 
           skilltypes.skill_type_name 
         FROM student
-        inner JOIN studentskills ON student.student_id = studentskills.student_id
-        inner JOIN skills ON studentskills.skill_id = skills.skill_id
-        inner JOIN skills_skilltypes ON skills.skill_id = skills_skilltypes.skill_id
-        inner JOIN skilltypes ON skilltypes.skill_type_id = skills_skilltypes.skill_type_id
+        LEFT JOIN studentskills ON student.student_id = studentskills.student_id
+        LEFT JOIN skills ON studentskills.skill_id = skills.skill_id
+        LEFT JOIN skills_skilltypes ON skills.skill_id = skills_skilltypes.skill_id
+        LEFT JOIN skilltypes ON skilltypes.skill_type_id = skills_skilltypes.skill_type_id
         WHERE student.student_id = ?
       `, [student_id]);
 

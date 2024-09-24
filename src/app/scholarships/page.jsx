@@ -69,7 +69,7 @@ function ShowScholarships() {
     setSuccess("เพิ่มหน่วยงานสำเร็จ!");
   };
 
-      };
+  
   const handleorganization = (organization_id) => {
       router.push(`/organization/show/${organization_id}`);
       };
