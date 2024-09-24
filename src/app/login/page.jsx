@@ -12,6 +12,7 @@ function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false); // เพิ่มการจัดการสำหรับ success
   const router = useRouter();
   const {data : session } = useSession();
   console.log(session, "Session Data");
@@ -22,45 +23,36 @@ function LoginPage() {
       if (session.user.role === 'admin') {
         router.replace('/homeAdmin');
       } else if (session.user.role === 'student') {
-        // router.replace('/welcome');
         console.log(session, "student_id");
         
         if (!session.user.student_id) {
           router.replace("/student/create"); // Redirect to create page if no student_id
-      } else {
+        } else {
           router.replace(`/student/edit/${session.user.student_id}`); // Redirect to edit page if student_id exists
-      }
+        }
       }
     }
   }, [session, router]);
-
-
 
   const handlerSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await signIn("credentials",{
         username , password, redirect: false  
-      })
+      });
       console.log(res, "res");
       if(res.error){
-        setError("Invalid credentials");
+        setError("ข้อมูลประจำตัวไม่ถูกต้อง");
         return;
       }
-      // user_role == admin
-      // user_role == student
+
+      setSuccess(true); // ตั้งค่า success เป็น true เมื่อเข้าสู่ระบบสำเร็จ
+
       const userRole = res.user?.role;
       console.log(userRole);
-      // if (userRole === 'admin') {
-      //   router.replace("/profile");
-      // } else if (userRole === 'student') {
-      //   router.replace("/welcome");
-      // } else {
-      //   setError("Unknown role");
-      // }
+      
     } catch(error){
       console.log(error);
-      
     }
   }
   
@@ -110,9 +102,39 @@ function LoginPage() {
           </div>
         </form>
       </div>
+
+      {success && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-[#0fef76] to-[#09c9f6] border-2 border-[#0F1035] rounded-lg shadow-[0px_0px_20px_5px_rgba(15,239,118,0.5)] text-center transition-all duration-500 ease-out animate-pulse">
+          <div className="flex items-center justify-center space-x-4">
+            <div className="p-2 bg-green-100 rounded-full shadow-lg">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-10 h-10 text-green-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <div className="text-2xl font-bold text-white drop-shadow-lg">
+              เข้าสู่ระบบสำเร็จ!
+            </div>
+          </div>
+          <p className="mt-4 text-lg text-white opacity-90 drop-shadow-md">
+            คุณได้เข้าสู่ระบบเรียบร้อยแล้ว ระบบจะนำคุณไปยังหน้าอื่นในไม่ช้า...
+          </p>
+        </div>
+      )}
+
       <Foter />
     </div>
   );
 };
 
-export default LoginPage
+export default LoginPage;

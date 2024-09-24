@@ -15,7 +15,8 @@ function EditScholarshipsPage({ params }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [error, setError] = useState(""); 
-  const [success, setSuccess] = useState(""); 
+  const [success, setSuccess] = useState(false); // เปลี่ยน success เป็น Boolean
+
   useEffect(() => {
     if (status === "loading") return; // Wait until session status is determined
     if (!session) router.push("/login"); // Redirect to login page if not authenticated
@@ -83,18 +84,17 @@ function EditScholarshipsPage({ params }) {
           }),
         });
   
-        const data = await res.json(); // รับข้อมูลจากการตอบกลับของเซิร์ฟเวอร์
-  
         if (res.ok) {
           const form = e.target;
           setError("");
-          setSuccess("แก้ไขทุนสำเร็จ");
+          setSuccess(true); // ตั้งค่า success เป็น true เมื่อแก้ไขสำเร็จ
           form.reset();
-          router.refresh();
-          router.push("/scholarships");
+          setTimeout(() => {
+            router.push("/scholarships");
+          }, 2000); // Redirect after 2 seconds
         } else {
-          setError("เพิ่มทุนไม่สำเร็จ เนื่องจากปีการศึกษาทุนซ้ำกัน");
-          console.log("เพิ่มทุนไม่สำเร็จ เนื่องจากปีการศึกษาทุนซ้ำกัน");
+          setError("แก้ไขทุนไม่สำเร็จ เนื่องจากปีการศึกษาทุนซ้ำกัน");
+          console.log("แก้ไขทุนไม่สำเร็จ เนื่องจากปีการศึกษาทุนซ้ำกัน");
         }
       } catch (error) {
         setError("An error occurred during submission.");
@@ -102,11 +102,10 @@ function EditScholarshipsPage({ params }) {
       }
     }
   };
-  
-  
+
   return (
     <>
-       <Navber session={session} />
+      <Navber session={session} />
       <div className="แถบสี"></div> 
       <br /><br />
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
@@ -115,7 +114,6 @@ function EditScholarshipsPage({ params }) {
           <h3 className="text-2xl font-bold mb-4 text-center">Edit Scholarships Page</h3>
           {scholarship_id && <div className="text-center mb-4">Editing Scholarship ID: {scholarship_id}</div>}
           {error && <div className="text-red-500 text-sm">{error}</div>}
-          {success && <div className="text-green-500 text-sm">{success}</div>}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <h3 className="text-gray-700">ปีการศึกษา</h3>
@@ -168,6 +166,37 @@ function EditScholarshipsPage({ params }) {
           </form>
         </div>
       </div>
+
+      {/* การแจ้งเตือนเมื่อแก้ไขสำเร็จ */}
+      {success && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-[#0fef76] to-[#09c9f6] border-2 border-[#0F1035] rounded-lg shadow-[0px_0px_20px_5px_rgba(15,239,118,0.5)] text-center transition-all duration-500 ease-out animate-pulse">
+          <div className="flex items-center justify-center space-x-4">
+            <div className="p-2 bg-green-100 rounded-full shadow-lg">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-10 h-10 text-green-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <div className="text-2xl font-bold text-white drop-shadow-lg">
+              แก้ไขทุนการศึกษาสำเร็จ!
+            </div>
+          </div>
+          <p className="mt-4 text-lg text-white opacity-90 drop-shadow-md">
+            ทุนการศึกษาได้ถูกแก้ไขเรียบร้อยแล้ว ระบบจะนำคุณไปยังหน้าอื่นในไม่ช้า...
+          </p>
+        </div>
+      )}
+
       <br /><br /><Foter/>
     </>
   );

@@ -10,7 +10,7 @@ function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [success, setSuccess] = useState(false); // Track success as a boolean
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -44,9 +44,11 @@ function RegisterPage() {
 
         if (res.ok) {
           setError("");
-          router.push("/scholarships");
-          setSuccess("ลงทะเบียนผู้ใช้สำเร็จ!");
+          setSuccess(true); // Trigger success notification
           e.target.reset(); // รีเซ็ตฟอร์มหลังจากลงทะเบียนสำเร็จ
+          setTimeout(() => {
+            router.push("/scholarships");
+          }, 2000); // Redirect after 2 seconds
         } else {
           setError("การลงทะเบียนผู้ใช้ล้มเหลว");
         }
@@ -66,7 +68,6 @@ function RegisterPage() {
           className="bg-white p-10 rounded-3xl shadow-2xl transform transition-all duration-500 hover:scale-105 w-full max-w-md"
         >
           {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
-          {success && <div className="text-green-500 mb-4 text-center">{success}</div>}
           <h3 className="text-4xl font-extrabold mb-6 text-center text-gray-800">
             สมัครสมาชิก
           </h3>
@@ -102,9 +103,38 @@ function RegisterPage() {
           </button>
         </form>
       </div>
+                {success && (
+            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-[#0fef76] to-[#09c9f6] border-2 border-[#0F1035] rounded-lg shadow-[0px_0px_20px_5px_rgba(15,239,118,0.5)] text-center transition-all duration-500 ease-out animate-pulse">
+              <div className="flex items-center justify-center space-x-4">
+                <div className="p-2 bg-green-100 rounded-full shadow-lg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="w-10 h-10 text-green-600"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <div className="text-2xl font-bold text-white drop-shadow-lg">
+                  สมัครสมาชิกสำเร็จ!
+                </div>
+              </div>
+              <p className="mt-4 text-lg text-white opacity-90 drop-shadow-md">
+                คุณได้สมัครสมาชิกเรียบร้อยแล้ว ระบบจะนำคุณไปยังหน้าอื่นในไม่ช้า...
+              </p>
+            </div>
+          )}
+
       <Foter />
     </div>
   );
-};
+}
 
 export default RegisterPage;

@@ -85,7 +85,30 @@ function Navbar({ session }) {
             <>
               {sessionData.user.role === "student" && (
                 <>
-
+               <Link href="/welcome">
+                    <button
+                      className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                      style={{ fontSize: "20px" }}
+                    >
+                      หน้าแรก
+                    </button>
+                  </Link>
+                  <Link href="/procedureSt">
+                    <button
+                      className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                      style={{ fontSize: "20px" }}
+                    >
+                      ขั้นตอนการสมัครทุน
+                    </button>
+                  </Link>
+                <Link href="/welcome">
+                    <button
+                      className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                      style={{ fontSize: "20px" }}
+                    >
+                      สมัครทุน
+                    </button>
+                  </Link>
                   <Link href="/welcome/showStudentScholarships">
                     <button
                       className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
@@ -102,15 +125,6 @@ function Navbar({ session }) {
                   >
                     โปรไฟล์
                   </button>
-
-                  <Link href="/welcome">
-                    <button
-                      className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
-                      style={{ fontSize: "20px" }}
-                    >
-                      สมัครทุน
-                    </button>
-                  </Link>
                   <button
                         className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                         style={{ fontSize: "20px" }}
