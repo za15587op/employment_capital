@@ -1,20 +1,29 @@
 import { NextResponse } from 'next/server';
-// import promisePool from '../../../../lib/db'; // ตรวจสอบให้แน่ใจว่าเส้นทางนี้ถูกต้อง
+import promisePool from "../../../../../lib/db"; // Import connection to MySQL
 
 export async function GET(req, { params }) {
-  const { organization_id } = params;
+  // ดึง organization_id จาก params
+  const organization_id = params.id;
+
+  // ตรวจสอบว่า organization_id มีค่าหรือไม่
+  if (!organization_id) {
+    return NextResponse.json({ message: "ไม่มีค่า organization_id ที่ถูกต้อง" }, { status: 400 });
+  }
 
   try {
-    const query = `
-      SELECT so.*, o.organization_name, o.contactPhone, sr.required_level, st.skill_type_name
+    const [rows] = await promisePool.query(
+      `SELECT so.*, 
+      o.organization_name, 
+      o.contactPhone,
+      sr.required_level, 
+      st.skill_type_name
       FROM scholarshiporganization so
       INNER JOIN organization o ON so.organization_id = o.organization_id
       INNER JOIN scholarshiprequirement sr ON so.scholarship_organ_id = sr.scholarship_organ_id
       INNER JOIN skilltypes st ON sr.skill_type_id = st.skill_type_id
-      WHERE so.organization_id = ?
-    `;
-
-    const [rows] = await promisePool.query(query, [organization_id]);
+      WHERE so.organization_id = ?`,
+      [organization_id]
+      );
 
     if (rows.length === 0) {
       return NextResponse.json({ message: "ไม่พบข้อมูล" }, { status: 404 });

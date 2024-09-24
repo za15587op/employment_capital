@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navber from "@/app/components/Navber";
+import Foter from "@/app/components/Foter";
 import { useSession } from "next-auth/react";
 
 function EditStudentPage({ params }) {
@@ -10,7 +11,9 @@ function EditStudentPage({ params }) {
   const [postData, setPostData] = useState({});
   const router = useRouter();
 
-  // ข้อมูลนักศึกษา
+  const [success, setSuccess] = useState(false); // Success state for notification
+
+  // Student information
   const [studentID, setStudentID] = useState("");
   const [studentFirstName, setStudentFirstName] = useState("");
   const [studentLastName, setStudentLastName] = useState("");
@@ -21,13 +24,13 @@ function EditStudentPage({ params }) {
   const [studentGpa, setStudentGpa] = useState("");
   const [studentPhone, setStudentPhone] = useState("");
 
-  // ข้อมูลทักษะ
+  // Skills information
   const [skills, setSkills] = useState([{ skill_name: "" }]);
   const [studentSkills, setStudentSkills] = useState([{ skill_level: "" }]);
   const [skillTypes, setSkillTypes] = useState([]);
   const [selectedSkillTypes, setSelectedSkillTypes] = useState([{ skill_type_id: "", skill_type_name: "" }]);
 
-  // ดึงข้อมูลทักษะทั้งหมดจาก API
+  // Fetch skill types from API
   const fetchSkillTypes = async () => {
     try {
       const res = await fetch("/api/skillTypes");
@@ -58,7 +61,7 @@ function EditStudentPage({ params }) {
       const data = await res.json();
       setPostData(data);
 
-      // ตั้งค่า state ด้วยข้อมูลที่ดึงมา
+      // Set fetched data into state
       setStudentID(data.student_id || "");
       setStudentFirstName(data.student_firstname || "");
       setStudentLastName(data.student_lastname || "");
@@ -69,7 +72,7 @@ function EditStudentPage({ params }) {
       setStudentGpa(data.student_gpa || "");
       setStudentPhone(data.student_phone || "");
 
-      // ตั้งค่าทักษะที่ดึงมา
+      // Set skills and types
       setSkills(data.skills || [{ skill_name: "" }]);
       setStudentSkills(data.studentSkills || [{ skill_level: "" }]);
       setSelectedSkillTypes(data.selectedSkillTypes || [{ skill_type_id: "", skill_type_name: "" }]);
@@ -78,18 +81,15 @@ function EditStudentPage({ params }) {
     }
   };
 
-  // เมื่อ component ถูก mount
   useEffect(() => {
     if (student_id) {
       getDataById(student_id);
-      fetchSkillTypes(); // ดึงประเภททักษะ
+      fetchSkillTypes();
     }
   }, [student_id]);
 
-  // จัดการการเปลี่ยนแปลงในประเภททักษะ
   const handleSkillTypesChange = (index, event) => {
     const selectedSkillType = skillTypes.find((skillType) => skillType.skill_type_name === event.target.value);
-
     const newSelectedSkillTypes = [...selectedSkillTypes];
     newSelectedSkillTypes[index] = {
       skill_type_id: selectedSkillType?.skill_type_id || "",
@@ -98,38 +98,32 @@ function EditStudentPage({ params }) {
     setSelectedSkillTypes(newSelectedSkillTypes);
   };
 
-  // จัดการการเปลี่ยนแปลงชื่อทักษะ
   const handleSkillChange = (index, field, value) => {
     const newSkills = [...skills];
     newSkills[index][field] = value;
     setSkills(newSkills);
   };
 
-  // จัดการการเปลี่ยนแปลงระดับทักษะ
   const handleStudentSkillChange = (index, field, value) => {
     const newStudentSkills = [...studentSkills];
     newStudentSkills[index][field] = value;
     setStudentSkills(newStudentSkills);
   };
 
-  // เพิ่มฟิลด์ทักษะใหม่
   const addField = () => {
     setSkills([...skills, { skill_name: "" }]);
     setStudentSkills([...studentSkills, { skill_level: "" }]);
     setSelectedSkillTypes([...selectedSkillTypes, { skill_type_id: "", skill_type_name: "" }]);
   };
 
-  // ลบฟิลด์ทักษะ
   const removeField = (index) => {
     setSkills(skills.filter((_, skillIndex) => skillIndex !== index));
     setStudentSkills(studentSkills.filter((_, skillIndex) => skillIndex !== index));
     setSelectedSkillTypes(selectedSkillTypes.filter((_, skillIndex) => skillIndex !== index));
   };
 
-  // ส่งข้อมูลเพื่อแก้ไข
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const res = await fetch(`http://localhost:3000/api/student/${student_id}`, {
         method: "PUT",
@@ -153,11 +147,15 @@ function EditStudentPage({ params }) {
       });
 
       if (!res.ok) {
-        throw new Error("Fail to update");
+        throw new Error("Failed to update");
       }
 
-      router.refresh();
-      router.push("/welcome");
+      setSuccess(true);
+
+      setTimeout(() => {
+        setSuccess(false);
+        router.push("/welcome");
+      }, 2000);
     } catch (error) {
       console.log(error);
     }
@@ -165,137 +163,168 @@ function EditStudentPage({ params }) {
 
   return (
     <>
-    <Navber session = {session}/>
-    <div className="min-h-screen bg-gradient-to-r from-blue-500 to-teal-400 p-6 flex flex-col items-center justify-center">
-      <div className="max-w-3xl w-full bg-white shadow-lg rounded-md p-8">
-        <h3 className="text-3xl font-bold text-center text-gray-700 mb-8">Edit Student</h3>
-        {student_id && <div className="text-center text-gray-600 mb-4">Editing Student ID: {student_id}</div>}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <input
-            onChange={(e) => setStudentID(e.target.value)}
-            type="number"
-            placeholder="รหัสนิสิต"
-            value={studentID}
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-          <input
-            onChange={(e) => setStudentFirstName(e.target.value)}
-            type="text"
-            placeholder="ชื่อ"
-            value={studentFirstName}
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-          <input
-            onChange={(e) => setStudentLastName(e.target.value)}
-            type="text"
-            placeholder="นามสกุล"
-            value={studentLastName}
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-          <input
-            onChange={(e) => setStudentFaculty(e.target.value)}
-            type="text"
-            placeholder="คณะ"
-            value={studentFaculty}
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-          <input
-            onChange={(e) => setStudentField(e.target.value)}
-            type="text"
-            placeholder="สาขา"
-            value={studentField}
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-          <input
-            onChange={(e) => setStudentCurriculum(e.target.value)}
-            type="text"
-            placeholder="หลักสูตร"
-            value={studentCurriculum}
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-          <input
-            onChange={(e) => setStudentYear(e.target.value)}
-            type="number"
-            placeholder="ชั้นปี"
-            value={studentYear}
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-          <input
-            onChange={(e) => setStudentGpa(e.target.value)}
-            type="number"
-            step="0.01"
-            placeholder="เกรดเฉลี่ย GPA"
-            value={studentGpa}
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-          <input
-            onChange={(e) => setStudentPhone(e.target.value)}
-            type="tel"
-            placeholder="เบอร์โทร"
-            value={studentPhone}
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-
-          <div className="space-y-4">
-            <label className="block text-gray-700 font-medium">ทักษะ</label>
-            {skills.map((skill, index) => (
-              <div key={index} className="relative bg-gray-50 p-4 rounded-md shadow-md">
+      {/* Background starts from the top and covers the whole page */}
+      <div className="relative min-h-screen w-full bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100 overflow-hidden">
+        <Navber session={session} />
+  
+        <div className="relative min-h-screen p-6 flex flex-col items-center justify-center">
+          <div className="max-w-3xl w-full bg-white shadow-2xl rounded-3xl p-10 border-4 border-blue-400 bg-opacity-80 backdrop-blur-lg transform transition-all">
+            <h3 className="text-4xl font-extrabold text-center text-gray-800 mb-8">Edit Student</h3>
+            {student_id && <div className="text-center text-gray-600 mb-4">Editing Student ID: {student_id}</div>}
+  
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <input
+                onChange={(e) => setStudentID(e.target.value)}
+                type="number"
+                placeholder="รหัสนิสิต"
+                value={studentID}
+                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+              />
+              <input
+                onChange={(e) => setStudentFirstName(e.target.value)}
+                type="text"
+                placeholder="ชื่อ"
+                value={studentFirstName}
+                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+              />
+              <input
+                onChange={(e) => setStudentLastName(e.target.value)}
+                type="text"
+                placeholder="นามสกุล"
+                value={studentLastName}
+                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+              />
+              <input
+                onChange={(e) => setStudentFaculty(e.target.value)}
+                type="text"
+                placeholder="คณะ"
+                value={studentFaculty}
+                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+              />
+              <input
+                onChange={(e) => setStudentField(e.target.value)}
+                type="text"
+                placeholder="สาขา"
+                value={studentField}
+                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+              />
+              <input
+                onChange={(e) => setStudentCurriculum(e.target.value)}
+                type="text"
+                placeholder="หลักสูตร"
+                value={studentCurriculum}
+                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+              />
+              <input
+                onChange={(e) => setStudentYear(e.target.value)}
+                type="number"
+                placeholder="ชั้นปี"
+                value={studentYear}
+                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+              />
+              <input
+                onChange={(e) => setStudentGpa(e.target.value)}
+                type="number"
+                step="0.01"
+                placeholder="เกรดเฉลี่ย GPA"
+                value={studentGpa}
+                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+              />
+              <input
+                onChange={(e) => setStudentPhone(e.target.value)}
+                type="tel"
+                placeholder="เบอร์โทร"
+                value={studentPhone}
+                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+              />
+  
+              <div className="space-y-4">
+                <label className="block text-gray-700 font-medium">ทักษะ</label>
+                {skills.map((skill, index) => (
+                  <div key={index} className="relative bg-white bg-opacity-70 p-4 rounded-xl shadow-md border-2 border-blue-400">
+                    <button
+                      type="button"
+                      onClick={() => removeField(index)}
+                      className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                    >
+                      ลบทักษะ
+                    </button>
+                    <label className="block text-gray-600">ประเภททักษะ</label>
+                    <select
+                      value={selectedSkillTypes[index]?.skill_type_name || ""}
+                      onChange={(e) => handleSkillTypesChange(index, e)}
+                      className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    >
+                      <option value="">เลือกประเภททักษะ</option>
+                      {skillTypes.map((skillType, idx) => (
+                        <option key={idx} value={skillType.skill_type_name}>
+                          {skillType.skill_type_name}
+                        </option>
+                      ))}
+                    </select>
+  
+                    <label className="block text-gray-600 mt-2">ชื่อทักษะ</label>
+                    <input
+                      type="text"
+                      value={skill.skill_name}
+                      onChange={(e) => handleSkillChange(index, "skill_name", e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    />
+  
+                    <label className="block text-gray-600 mt-2">ระดับทักษะ</label>
+                    <input
+                      type="number"
+                      value={studentSkills[index]?.skill_level || ""}
+                      onChange={(e) => handleStudentSkillChange(index, "skill_level", e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    />
+                  </div>
+                ))}
                 <button
                   type="button"
-                  onClick={() => removeField(index)}
-                  className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                  onClick={addField}
+                  className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-300"
                 >
-                  ลบทักษะ
+                  เพิ่มทักษะ
                 </button>
-                <label className="block text-gray-600">ประเภททักษะ</label>
-                <select
-                  value={selectedSkillTypes[index]?.skill_type_name || ""}
-                  onChange={(e) => handleSkillTypesChange(index, e)}
-                  className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                >
-                  <option value="">เลือกประเภททักษะ</option>
-                  {skillTypes.map((skillType, idx) => (
-                    <option key={idx} value={skillType.skill_type_name}>
-                      {skillType.skill_type_name}
-                    </option>
-                  ))}
-                </select>
-
-                <label className="block text-gray-600 mt-2">ชื่อทักษะ</label>
-                <input
-                  type="text"
-                  value={skill.skill_name}
-                  onChange={(e) => handleSkillChange(index, "skill_name", e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
-
-                <label className="block text-gray-600 mt-2">ระดับทักษะ</label>
-                <input
-                  type="number"
-                  value={studentSkills[index]?.skill_level || ""}
-                  onChange={(e) => handleStudentSkillChange(index, "skill_level", e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
               </div>
-            ))}
-            <button
-              type="button"
-              onClick={addField}
-              className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-300"
-            >
-              เพิ่มทักษะ
-            </button>
+  
+              <button type="submit" className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition duration-300">
+                บันทึก
+              </button>
+            </form>
           </div>
-
-          <button type="submit" className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition duration-300">
-            บันทึก
-          </button>
-        </form>
+  
+          {/* Success notification */}
+          {success && (
+            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-[#0fef76] to-[#09c9f6] border-2 border-[#0F1035] rounded-lg shadow-[0px_0px_20px_5px_rgba(15,239,118,0.5)] text-center transition-all duration-500 ease-out animate-pulse">
+              <div className="flex items-center justify-center space-x-4">
+                <div className="p-2 bg-green-100 rounded-full shadow-lg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="w-10 h-10 text-green-600"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <div className="text-2xl font-bold text-white drop-shadow-lg">
+                  การแก้ไขข้อมูลสำเร็จ!
+                </div>
+              </div>
+              <p className="mt-4 text-lg text-white opacity-90 drop-shadow-md">
+                ข้อมูลของคุณได้รับการแก้ไขเรียบร้อยแล้ว ระบบจะนำคุณไปยังหน้าอื่นในไม่ช้า...
+              </p>
+            </div>
+          )}
+        </div>
+        <Foter />
       </div>
-    </div>
     </>
   );
+  
 }
 
 export default EditStudentPage;

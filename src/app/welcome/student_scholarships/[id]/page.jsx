@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import Navber from '@/app/components/Navber';
+import Foter from '@/app/components/Foter';
 
 export default function ScholarshipRegistration({ params }) {
   const { data: session } = useSession();
@@ -17,11 +19,11 @@ export default function ScholarshipRegistration({ params }) {
     scholarship_id = parts[parts.length - 1];
   }
 
+
   // สถานะที่ต้องใช้ในฟอร์ม
   const [related_works, setRelatedWorks] = useState("");
-  const [isPartTime, setIsPartTime] = useState(""); // เก็บค่า fulltime หรือ parttime หรือ both
-  const [dateAvailable, setDateAvailable] = useState([]); // เก็บวันที่สามารถทำงานได้
-
+  const [isPartTime, setIsPartTime] = useState("");
+  const [dateAvailable, setDateAvailable] = useState([]);
   const [scholarships, setScholarships] = useState({});
   const [academic_year, setAcademicYear] = useState("");
   const [academic_term, setAcademicTerm] = useState("");
@@ -33,11 +35,11 @@ export default function ScholarshipRegistration({ params }) {
   const [student_year, setStudentYear] = useState("");
   const [student_gpa, setStudentGpa] = useState("");
   const [student_phone, setStudentPhone] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
-  // กำหนดวันต่างๆ
   const weekDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
 
-  // ฟังก์ชันจัดการการเปลี่ยนแปลงของเวลางาน (นอกเวลา, ในเวลา หรือทั้ง 2)
   const handlePartTimeChange = (e) => {
     const { value, checked } = e.target;
     if (checked) {
@@ -53,7 +55,6 @@ export default function ScholarshipRegistration({ params }) {
     }
   };
 
-  // ฟังก์ชันจัดการการเลือกวัน
   const handleDaySelectionChange = (e, day) => {
     const { checked } = e.target;
     if (checked) {
@@ -63,7 +64,6 @@ export default function ScholarshipRegistration({ params }) {
     }
   };
 
-  // ดึงข้อมูลนักศึกษาและทุน
   const getStudentById = async (student_id) => {
     try {
       const res = await fetch(`/api/student/${student_id}`, {
@@ -111,7 +111,6 @@ export default function ScholarshipRegistration({ params }) {
     }
   };
 
-  // เมื่อ component ถูก mount
   useEffect(() => {
     if (student_id) {
       getStudentById(student_id);
@@ -171,13 +170,11 @@ export default function ScholarshipRegistration({ params }) {
           throw new Error("การส่งฟอร์มล้มเหลว");
         }
       } else {
-        const result = await response.json();
-        if (result.success) {
-          alert("สมัครทุนการศึกษาสำเร็จ!");
+        setSuccessMessage("สมัครทุนการศึกษาสำเร็จ!");
+        setSuccess(true);
+        setTimeout(() => {
           router.push(`/welcome/showStudentScholarships`);
-        } else {
-          alert("การสมัครทุนการศึกษาไม่สำเร็จ");
-        }
+        }, 2000);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -205,9 +202,7 @@ export default function ScholarshipRegistration({ params }) {
               onChange={(e) => handleDaySelectionChange(e, day)}
               className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
             />
-            <label htmlFor={`day_${index}`} className="text-gray-700">
-              {day}
-            </label>
+            <label htmlFor={`day_${index}`} className="text-gray-700">{day}</label>
           </div>
         ))}
       </div>
@@ -215,85 +210,118 @@ export default function ScholarshipRegistration({ params }) {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-2xl mx-auto bg-white shadow-md rounded-lg p-6 space-y-6"
-      >
-        <h1 className="text-3xl font-bold text-indigo-600 mb-6 text-center">สมัครทุนจ้างงาน</h1>
+    <div className="relative min-h-screen bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100">
+      <Navber session={session} />
+      
+      <div className="container mx-auto px-4 py-8">
+        <form
+          onSubmit={handleSubmit}
+          className="max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-6 space-y-6 border border-gray-300"
+        >
+          <h1 className="text-3xl font-bold text-indigo-600 mb-6 text-center">สมัครทุนจ้างงาน</h1>
 
-        <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <h2 className="text-lg font-semibold text-gray-700">ข้อมูลนักศึกษา</h2>
-            <div className="text-gray-600">
-              <label className="block">ชื่อ: {student_firstname}</label>
-              <label className="block">นามสกุล: {student_lastname}</label>
-              <label className="block">คณะ: {student_faculty}</label>
-              <label className="block">สาขา: {student_field}</label>
-              <label className="block">หลักสูตร: {student_curriculum}</label>
-              <label className="block">ปีการศึกษา: {student_year}</label>
-              <label className="block">เกรดเฉลี่ย (GPA): {student_gpa}</label>
-              <label className="block">เบอร์โทรศัพท์: {student_phone}</label>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold text-gray-700">ข้อมูลนักศึกษา</h2>
+              <div className="text-gray-600">
+                <label className="block">ชื่อ: {student_firstname}</label>
+                <label className="block">นามสกุล: {student_lastname}</label>
+                <label className="block">คณะ: {student_faculty}</label>
+                <label className="block">สาขา: {student_field}</label>
+                <label className="block">หลักสูตร: {student_curriculum}</label>
+                <label className="block">ปีการศึกษา: {student_year}</label>
+                <label className="block">เกรดเฉลี่ย (GPA): {student_gpa}</label>
+                <label className="block">เบอร์โทรศัพท์: {student_phone}</label>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold text-gray-700">ข้อมูลทุนการศึกษา</h2>
+              <p className="text-gray-600">ปีการศึกษาที่: {academic_year}</p>
+              <p className="text-gray-600">เทอมการศึกษาที่: {academic_term}</p>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <h2 className="text-lg font-semibold text-gray-700">ข้อมูลทุนการศึกษา</h2>
-            <p className="text-gray-600">ปีการศึกษาที่: {academic_year}</p>
-            <p className="text-gray-600">เทอมการศึกษาที่: {academic_term}</p>
-          </div>
-        </div>
-
-        <div className="flex flex-col space-y-4">
-          <div>
-            <label htmlFor="file" className="font-medium text-gray-700">อัปโหลดไฟล์:</label>
-            <input
-              type="file"
-              id="file"
-              name="file"
-              onChange={(e) => setRelatedWorks(e.target.value)}
-              className="block mt-2 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
-            />
-          </div>
-
-          <div className="flex space-x-4">
-            <div className="flex items-center space-x-2">
+          <div className="flex flex-col space-y-4">
+            <div>
+              <label htmlFor="file" className="font-medium text-gray-700">อัปโหลดไฟล์:</label>
               <input
-                type="checkbox"
-                id="in_time"
-                value="in_time"
-                checked={isPartTime === "fulltime" || isPartTime === "both"}
-                onChange={handlePartTimeChange}
-                className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
+                type="file"
+                id="file"
+                name="file"
+                onChange={(e) => setRelatedWorks(e.target.value)}
+                className="block mt-2 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
               />
-              <label htmlFor="in_time" className="text-gray-700">ในเวลา</label>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="out_time"
-                value="out_time"
-                checked={isPartTime === "parttime" || isPartTime === "both"}
-                onChange={handlePartTimeChange}
-                className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
-              />
-              <label htmlFor="out_time" className="text-gray-700">นอกเวลา</label>
+            <div className="flex space-x-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="in_time"
+                  value="in_time"
+                  checked={isPartTime === "fulltime" || isPartTime === "both"}
+                  onChange={handlePartTimeChange}
+                  className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
+                />
+                <label htmlFor="in_time" className="text-gray-700">ในเวลา</label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="out_time"
+                  value="out_time"
+                  checked={isPartTime === "parttime" || isPartTime === "both"}
+                  onChange={handlePartTimeChange}
+                  className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
+                />
+                <label htmlFor="out_time" className="text-gray-700">นอกเวลา</label>
+              </div>
             </div>
+
+            {isPartTime && renderDaysCheckboxes()}
           </div>
 
-          {isPartTime && renderDaysCheckboxes()}
-        </div>
+          <div className="flex justify-center mt-6">
+            <button
+              type="submit"
+              className="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-500 transition ease-in-out duration-300 transform hover:scale-105"
+            >
+              สมัคร
+            </button>
+          </div>
+        </form>
+      </div>
 
-        <div className="flex justify-center mt-6">
-          <button
-            type="submit"
-            className="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-500 transition ease-in-out duration-300 transform hover:scale-105"
-          >
-            สมัคร
-          </button>
+      {/* Success Message */}
+      {success && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-green-400 to-blue-400 border-2 border-green-600 rounded-lg shadow-2xl text-center transition-all duration-500 ease-out">
+          <div className="flex items-center justify-center space-x-4">
+            <div className="p-2 bg-white rounded-full shadow-lg">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-10 h-10 text-green-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+          </div>
+          <p className="mt-4 text-lg text-white font-semibold">
+            {successMessage}
+          </p>
         </div>
-      </form>
+      )}
+
+      <Foter />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "@/fonts/THSarabunNew-normal.js"; // นำฟอนต์เข้ามาเพื่อใช้ภาษาไทย
 import Navber from "@/app/components/Navber";
+import Foter from "@/app/components/Foter";
 import { useSession } from "next-auth/react";
 
 function ShowScholarshipGenPDF() {
@@ -91,6 +92,7 @@ function ShowScholarshipGenPDF() {
   return (
     <>
     <Navber session = {session}/>
+    <div className="แถบสี"></div>
     <div className="min-h-screen flex flex-col items-center justify-center">
       <div className="max-w-2xl w-full bg-white p-6 shadow-md rounded-md">
         <h1 className="text-2xl font-bold mb-4">รายชื่อนักศึกษาทั้งหมด</h1>
@@ -133,6 +135,7 @@ function ShowScholarshipGenPDF() {
         )}
       </div>
     </div>
+    <Foter />
     </>
   );
 }

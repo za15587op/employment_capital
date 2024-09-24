@@ -11,7 +11,7 @@ function EditorganizationPage({ params }) {
   const [organization_name, setOrganizationName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [success, setSuccess] = useState(false); // เปลี่ยน success เป็น Boolean
   const [newacademic_year, setNewAcademicYear] = useState("");
   const [newacademic_term, setNewAcademicTerm] = useState("");
   const [existingOrganizations, setExistingOrganizations] = useState([]); // state สำหรับข้อมูล organization ที่มีอยู่แล้ว
@@ -27,112 +27,112 @@ function EditorganizationPage({ params }) {
   }, [status, session, router]);
 
   // ฟังก์ชันสำหรับดึงข้อมูลทุนการศึกษาตาม scholarship_id
-            const getDataById = async (scholarship_id) => {
-              try {
-                const res = await fetch(`http://localhost:3000/api/scholarships/${scholarship_id}`, {
-                  method: "GET",
-                  cache: "no-store",
-                });
-            
-                if (!res.ok) {
-                  throw new Error("Failed to fetch");
-                }
-            
-                const data = await res.json();
-              
-                console.log(data); // log ข้อมูลเพื่อตรวจสอบว่าได้ข้อมูลอะไรมา
-              
-                // ตรวจสอบว่า data เป็น object ที่ถูกต้อง
-                if (data && data.academic_year && data.academic_term) {
-                  setNewAcademicYear(data.academic_year); // อัปเดตปีการศึกษา
-                  setNewAcademicTerm(data.academic_term); // อัปเดตเทอมการศึกษา
-                } else {
-                  console.log("ไม่มีข้อมูลที่เหมาะสม");
-                }
-              } catch (error) {
-                console.log(error); // แสดง error หาก fetch ข้อมูลไม่สำเร็จ
-              }
-            };
-          
-            useEffect(() => {
-              if (scholarship_id) {
-                getDataById(scholarship_id); // ดึงข้อมูลทุนการศึกษา
-              }
-            }, [scholarship_id]);
-            
-            
-            const fetchOrganizationList = async () => {
-              try {
-                const res = await fetch("/api/organization", {
-                  method: "GET",
-                });
-                if (!res.ok) {
-                  throw new Error("Failed to fetch organization list");
-                }
-                const data = await res.json();
-                setExistingOrganizations(data); // เก็บข้อมูลใน state สำหรับ organizations ที่มีอยู่แล้ว
-              } catch (error) {
-                console.error("Error fetching organization list:", error);
-              }
-            };
-          
-            useEffect(() => {
-              fetchOrganizationList(); // ดึงข้อมูลหน่วยงานที่มีอยู่แล้วเมื่อ component ถูก mount
-            }, []);
-          
-            // ฟังก์ชันสำหรับการเลือกข้อมูลจากรายการที่มีอยู่แล้ว
-            const handleSelectOrganization = (organization) => {
-              setOrganizationName(organization.organization_name);
-              setContactPhone(organization.contactPhone); };
+  const getDataById = async (scholarship_id) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/scholarships/${scholarship_id}`, {
+        method: "GET",
+        cache: "no-store",
+      });
 
-              const handleSubmit = async (e) => {
-                e.preventDefault();
-                
-              if (!organization_name || !contactPhone) {
-                setError("กรุณากรอกข้อมูลให้ครบถ้วน!");
-                return;
-              }
+      if (!res.ok) {
+        throw new Error("Failed to fetch");
+      }
 
-              try {
-                // บันทึกข้อมูล Organization
-                const organizationRes = await fetch("http://localhost:3000/api/organization", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    organization_name,
-                    contactPhone,
-                    scholarship_id,
-                  }),
-                });
+      const data = await res.json();
+      
+      // ตรวจสอบว่า data เป็น object ที่ถูกต้อง
+      if (data && data.academic_year && data.academic_term) {
+        setNewAcademicYear(data.academic_year); // อัปเดตปีการศึกษา
+        setNewAcademicTerm(data.academic_term); // อัปเดตเทอมการศึกษา
+      } else {
+        console.log("ไม่มีข้อมูลที่เหมาะสม");
+      }
+    } catch (error) {
+      console.log(error); // แสดง error หาก fetch ข้อมูลไม่สำเร็จ
+    }
+  };
 
-                const data = await organizationRes.json();
+  useEffect(() => {
+    if (scholarship_id) {
+      getDataById(scholarship_id); // ดึงข้อมูลทุนการศึกษา
+    }
+  }, [scholarship_id]);
 
-                // ตรวจสอบว่า request สำเร็จหรือไม่
-                if (!organizationRes.ok) {
-                  throw new Error(data.message || "Failed to create organization");
-                }
+  const fetchOrganizationList = async () => {
+    try {
+      const res = await fetch("/api/organization", {
+        method: "GET",
+      });
+      if (!res.ok) {
+        throw new Error("Failed to fetch organization list");
+      }
+      const data = await res.json();
+      setExistingOrganizations(data); // เก็บข้อมูลใน state สำหรับ organizations ที่มีอยู่แล้ว
+    } catch (error) {
+      console.error("Error fetching organization list:", error);
+    }
+  };
 
-                // หากสำเร็จให้แสดงข้อความและเปลี่ยนหน้า
-                setError("");
-                setSuccess("บันทึกข้อมูลสำเร็จ");
-                e.target.reset();
-                router.push(`/organization/show/${organization_id}`);
-                
-              } catch (error) {
-                console.error("Error:", error);
-                setError("ข้อมูลหน่วยงานซ้ำกันทำให้ไม่สามารถเพิ่มหน่วยงานได้ กรุณาแก้ไขข้อมูลที่กรอกมา");
-              }
-            };
+  useEffect(() => {
+    fetchOrganizationList(); // ดึงข้อมูลหน่วยงานที่มีอยู่แล้วเมื่อ component ถูก mount
+  }, []);
+
+  // ฟังก์ชันสำหรับการเลือกข้อมูลจากรายการที่มีอยู่แล้ว
+  const handleSelectOrganization = (organization) => {
+    setOrganizationName(organization.organization_name);
+    setContactPhone(organization.contactPhone); 
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!organization_name || !contactPhone) {
+      setError("กรุณากรอกข้อมูลให้ครบถ้วน!");
+      return;
+    }
+
+    try {
+      // บันทึกข้อมูล Organization
+      const organizationRes = await fetch("http://localhost:3000/api/organization", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          organization_name,
+          contactPhone,
+          scholarship_id,
+        }),
+      });
+
+      const data = await organizationRes.json();
+
+      // ตรวจสอบว่า request สำเร็จหรือไม่
+      if (!organizationRes.ok) {
+        throw new Error(data.message || "Failed to create organization");
+      }
+
+      // หากสำเร็จให้แสดงข้อความและเปลี่ยนหน้า
+      setError("");
+      setSuccess(true); // ตั้งค่า success เป็น true เมื่อบันทึกสำเร็จ
+      e.target.reset();
+      setTimeout(() => {
+        router.push(`/organization/show/${organization_id}`);
+      }, 2000); // Redirect after 2 seconds
+      
+    } catch (error) {
+      console.error("Error:", error);
+      setError("ข้อมูลหน่วยงานซ้ำกันทำให้ไม่สามารถเพิ่มหน่วยงานได้ กรุณาแก้ไขข้อมูลที่กรอกมา");
+    }
+  };
 
   return (
-<div>
+    <div>
       <Navber session={session} />
       <div className="แถบสี"></div>
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-8">
+      <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-8">
         <h3 className=" text-2xl font-bold mb-6 text-center bg-blue-500 text-white px-5 py-3 rounded-lg hover:bg-blue-600">
-          ปีการศึกษา <span >{newacademic_year } เทอมการศึกษาที่ <span >{newacademic_term }</span></span>
+          ปีการศึกษา <span>{newacademic_year} เทอมการศึกษาที่ <span>{newacademic_term}</span></span>
         </h3>
       </div>
       <div className="max-w-lg mx-auto p-6 mt-10 bg-white rounded-lg shadow-lg">
@@ -142,7 +142,6 @@ function EditorganizationPage({ params }) {
           </h3>
           
           {error && <div className="text-red-500 text-sm mb-4 text-center">{error}</div>}
-          {success && <div className="text-green-500 text-sm mb-4 text-center">{success}</div>}
           <div>
             <h3 className="text-gray-700">ชื่อหน่วยงานที่ต้องการ</h3>
             <input
@@ -172,6 +171,37 @@ function EditorganizationPage({ params }) {
             </button>
           </div>
         </form>
+
+        {/* การแสดงข้อความแจ้งเตือนเมื่อบันทึกสำเร็จ */}
+        {success && (
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-[#0fef76] to-[#09c9f6] border-2 border-[#0F1035] rounded-lg shadow-[0px_0px_20px_5px_rgba(15,239,118,0.5)] text-center transition-all duration-500 ease-out animate-pulse">
+            <div className="flex items-center justify-center space-x-4">
+              <div className="p-2 bg-green-100 rounded-full shadow-lg">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className="w-10 h-10 text-green-600"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <div className="text-2xl font-bold text-white drop-shadow-lg">
+                บันทึกข้อมูลสำเร็จ!
+              </div>
+            </div>
+            <p className="mt-4 text-lg text-white opacity-90 drop-shadow-md">
+              หน่วยงานได้ถูกบันทึกเข้าสู่ระบบเรียบร้อยแล้ว ระบบจะนำคุณไปยังหน้าอื่นในไม่ช้า...
+            </p>
+          </div>
+        )}
+
         <h3 className="text-lg mt-6 mb-4">หน่วยงานที่มีอยู่แล้ว</h3>
         <ul className="list-disc pl-5">
           {existingOrganizations.map((org) => (

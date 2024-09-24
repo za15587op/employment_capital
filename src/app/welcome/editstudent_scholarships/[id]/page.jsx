@@ -2,11 +2,15 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import Navber from '@/app/components/Navber';
+import Foter from '@/app/components/Foter';
 
 export default function EditScholarshipRegistration({ params }) {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const router = useRouter();
+  const [success, setSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const http = 'http://localhost:3000';
 
@@ -103,8 +107,11 @@ export default function EditScholarshipRegistration({ params }) {
 
       const result = await response.json();
       if (result.success) {
-        alert("แก้ไขข้อมูลการสมัครสำเร็จ!");
-        router.push(`/welcome/showStudentScholarships`);
+        setSuccessMessage("แก้ไขข้อมูลการสมัครสำเร็จ!");
+        setSuccess(true);
+        setTimeout(() => {
+          router.push(`/welcome/showStudentScholarships`);
+        }, 2000);
       } else {
         alert("การแก้ไขข้อมูลไม่สำเร็จ");
       }
@@ -166,89 +173,124 @@ export default function EditScholarshipRegistration({ params }) {
   
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 space-y-6"
-      >
-        <h1 className="text-3xl font-bold text-indigo-600 mb-6 text-center">แก้ไขข้อมูลการสมัครทุนจ้างงาน</h1>
+    <div className="bg-gray-50 min-h-screen flex flex-col">
+      <Navber session={session} />
+      <div className="แถบสี"></div>
+      <div className="container mx-auto px-4 py-8 flex-grow">
+        <form
+          onSubmit={handleSubmit}
+          className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 space-y-6"
+        >
+          <h1 className="text-3xl font-bold text-indigo-600 mb-6 text-center">แก้ไขข้อมูลการสมัครทุนจ้างงาน</h1>
 
-        <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <h2 className="text-lg font-semibold text-gray-700">ข้อมูลนักศึกษา</h2>
-            <div className="text-gray-600">
-              <label className="block">ชื่อ: {student_firstname}</label>
-              <label className="block">นามสกุล: {student_lastname}</label>
-              <label className="block">คณะ: {student_faculty}</label>
-              <label className="block">สาขา: {student_field}</label>
-              <label className="block">หลักสูตร: {student_curriculum}</label>
-              <label className="block">ปีการศึกษา: {student_year}</label>
-              <label className="block">เกรดเฉลี่ย (GPA): {student_gpa}</label>
-              <label className="block">เบอร์โทรศัพท์: {student_phone}</label>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold text-gray-700">ข้อมูลนักศึกษา</h2>
+              <div className="text-gray-600">
+                <label className="block">ชื่อ: {student_firstname}</label>
+                <label className="block">นามสกุล: {student_lastname}</label>
+                <label className="block">คณะ: {student_faculty}</label>
+                <label className="block">สาขา: {student_field}</label>
+                <label className="block">หลักสูตร: {student_curriculum}</label>
+                <label className="block">ปีการศึกษา: {student_year}</label>
+                <label className="block">เกรดเฉลี่ย (GPA): {student_gpa}</label>
+                <label className="block">เบอร์โทรศัพท์: {student_phone}</label>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold text-gray-700">ข้อมูลทุนการศึกษา</h2>
+              <p className="text-gray-600">ปีการศึกษาที่: {academic_year}</p>
+              <p className="text-gray-600">เทอมการศึกษาที่: {academic_term}</p>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <h2 className="text-lg font-semibold text-gray-700">ข้อมูลทุนการศึกษา</h2>
-            <p className="text-gray-600">ปีการศึกษาที่: {academic_year}</p>
-            <p className="text-gray-600">เทอมการศึกษาที่: {academic_term}</p>
-          </div>
-        </div>
-
-        <div className="flex flex-col space-y-4">
-          <div>
-            <label htmlFor="file" className="font-medium text-gray-700">ไฟล์ที่อัปโหลดแล้ว:</label>
-            <a href={`${baseUrl}/${relatedWorks}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
-              ดูไฟล์ที่อัปโหลด
-            </a>
-            <input
-              type="file"
-              id="file"
-              name="file"
-              onChange={(e) => setFile(e.target.files[0])}
-              className="block mt-2 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
-            />
-          </div>
-
-          <div className="flex space-x-4">
-            <div className="flex items-center space-x-2">
+          <div className="flex flex-col space-y-4">
+            <div>
+              <label htmlFor="file" className="font-medium text-gray-700">ไฟล์ที่อัปโหลดแล้ว:</label>{" "}
+              <a href={`${baseUrl}/${relatedWorks}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
+                ดูไฟล์ที่อัปโหลด
+              </a>
               <input
-                type="checkbox"
-                id="in_time"
-                value="in_time"
-                checked={isPartTime === "fulltime" || isPartTime === "both"}
-                onChange={handlePartTimeChange}
-                className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
+                type="file"
+                id="file"
+                name="file"
+                onChange={(e) => setFile(e.target.files[0])}
+                className="block mt-2 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
               />
-              <label htmlFor="in_time" className="text-gray-700">ในเวลา</label>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="out_time"
-                value="out_time"
-                checked={isPartTime === "parttime" || isPartTime === "both"}
-                onChange={handlePartTimeChange}
-                className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
-              />
-              <label htmlFor="out_time" className="text-gray-700">นอกเวลา</label>
+            <div className="flex space-x-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="in_time"
+                  value="in_time"
+                  checked={isPartTime === "fulltime" || isPartTime === "both"}
+                  onChange={handlePartTimeChange}
+                  className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
+                />
+                <label htmlFor="in_time" className="text-gray-700">ในเวลา</label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="out_time"
+                  value="out_time"
+                  checked={isPartTime === "parttime" || isPartTime === "both"}
+                  onChange={handlePartTimeChange}
+                  className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
+                />
+                <label htmlFor="out_time" className="text-gray-700">นอกเวลา</label>
+              </div>
             </div>
+
+             {isPartTime === "fulltime" || isPartTime === "both" ? renderDaysCheckboxes() : null}
           </div>
 
-          {/* {isPartTime && renderDaysCheckboxes()} */}
-          {isPartTime === "fulltime" || isPartTime === "both" ? renderDaysCheckboxes() : null}
-        </div>
 
-        <div className="flex justify-center mt-6">
-          <button
-            type="submit"
-            className="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-500 transition ease-in-out duration-300 transform hover:scale-105"
-          >
-            บันทึกการแก้ไข
-          </button>
+          <div className="flex justify-center mt-6">
+            <button
+              type="submit"
+              className="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-500 transition ease-in-out duration-300 transform hover:scale-105"
+            >
+              บันทึกการแก้ไข
+            </button>
+          </div>
+        </form>
+      </div>
+
+
+      {/* Success Message */}
+      {success && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-green-400 to-blue-400 border-2 border-green-600 rounded-lg shadow-2xl text-center transition-all duration-500 ease-out">
+          <div className="flex items-center justify-center space-x-4">
+            <div className="p-2 bg-white rounded-full shadow-lg">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-10 h-10 text-green-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+          </div>
+          <p className="mt-4 text-lg text-white font-semibold">
+            {successMessage}
+          </p>
         </div>
-      </form>
+      )}
+
+      <Foter />
     </div>
   );
 }
+

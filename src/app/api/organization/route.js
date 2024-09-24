@@ -172,14 +172,26 @@ export async function DELETE(req) {
     `;
     await connection.query(deleteScholarshipRequirement, [organization_id]);
 
+    // ลบข้อมูลจากตาราง `skills_skilltypes` ที่อ้างอิงกับ `skill_type_id`
+    const deleteSkillsSkillTypes = `
+    DELETE FROM skills_skilltypes WHERE skill_type_id IN (
+      SELECT st.skill_type_id FROM skills_skilltypes st
+      LEFT JOIN scholarshiprequirement sr ON st.skill_type_id = sr.skill_type_id
+      WHERE sr.skill_type_id IS NULL
+    )
+
+    `;
+    await connection.query(deleteSkillsSkillTypes);
+
     // ลบข้อมูลจากตาราง `skilltypes` ที่ไม่มีการอ้างอิงจาก `scholarshiprequirement`
     const deleteSkillTypes = `
-    DELETE st
-    FROM skilltypes st
-    LEFT JOIN scholarshiprequirement sr ON st.skill_type_id = sr.skill_type_id
-    WHERE sr.skill_type_id IS NULL
-  `;
-  await connection.query(deleteSkillTypes);
+      DELETE st
+      FROM skilltypes st
+      LEFT JOIN scholarshiprequirement sr ON st.skill_type_id = sr.skill_type_id
+      WHERE sr.skill_type_id IS NULL
+    `;
+    await connection.query(deleteSkillTypes);
+
     // ลบข้อมูลจากตาราง `scholarshiporganization` ที่เกี่ยวข้องกับ `organization_id`
     const deleteScholarshipOrganization = `
       DELETE FROM scholarshiporganization WHERE organization_id = ?

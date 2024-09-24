@@ -8,6 +8,7 @@ import { useSession } from 'next-auth/react';
 function ShowScholarships() {
   const [scholarships, setScholarships] = useState([]);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(""); // เพิ่มสถานะ success สำหรับการแจ้งเตือน
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -46,14 +47,28 @@ function ShowScholarships() {
       fetchScholarships();
     }
   }, [session, status, router]);
-  
 
+  // ใช้ useEffect เพื่อทำให้การแจ้งเตือนหายไปหลังจาก 5 วินาที
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        setSuccess(""); // ซ่อนข้อความแจ้งเตือน
+      }, 5000); // 5 วินาที
+      return () => clearTimeout(timer); // ล้างเวลาเมื่อตัว component ถูก unmount
+    }
+  }, [success]);
+  
   const handleUpdate = (scholarship_id) => {
     router.push(`/scholarships/edit/${scholarship_id}`);
+    setSuccess("แก้ไขข้อมูลทุนสำเร็จ!");
   };
 
   const handleAddData = (organization_id) => {
     router.push(`/organization/create/${organization_id}`);
+
+    setSuccess("เพิ่มหน่วยงานสำเร็จ!");
+  };
+
       };
   const handleorganization = (organization_id) => {
       router.push(`/organization/show/${organization_id}`);
@@ -73,15 +88,20 @@ function ShowScholarships() {
   // };
 
 
+  const handleOrganization = (organization_id) => {
+    router.push(`/organization/show/${organization_id}`);
+    setSuccess("ดูหน่วยงานสำเร็จ!");
+  };
 
   const handleDelete = async (scholarship_id) => {
     const confirmed = confirm("ต้องการลบทุนนี้ใช่หรือไม่?");
     if (confirmed) {
-    const res = await fetch(`/api/scholarships/?scholarship_id=${scholarship_id}`, {
-        method: "DELETE"
+      const res = await fetch(`/api/scholarships/?scholarship_id=${scholarship_id}`, {
+        method: "DELETE",
       });
 
       if (res.ok) {
+        setSuccess("ลบทุนสำเร็จ!");
         window.location.reload();
       }
     }
@@ -107,6 +127,7 @@ function ShowScholarships() {
               : scholarship
           )
         );
+        setSuccess(`ทุนถูก ${newStatus === 1 ? 'เปิด' : 'ปิด'} สำเร็จ!`);
       } else {
         setError("Failed to update scholarship status");
       }
@@ -124,6 +145,32 @@ function ShowScholarships() {
         <h3 className="text-2xl font-bold mb-6 text-center bg-blue-500 text-white px-5 py-3 rounded-lg hover:bg-blue-600">
           Scholarships List
         </h3>
+        {success && (
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-[#0fef76] to-[#09c9f6] border-2 border-[#0F1035] rounded-lg shadow-[0px_0px_20px_5px_rgba(15,239,118,0.5)] text-center transition-all duration-500 ease-out animate-pulse">
+            <div className="flex items-center justify-center space-x-4">
+              <div className="p-2 bg-green-100 rounded-full shadow-lg">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className="w-10 h-10 text-green-600"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <div className="text-2xl font-bold text-white drop-shadow-lg">
+                {success}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="flex justify-between items-center p-4">
           <div className="flex-grow"></div>
           <a href='/scholarships/create' className="bg-blue-500 text-white px-8 py-4 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
@@ -132,84 +179,89 @@ function ShowScholarships() {
         </div>
         <br />
         <div className="flex flex-col md:flex-row bg-blue-600 p-2 rounded">
-                <div className="w-full md:w-1/4 bg-blue-400 p-2 rounded">
-                <ul className=" space-y-2">
-                <li>สิทธิ์ของ Admin</li>
-                <li>1. เปิดรับสมัครทุน</li>
-                <li>2. แก้ไข/ลบ/ทำสำเนาทุน</li>
-                <li>3. เพิ่ม/ลบ/แก้ไข ข้อมูลหน่วยงาน</li>
-                <li>4. ดูผล Matching</li>
-                <li>5. ออกรายงาน</li>
+          <div className="w-full md:w-1/4 bg-blue-400 p-2 rounded">
+            <ul className=" space-y-2">
+              <li>สิทธิ์ของ Admin</li>
+              <li>1. เปิด/ปิด รับสมัครทุน</li>
+              <li>2. แก้ไข/ลบ/ทำสำเนาทุน</li>
+              <li>3. เพิ่ม/ลบ/แก้ไข ข้อมูลหน่วยงาน</li>
+              <li>4. ดูผล Matching</li>
+              <li>5. ออกรายงาน</li>
             </ul>
+          </div>
+
+          <div className="w-full bg-blue-800 p-2 rounded">
+            {error && <div className="text-red-500 text-center mb-4">{error}</div>}
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white border border-gray-400 rounded-lg">
+                <thead>
+                  <tr className="bg-gray-100 border-b border-gray-400">
+                    <th className="text-left py-2 px-4 whitespace-nowrap">ปีการศึกษา</th>
+                    <th className="text-left py-2 px-4 whitespace-nowrap">เทอมการศึกษา</th>
+                    <th className="text-left py-2 px-4 whitespace-nowrap">วันที่เริ่มต้น</th>
+                    <th className="text-left py-2 px-4 whitespace-nowrap">วันที่สิ้นสุด</th>
+                    <th className="text-left py-2 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scholarships.map((scholarship) => (
+                    <tr key={scholarship.scholarship_id} className="border-b border-gray-400 hover:bg-gray-50">
+                      <td className="py-2 px-4 whitespace-nowrap">{scholarship.academic_year}</td>
+                      <td className="py-2 px-4 whitespace-nowrap">{scholarship.academic_term}</td>
+                      <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_start_date}</td>
+                      <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_end_date}</td> 
+                      <td className="py-2 px-4">
+                        <button
+                          onClick={() =>
+                            toggleStatus(scholarship.scholarship_id, scholarship.scholarship_status)
+                          }
+                          className={`${
+                            scholarship.scholarship_status === 1
+                              ? "bg-green-500"
+                              : "bg-red-500"
+                          } text-white px-3 py-1 rounded-lg`}
+                        >
+                          {scholarship.scholarship_status === 1 ? "เปิด" : "ปิด"}
+                        </button>
+                      </td>
+                      <td className="py-2 px-4 text-right">
+                        <button
+                          onClick={() => handleAddData(scholarship.scholarship_id)}
+                          className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 mr-2"
+                        >
+                          เพิ่มหน่วยงาน
+                        </button>
+                        <button
+                          onClick={() => handleOrganization(scholarship.scholarship_id)}
+                          className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 mr-2"
+                        >
+                          ดูหน่วยงาน
+                        </button>
+                        <button
+                          onClick={() => handleUpdate(scholarship.scholarship_id)}
+                          className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 mr-2"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(scholarship.scholarship_id)}
+                          className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div className="w-full  bg-blue-800 p-2 rounded">
-        {error && <div className="text-red-500 text-center mb-4">{error}</div>}
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-400 rounded-lg">
-            <thead>
-              <tr className="bg-gray-100 border-b border-gray-400">
-                <th className="text-left py-2 px-4 whitespace-nowrap">ปีการศึกษา</th>
-                <th className="text-left py-2 px-4 whitespace-nowrap">เทอมการศึกษา</th>
-                <th className="text-left py-2 px-4 whitespace-nowrap">วันที่เริ่มต้น</th>
-                <th className="text-left py-2 px-4 whitespace-nowrap">วันที่สิ้นสุด</th>
-                <th className="text-left py-2 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {scholarships.map((scholarship) => (
-                <tr key={scholarship.scholarship_id} className="border-b border-gray-400 hover:bg-gray-50">
-                  <td className="py-2 px-4 whitespace-nowrap">{scholarship.academic_year}</td>
-                  <td className="py-2 px-4 whitespace-nowrap">{scholarship.academic_term}</td>
-                  <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_start_date}</td>
-                  <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_end_date}</td> 
-                  <td className="py-2 px-4">
-                      <button
-                        onClick={() =>
-                          toggleStatus(scholarship.scholarship_id, scholarship.scholarship_status)
-                        }
-                        className={`${
-                          scholarship.scholarship_status === 1
-                            ? "bg-green-500"
-                            : "bg-red-500"
-                        } text-white px-3 py-1 rounded-lg`}
-                      >
-                        {scholarship.scholarship_status === 1 ? "เปิด" : "ปิด"}
-                      </button>
-                    </td>
-                  <td className="py-2 px-4 text-right">
-                  <button
-                     onClick={() => handleShow(scholarship.scholarship_id)}
-                      className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 mr-2" >
-                      ดูจำนวนผู้สมัคร
-                      </button>
-                  <button
-                     onClick={() => handleAddData(scholarship.scholarship_id)}
-                      className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 mr-2" >
-                      เพิ่มหน่วยงาน
-                      </button>
-                      <button onClick={() => handleorganization(scholarship.scholarship_id)} className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 mr-2">
-                      ดูหน่วยงาน
-                    </button>
-                    <button onClick={() => handleUpdate(scholarship.scholarship_id)} className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 mr-2">
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(scholarship.scholarship_id)} className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300">
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      </div>   
+          </div>
+        </div>   
       </div>  
       <br /><br />
       <Foter />
     </>
   );
 }
-
 
 export default ShowScholarships;

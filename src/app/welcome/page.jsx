@@ -1,42 +1,40 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import Navber from '@/app/components/Navber';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import React, { useEffect, useState } from "react";
+import Navber from "@/app/components/Navber";
+import Foter from "../components/Foter";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 function HomeStudentPage() {
   const [scholarships, setScholarships] = useState([]);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
-  const { data: session, status } = useSession();
-
+  const { data: session } = useSession();
   const router = useRouter();
 
   const formatDateToYYYYMMDD = (dateString) => {
     const date = new Date(dateString);
-    return date.toISOString().split('T')[0]; // "yyyy-MM-dd"
+    return date.toISOString().split("T")[0]; // "yyyy-MM-dd"
   };
 
   useEffect(() => {
     const fetchScholarships = async () => {
       try {
-        const res = await fetch('http://localhost:3000/api/showScholarshipsStd');
+        const res = await fetch("/api/showScholarshipsStd");
         if (res.ok) {
           const data = await res.json();
-          console.log("Fetched data:", data);
-
-          const formattedData = data.map(scholarship => ({
+          const formattedData = data.map((scholarship) => ({
             ...scholarship,
             application_start_date: formatDateToYYYYMMDD(scholarship.application_start_date),
             application_end_date: formatDateToYYYYMMDD(scholarship.application_end_date),
           }));
-          
           setScholarships(formattedData);
         } else {
-          setError('Failed to fetch scholarships data');
+          setError("Failed to fetch scholarships data");
         }
       } catch (error) {
-        setError('An error occurred while fetching scholarships data');
+        setError("An error occurred while fetching scholarships data");
       }
     };
 
@@ -44,47 +42,93 @@ function HomeStudentPage() {
   }, []);
 
   const ApplyScholarship = (scholarship_id) => {
-    router.push(`/welcome/student_scholarships/${scholarship_id}`);
+    setSuccess(true);
+    setTimeout(() => {
+      router.push(`/welcome/student_scholarships/${scholarship_id}`);
+    }, 2000);
   };
 
   return (
     <>
-    <Navber session = {session}/>
-    <div className=" bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-          <h3 className="text-2xl font-bold mb-6 text-center">Scholarships List</h3>
+      <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100">
+
+        <Navber session={session} />
+        {/* Scholarship Cards */}
+        <div className="relative z-10 container mx-auto py-12">
           {error && <div className="text-red-500 text-center mb-4">{error}</div>}
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-              <thead>
-                <tr className="bg-gray-100 border-b border-gray-300">
-                  <th className="text-left py-2 px-4">ปีการศึกษา</th>
-                  <th className="text-left py-2 px-4">เทอมการศึกษา</th>
-                  <th className="text-left py-2 px-4">วันที่เริ่มต้น</th>
-                  <th className="text-left py-2 px-4">วันที่สิ้นสุด</th>
-                  <th className="text-left py-2 px-4">สมัครทุน</th>
-                </tr>
-              </thead>
-              <tbody>
-                {scholarships.map((scholarship) => (
-                  <tr key={scholarship.scholarship_id} className="border-b border-gray-200 hover:bg-gray-50">
-                    <td className="py-2 px-4">{scholarship.academic_year}</td>
-                    <td className="py-2 px-4">{scholarship.academic_term}</td>
-                    <td className="py-2 px-4">{scholarship.application_start_date}</td>
-                    <td className="py-2 px-4">{scholarship.application_end_date}</td>
-                    <td className="py-2 px-4">
-                      <button onClick={() => ApplyScholarship(scholarship.scholarship_id)} className="bg-blue-500 text-white px-3 py-1 rounded-lg mr-2 hover:bg-blue-600">สมัครทุน</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+          {/* Scholarship Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            {scholarships.map((scholarship) => (
+              <div
+                key={scholarship.scholarship_id}
+                className="relative group bg-white bg-opacity-10 backdrop-blur-lg p-10 rounded-2xl shadow-2xl border border-white hover:shadow-3xl hover:scale-110 transition-transform duration-700 ease-in-out"
+              >
+                {/* Neon Glow Outline */}
+                <div className="absolute inset-0 -z-10 transform scale-105 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 opacity-30 group-hover:scale-110 transition-transform duration-700 ease-in-out"></div>
+
+                {/* Scholarship Icon */}
+                <div className="flex justify-center mb-6">
+                  <div className="w-20 h-20 p-5 bg-gradient-to-r from-blue-400 to-green-500 rounded-full shadow-2xl">
+                    <img src="/e.png" alt="Scholarship Icon" className="w-full h-full" />
+                  </div>
+                </div>
+
+                {/* Scholarship Details */}
+                <div className="flex flex-col text-center text-lg text-gray-800 space-y-2 mt-2 group-hover:text-blue-700 transition-all duration-500 ease-in-out">
+                  <span className="font-extrabold text-3xl text-gray-900 group-hover:text-blue-500">
+                    ปีการศึกษา {scholarship.academic_year}
+                  </span>
+                  <span className="text-md">เทอมที่ {scholarship.academic_term}</span>
+                  <span>เริ่มสมัครได้ตั้งแต่: {scholarship.application_start_date}</span>
+                  <span>ปิดรับสมัครวันที่: {scholarship.application_end_date}</span>
+                </div>
+
+                {/* Apply Button */}
+                <div className="mt-8 flex justify-center">
+                  <button
+                    onClick={() => ApplyScholarship(scholarship.scholarship_id)}
+                    className="bg-gradient-to-r from-green-400 to-blue-600 text-white px-8 py-3 rounded-full shadow-2xl hover:shadow-3xl hover:scale-110 transition-transform duration-500 ease-in-out transform hover:bg-gradient-to-l"
+                  >
+                    สมัครทุน
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+
+        {/* Success Modal */}
+        {success && (
+          <div className="fixed z-50 top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-80">
+            <div className="relative w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-green-400 to-blue-400 border-2 border-green-600 rounded-lg shadow-2xl text-center transition-all duration-500 ease-out animate-pulse">
+              <div className="flex items-center justify-center space-x-4">
+                <div className="p-2 bg-white rounded-full shadow-lg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="w-10 h-10 text-green-600"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <p className="mt-4 text-lg text-white font-semibold">
+                ระบบกำลังนำคุณไปยังหน้าสมัครทุนถัดไป...
+              </p>
+            </div>
+          </div>
+        )}
+
+        <Foter />
       </div>
-    </div>
     </>
   );
 }
