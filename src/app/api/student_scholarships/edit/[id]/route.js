@@ -18,12 +18,19 @@ export async function GET(req, { params }) {
       return NextResponse.json({ message: 'Student not found' }, { status: 404 });
     }
 
-    return NextResponse.json(registration, { status: 200 });
+    // ดึงข้อมูลจาก DateTimeAvailable และแปลง date_available จาก JSON string กลับเป็น array
+    const datetimeAvailable = await DateTimeAvailable.findByRegistId(regist_id);
+
+    return NextResponse.json({
+      ...registration,
+      datetime_available: datetimeAvailable, // เพิ่มข้อมูล datetime_available ที่แปลงเป็น array แล้ว
+    }, { status: 200 });
   } catch (error) {
     console.error('Error fetching student data:', error);
     return NextResponse.json({ message: 'Internal Server Error', error: error.message }, { status: 500 });
   }
 }
+
 
 const UPLOAD_DIR = path.resolve(process.cwd(), "public/uploads");
 
@@ -58,7 +65,7 @@ async function handleFileUpload(formData) {
 
     fs.writeFileSync(filePath, buffer);
 
-    return `uploads/${newFileName}`;
+    return `/uploads/${newFileName}`;
   }
 
   return null;
@@ -72,26 +79,23 @@ export async function PUT(req, { params }) {
 
     const related_works = formData.get("related_works");
     const is_parttime = formData.get("is_parttime");
-    const date_available = JSON.parse(formData.get("date_available")); // ได้รับค่า date_available
+    const student_status = formData.get("student_status");
+    const date_available = JSON.parse(formData.get("date_available")); // ได้รับค่า date_available เป็น array
     
     const filePath = await handleFileUpload(formData);
     const fileOrWorksPath = filePath || related_works;
 
     const updatedScholarship = await ScholarshipRegistrations.findOneAndUpdate(
       { regist_id: id },
-      {
-        related_works: fileOrWorksPath,
-        is_parttime
-      },
-      { new: true }
+      { related_works: fileOrWorksPath, is_parttime , student_status },
+      // { student_status:student_status}
     );
 
-    // อัปเดตข้อมูลในตาราง DateTimeAvailable
-    // คุณอาจจะลบข้อมูลเก่าออกก่อนและสร้างข้อมูลใหม่ หรือทำการอัปเดตตามความต้องการของระบบ
-    await DateTimeAvailable.deleteMany(id); // ลบข้อมูลเก่าทั้งหมดที่เกี่ยวข้องกับ regist_id
-    for (const day of date_available) {
-      await DateTimeAvailable.create(id, day, is_parttime); // เพิ่มข้อมูลใหม่
-    }
+    // ลบข้อมูลเก่าทั้งหมดที่เกี่ยวข้องกับ regist_id และเพิ่มข้อมูลใหม่
+    await DateTimeAvailable.deleteMany(id); 
+
+      await DateTimeAvailable.create(id, date_available, is_parttime); // เพิ่มข้อมูลใหม่
+
 
     if (!updatedScholarship) {
       return NextResponse.json({ success: false, message: "Scholarship registration not found" }, { status: 404 });

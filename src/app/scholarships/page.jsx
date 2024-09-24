@@ -65,8 +65,28 @@ function ShowScholarships() {
 
   const handleAddData = (organization_id) => {
     router.push(`/organization/create/${organization_id}`);
+
     setSuccess("เพิ่มหน่วยงานสำเร็จ!");
   };
+
+      };
+  const handleorganization = (organization_id) => {
+      router.push(`/organization/show/${organization_id}`);
+      };
+
+  const handleShow = (scholarship_id) => {
+        router.push(`/showScholarshipAll/${scholarship_id}`);
+      };
+
+  // useEffect(() => {
+  //   if (scholarship_id) {
+  //     getDataById(scholarship_id);
+  //   }
+  // }, [scholarship_id]);
+  // const handleCreate = () => {
+  //   router.push(`/scholarships/create`);
+  // };
+
 
   const handleOrganization = (organization_id) => {
     router.push(`/organization/show/${organization_id}`);

@@ -14,7 +14,7 @@ class DateTimeAvailable {
       const [result] = await promisePool.query(
         `INSERT INTO datetimeavailable (regist_id, date_available, is_parttime) 
          VALUES (?, ?, ?)`,
-        [regist_id, date_available, is_parttime]
+        [regist_id, JSON.stringify(date_available), is_parttime]
       );
       return result.insertId; // Return the ID of the created entry
     } catch (error) {
@@ -40,19 +40,24 @@ static async findOne(regist_id, date_available) {
 
 
 
-  // Find DateTimeAvailable by regist_id
-  static async findByRegistId(regist_id) {
-    try {
-      const [rows] = await promisePool.query(
-        `SELECT * FROM datetimeavailable WHERE regist_id = ?`,
-        [regist_id]
-      );
-      return rows;
-    } catch (error) {
-      console.error('Error finding DateTimeAvailable entries:', error);
-      throw error;
-    }
+static async findByRegistId(regist_id) {
+  try {
+    const [rows] = await promisePool.query(
+      `SELECT * FROM datetimeavailable WHERE regist_id = ?`,
+      [regist_id]
+    );
+    
+    // แปลงข้อมูล date_available จาก JSON string กลับมาเป็น array
+    return rows.map(row => ({
+      ...row,
+      date_available: JSON.parse(row.date_available)
+    }));
+  } catch (error) {
+    console.error('Error finding DateTimeAvailable entries:', error);
+    throw error;
   }
+}
+
 
   // Update an existing DateTimeAvailable entry
   static async update(datetime_id, regist_id, date_available, is_parttime) {
@@ -61,7 +66,7 @@ static async findOne(regist_id, date_available) {
         `UPDATE datetimeavailable 
          SET regist_id = ?, date_available = ?, is_parttime = ? 
          WHERE datetime_id = ?`,
-        [regist_id, date_available, is_parttime, datetime_id]
+        [regist_id, JSON.stringify(date_available), is_parttime, datetime_id]
       );
       return result.affectedRows; // Return the number of affected rows
     } catch (error) {

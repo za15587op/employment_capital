@@ -44,7 +44,9 @@ function EditStudentPage({ params }) {
     }
   };
 
-  // Fetch student data by ID
+
+  
+  // ดึงข้อมูลนักศึกษาโดยใช้ student_id
   const getDataById = async (student_id) => {
     try {
       const res = await fetch(`http://localhost:3000/api/student/${student_id}`, {

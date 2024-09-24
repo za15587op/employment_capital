@@ -135,6 +135,17 @@ function ShowPage({ params }) {
           setSuccess(""); // Reset success message after navigation
         }, 1000);
     };
+
+    const handleShow = (organization_id) => {
+        router.push(`/showScholarshipAll/showStdOrgan/${scholarship_id}/${organization_id}`);
+        
+    };
+    
+    const handleEvaluate = (organization_id) => {
+        router.push(`/evaluateStudent/${scholarship_id}/${organization_id}`);
+        
+    };
+
     
     return (
         <>
@@ -148,50 +159,58 @@ function ShowPage({ params }) {
                     ปีการศึกษา <span >{newacademic_year } เทอมการศึกษาที่ <span >{newacademic_term }</span></span>
                     </h3>
                 </div>
-                <div className="flex justify-between items-center p-4">
-                    <div className="flex-grow"></div>
-                    <Link
-                        href={`/organization/create/${scholarship_id}`} 
-                        className="inline-block bg-blue-500 text-white px-8 py-4 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 "
-                    >
-                        เพิ่มหน่วยงาน
-                    </Link>
-                </div>
-                <br></br>
-                <div className="flex flex-col md:flex-row bg-blue-600 p-2 rounded">
-                    <div className="w-full bg-blue-800 p-2 rounded">
-                        {error && (
-                            <div className="text-red-500 text-center mb-4">{error}</div>
-                        )}
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full bg-white border border-gray-400 rounded-lg">
-                            <thead>
-                                <tr className="bg-gray-100 border-b border-gray-400">
-                                    <th className="text-left py-2 px-4 whitespace-nowrap">ชื่อหน่วยงาน</th>
-                                    <th className="text-left py-2 px-4 whitespace-nowrap">โทรศัพท์</th>
-                                    <th className="text-left py-2 px-4 whitespace-nowrap text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {organization.length > 0 ? (
-                                    organization.map(org => (
-                                        <tr key={org.organization_id} className="border-b border-gray-400 hover:bg-gray-50">
-                                            <td className="py-2 px-4 whitespace-nowrap">{org.organization_name}</td>
-                                            <td className="py-2 px-4 whitespace-nowrap">{org.contactPhone}</td>
-                                            <td className="py-2 px-4 text-right">
-                                            
-                                            <button
-                                                    onClick={() => handleAddData(org.organization_id)}
-                                                    className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 ml-2"
-                                                >
-                                                    เพิ่มข้อมูลหน่วยงาน
-                                                </button>
+
+                    <div className="flex justify-between items-center p-4">
+                        <div className="flex-grow"></div>
+                        <Link
+                                href={`/organization/create/${scholarship_id}`} // ใช้ org.organization_id เพื่อสร้าง dynamic URL
+                                className="inline-block bg-blue-500 text-white px-8 py-4 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 "
+                                >
+                                เพิ่มหน่วยงาน
+                                </Link>
+                        
+                        <Link
+                            href="/scholarshiporganization"
+                            className="inline-block bg-blue-500 text-white px-8 py-4 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 ml-2"
+                        >
+                            ดูหน่วยงาน
+                        </Link>
+                    </div>
+                    <br></br>
+                    <div className="flex flex-col md:flex-row bg-blue-600 p-2 rounded">
+                        <div className="w-full bg-blue-800 p-2 rounded">
+                            {error && (
+                                <div className="text-red-500 text-center mb-4">{error}</div>
+                            )}
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full bg-white border border-gray-400 rounded-lg">
+                                <thead>
+                                    <tr className="bg-gray-100 border-b border-gray-400">
+                                        <th className="text-left py-2 px-4 whitespace-nowrap">ชื่อหน่วยงาน</th>
+                                        <th className="text-left py-2 px-4 whitespace-nowrap">โทรศัพท์</th>
+                                        <th className="text-left py-2 px-4 whitespace-nowrap text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {organization.length > 0 ? (
+                                        organization.map(org => (
+                                            <tr key={org.organization_id} className="border-b border-gray-400 hover:bg-gray-50">
+                                                <td className="py-2 px-4 whitespace-nowrap">{org.organization_name}</td>
+                                                <td className="py-2 px-4 whitespace-nowrap">{org.contactPhone}</td>
+                                                <td className="py-2 px-4 text-right">
                                                 <button
-                                                    onClick={() => handleedit_add(org.organization_id)}
-                                                    className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 ml-2 "
-                                                >
-                                                    ดูข้อมูลหน่วยงาน
-                                                </button>
+                                                        onClick={() => handleEvaluate(org.organization_id)}
+                                                       className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 ml-2 "
+                                                    >
+                                                        ประเมิน
+                                                    </button>
+                                                <button
+                                                        onClick={() => handleShow(org.organization_id)}
+                                                       className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 ml-2 "
+                                                    >
+                                                        ดูคนสมัคร
+                                                    </button>
+
                                                 <button
                                                     onClick={() => handleDelete(org.organization_id)}
                                                     className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 ml-2"

@@ -11,7 +11,7 @@ export default function ScholarshipRegistration({ params }) {
   const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
-  const student_id = session.user.student_id;
+  const student_id = session?.user?.student_id || null;  // ตรวจสอบ session ก่อนใช้
 
   let scholarship_id = params?.id;
   if (!scholarship_id) {
@@ -19,6 +19,8 @@ export default function ScholarshipRegistration({ params }) {
     scholarship_id = parts[parts.length - 1];
   }
 
+
+  // สถานะที่ต้องใช้ในฟอร์ม
   const [related_works, setRelatedWorks] = useState("");
   const [isPartTime, setIsPartTime] = useState("");
   const [dateAvailable, setDateAvailable] = useState([]);
@@ -85,7 +87,7 @@ export default function ScholarshipRegistration({ params }) {
       setStudentGpa(data.student_gpa);
       setStudentPhone(data.student_phone);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching student data:", error);
     }
   };
 
@@ -105,16 +107,18 @@ export default function ScholarshipRegistration({ params }) {
       setAcademicYear(data.academic_year);
       setAcademicTerm(data.academic_term);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching scholarship data:", error);
     }
   };
 
   useEffect(() => {
-    getStudentById(student_id);
+    if (student_id) {
+      getStudentById(student_id);
+    }
     if (scholarship_id) {
       getDataById(scholarship_id);
     }
-  }, [scholarship_id]);
+  }, [student_id, scholarship_id]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -122,15 +126,17 @@ export default function ScholarshipRegistration({ params }) {
     const fileInput = event.target.querySelector('input[type="file"]');
     const formData = new FormData();
 
-    if (!session?.user?.student_id || !scholarship_id) {
+    if (!student_id || !scholarship_id) {
       alert("Student ID หรือ Scholarship ID หายไป.");
       return;
     }
 
     try {
       const checkRegistrationResponse = await fetch(
-        `/api/student_scholarships/?student_id=${session.user.student_id}`,
-        { method: "GET" }
+        `/api/student_scholarships/?student_id=${student_id}`,
+        {
+          method: "GET",
+        }
       );
 
       const checkRegistrationData = await checkRegistrationResponse.json();
@@ -140,7 +146,7 @@ export default function ScholarshipRegistration({ params }) {
         return;
       }
 
-      formData.append("student_id", session.user.student_id);
+      formData.append("student_id", student_id);
       formData.append("scholarship_id", scholarship_id);
       formData.append("related_works", related_works);
       formData.append("is_parttime", isPartTime);

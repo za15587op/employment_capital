@@ -12,6 +12,8 @@ export default function EditScholarshipRegistration({ params }) {
   const [success, setSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
+  const http = 'http://localhost:3000';
+
   let regist_id = params?.id;
   if (!regist_id) {
     const parts = pathname.split("/");
@@ -41,15 +43,18 @@ export default function EditScholarshipRegistration({ params }) {
       const res = await fetch(`/api/student_scholarships/edit/${regist_id}`, {
         method: "GET",
       });
-
+  
       if (!res.ok) {
         throw new Error("Failed to fetch");
       }
-
+  
       const data = await res.json();
+      console.log(data);
+  
       setRelatedWorks(data.related_works);
       setIsPartTime(data.datetime_available[0]?.is_parttime);
-      setDateAvailable(data.datetime_available.map(d => d.date_available));
+      // แสดงค่า date_available ที่เป็น array
+      setDateAvailable(data.datetime_available[0]?.date_available || []); // เข้าถึง date_available อย่างถูกต้อง
       setScholarshipId(data.scholarship_id);
       setAcademicTerm(data.academic_term);
       setAcademicYear(data.academic_year);
@@ -65,6 +70,7 @@ export default function EditScholarshipRegistration({ params }) {
       console.log(error);
     }
   };
+  
 
   useEffect(() => {
     if (regist_id) {
@@ -130,33 +136,20 @@ export default function EditScholarshipRegistration({ params }) {
       setDateAvailable([]);
     }
   };
-
-  const handleDaySelectionChange = (e, day) => {
-    const { checked } = e.target;
-    if (checked) {
-      setDateAvailable([...dateAvailable, day]);
-    } else {
-      setDateAvailable(dateAvailable.filter((selectedDay) => selectedDay !== day));
-    }
-  };
-
+  
   const renderDaysCheckboxes = () => {
-    let daysToRender = [];
-
-    if (isPartTime === "fulltime") {
-      daysToRender = weekDays;
-    }
-
+    const weekDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
+  
     return (
       <div className="flex flex-wrap gap-4">
         <label className="font-semibold text-gray-600">เลือกวันที่คุณสามารถทำงานได้:</label>
-        {daysToRender.map((day, index) => (
+        {weekDays.map((day, index) => (
           <div key={index} className="flex items-center space-x-2">
             <input
               type="checkbox"
               id={`day_${index}`}
               value={day}
-              checked={dateAvailable.includes(day)}
+              checked={dateAvailable.includes(day)} // ตรวจสอบวันที่ที่ถูกเลือก
               onChange={(e) => handleDaySelectionChange(e, day)}
               className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
             />
@@ -166,6 +159,18 @@ export default function EditScholarshipRegistration({ params }) {
       </div>
     );
   };
+  
+  const handleDaySelectionChange = (e, day) => {
+    const { checked } = e.target;
+    if (checked) {
+      setDateAvailable([...dateAvailable, day]); // เพิ่มวันถ้า checkbox ถูกเลือก
+    } else {
+      setDateAvailable(dateAvailable.filter((selectedDay) => selectedDay !== day)); // ลบวันถ้า checkbox ถูกยกเลิกเลือก
+    }
+  };
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
@@ -203,7 +208,7 @@ export default function EditScholarshipRegistration({ params }) {
           <div className="flex flex-col space-y-4">
             <div>
               <label htmlFor="file" className="font-medium text-gray-700">ไฟล์ที่อัปโหลดแล้ว:</label>{" "}
-              <a href={`/${relatedWorks}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
+              <a href={`${baseUrl}/${relatedWorks}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
                 ดูไฟล์ที่อัปโหลด
               </a>
               <input
@@ -241,8 +246,9 @@ export default function EditScholarshipRegistration({ params }) {
               </div>
             </div>
 
-            {isPartTime && renderDaysCheckboxes()}
+             {isPartTime === "fulltime" || isPartTime === "both" ? renderDaysCheckboxes() : null}
           </div>
+
 
           <div className="flex justify-center mt-6">
             <button
@@ -254,6 +260,7 @@ export default function EditScholarshipRegistration({ params }) {
           </div>
         </form>
       </div>
+
 
       {/* Success Message */}
       {success && (
@@ -286,3 +293,4 @@ export default function EditScholarshipRegistration({ params }) {
     </div>
   );
 }
+

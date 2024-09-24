@@ -92,10 +92,10 @@ class Student {
           studentskills.skill_level, 
           skilltypes.skill_type_name 
         FROM student
-        LEFT JOIN studentskills ON student.student_id = studentskills.student_id
-        LEFT JOIN skills ON studentskills.skill_id = skills.skill_id
-        LEFT JOIN skills_skilltypes ON skills.skill_id = skills_skilltypes.skill_id
-        LEFT JOIN skilltypes ON skilltypes.skill_type_id = skills_skilltypes.skill_type_id
+        inner JOIN studentskills ON student.student_id = studentskills.student_id
+        inner JOIN skills ON studentskills.skill_id = skills.skill_id
+        inner JOIN skills_skilltypes ON skills.skill_id = skills_skilltypes.skill_id
+        inner JOIN skilltypes ON skilltypes.skill_type_id = skills_skilltypes.skill_type_id
         WHERE student.student_id = ?
       `, [student_id]);
 
@@ -133,14 +133,17 @@ class Student {
     }
   }
 
-
+//ยังมี dug อยู่ คือ ตอนอัพเดทถ้ามี
   static async update(student_id, studentData, skills, studentSkills, selectedSkillTypes) {
+
+    console.log(student_id, "student_id");
+    
     const connection = await promisePool.getConnection();
-
+    
     try {
-      await connection.beginTransaction(); // เริ่ม Transaction
-
-      // อัปเดตข้อมูลนักศึกษาในตาราง student
+      await connection.beginTransaction(); // เริ่ม transaction
+  
+      // อัปเดตข้อมูลนักศึกษา
       await connection.query(
         `
         UPDATE student 
@@ -161,23 +164,29 @@ class Student {
           student_id
         ]
       );
-
-      // ลบข้อมูลทักษะเดิมที่เกี่ยวข้องกับ student_id
-      await connection.query(
+  
+      // ลบข้อมูลทักษะเดิมที่เกี่ยวข้องกับ student_id และตรวจสอบผล
+      const [deleteResult] = await connection.query(
         "DELETE FROM studentskills WHERE student_id = ?", [student_id]
       );
-
+  
+      if (deleteResult.affectedRows > 0) {
+        console.log(`Deleted ${deleteResult.affectedRows} skill(s) for student_id: ${student_id}`);
+      } else {
+        console.log(`No skills to delete for student_id: ${student_id}`);
+      }
+  
       // เพิ่มทักษะใหม่ใน student_skills
       for (let i = 0; i < skills.length; i++) {
         const { skill_name } = skills[i];
         const { skill_level } = studentSkills[i];
         const { skill_type_id } = selectedSkillTypes[i];
-
-        // อัปเดตทักษะและเชื่อมโยงกับ student_skills
+  
+        // ตรวจสอบว่าทักษะมีอยู่หรือไม่
         const [skillResult] = await connection.query(
           "SELECT skill_id FROM skills WHERE skill_name = ?", [skill_name]
         );
-
+  
         let skill_id;
         if (skillResult.length > 0) {
           skill_id = skillResult[0].skill_id;
@@ -187,25 +196,25 @@ class Student {
           );
           skill_id = insertSkillResult.insertId;
         }
-
+  
         // เพิ่มข้อมูลลงใน student_skills
         await connection.query(
           "INSERT INTO studentskills (student_id, skill_id, skill_level) VALUES (?, ?, ?)",
           [student_id, skill_id, skill_level]
         );
-
+  
         // ตรวจสอบว่า skill_type_id ไม่เป็น NULL ก่อนทำการ INSERT
-      if (skill_type_id) {
-        await connection.query(
-          "INSERT INTO skills_skilltypes (skill_id, skill_type_id) VALUES (?, ?)",
-          [skill_id, skill_type_id]
-        );
+        if (skill_type_id) {
+          await connection.query(
+            "INSERT INTO skills_skilltypes (skill_id, skill_type_id) VALUES (?, ?)",
+            [skill_id, skill_type_id]
+          );
+        }
       }
-      
-      }
-
+  
       await connection.commit(); // ยืนยันการทำงาน (Commit)
       return { success: true };
+  
     } catch (error) {
       await connection.rollback(); // ย้อนกลับการทำงานหากเกิดข้อผิดพลาด
       console.error('Error updating student:', error);
@@ -214,6 +223,8 @@ class Student {
       connection.release(); // ปิดการเชื่อมต่อ
     }
   }
+  
+  
 
   // //ใช้ตอน showStudentScholarships
   // static async findByIdALL(student_id) {
