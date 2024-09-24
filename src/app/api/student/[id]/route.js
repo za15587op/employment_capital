@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import Student from "../../../../../models/student";
 
+
+//หๆส ยังมี dug อยู่
 export async function GET(req, { params }) {
   try {
     const student_id = params.id; // ดึง student_id จากพารามิเตอร์ URL

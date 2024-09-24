@@ -128,6 +128,17 @@ function ShowPage({ params }) {
         router.push(`/organization/showogz/${scholarship_id}/${organization_id}`);
         
     };
+
+    const handleShow = (organization_id) => {
+        router.push(`/showScholarshipAll/showStdOrgan/${scholarship_id}/${organization_id}`);
+        
+    };
+    
+    const handleEvaluate = (organization_id) => {
+        router.push(`/evaluateStudent/${scholarship_id}/${organization_id}`);
+        
+    };
+
     
     return (
         <>
@@ -179,7 +190,18 @@ function ShowPage({ params }) {
                                                 <td className="py-2 px-4 whitespace-nowrap">{org.organization_name}</td>
                                                 <td className="py-2 px-4 whitespace-nowrap">{org.contactPhone}</td>
                                                 <td className="py-2 px-4 text-right">
-                                                
+                                                <button
+                                                        onClick={() => handleEvaluate(org.organization_id)}
+                                                       className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 ml-2 "
+                                                    >
+                                                        ประเมิน
+                                                    </button>
+                                                <button
+                                                        onClick={() => handleShow(org.organization_id)}
+                                                       className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 ml-2 "
+                                                    >
+                                                        ดูคนสมัคร
+                                                    </button>
                                                 <button
                                                         onClick={() => handleAddData(org.organization_id)}
                                                         className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 ml-2"

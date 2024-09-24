@@ -59,6 +59,10 @@ function ShowScholarships() {
       router.push(`/organization/show/${organization_id}`);
       };
 
+  const handleShow = (scholarship_id) => {
+        router.push(`/showScholarshipAll/${scholarship_id}`);
+      };
+
   // useEffect(() => {
   //   if (scholarship_id) {
   //     getDataById(scholarship_id);
@@ -173,6 +177,11 @@ function ShowScholarships() {
                       </button>
                     </td>
                   <td className="py-2 px-4 text-right">
+                  <button
+                     onClick={() => handleShow(scholarship.scholarship_id)}
+                      className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 mr-2" >
+                      ดูจำนวนผู้สมัคร
+                      </button>
                   <button
                      onClick={() => handleAddData(scholarship.scholarship_id)}
                       className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 mr-2" >

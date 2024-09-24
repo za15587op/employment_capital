@@ -9,16 +9,13 @@ export default function ScholarshipRegistration({ params }) {
   const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
-  const student_id = session.user.student_id;
+  const student_id = session?.user?.student_id || null;  // ตรวจสอบ session ก่อนใช้
 
-  console.log(student_id, "student_id");
   let scholarship_id = params?.id;
   if (!scholarship_id) {
     const parts = pathname.split("/");
     scholarship_id = parts[parts.length - 1];
   }
-
-  console.log(scholarship_id, "scholarship_id");
 
   // สถานะที่ต้องใช้ในฟอร์ม
   const [related_works, setRelatedWorks] = useState("");
@@ -89,9 +86,8 @@ export default function ScholarshipRegistration({ params }) {
       setStudentYear(data.student_year);
       setStudentGpa(data.student_gpa);
       setStudentPhone(data.student_phone);
-      console.log(data, "data");
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching student data:", error);
     }
   };
 
@@ -110,19 +106,20 @@ export default function ScholarshipRegistration({ params }) {
       setScholarships(data);
       setAcademicYear(data.academic_year);
       setAcademicTerm(data.academic_term);
-      console.log(data, "data");
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching scholarship data:", error);
     }
   };
 
   // เมื่อ component ถูก mount
   useEffect(() => {
-    getStudentById(student_id);
+    if (student_id) {
+      getStudentById(student_id);
+    }
     if (scholarship_id) {
       getDataById(scholarship_id);
     }
-  }, [scholarship_id]);
+  }, [student_id, scholarship_id]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -130,14 +127,14 @@ export default function ScholarshipRegistration({ params }) {
     const fileInput = event.target.querySelector('input[type="file"]');
     const formData = new FormData();
 
-    if (!session?.user?.student_id || !scholarship_id) {
+    if (!student_id || !scholarship_id) {
       alert("Student ID หรือ Scholarship ID หายไป.");
       return;
     }
 
     try {
       const checkRegistrationResponse = await fetch(
-        `/api/student_scholarships/?student_id=${session.user.student_id}`,
+        `/api/student_scholarships/?student_id=${student_id}`,
         {
           method: "GET",
         }
@@ -150,7 +147,7 @@ export default function ScholarshipRegistration({ params }) {
         return;
       }
 
-      formData.append("student_id", session.user.student_id);
+      formData.append("student_id", student_id);
       formData.append("scholarship_id", scholarship_id);
       formData.append("related_works", related_works);
       formData.append("is_parttime", isPartTime);
@@ -165,18 +162,6 @@ export default function ScholarshipRegistration({ params }) {
         method: "POST",
         body: formData,
       });
-
-      // if (!event.target.files || event.target.files.length === 0) {
-      //   return; // User canceled file selection
-      // }
-      // const file = event.target.files[0];
-      // const formData = new FormData();
-      // formData.append('file', file);
-  
-      // await fetch('/api/upload', {
-      //   method: 'POST',
-      //   body: formData,
-      // });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -312,183 +297,3 @@ export default function ScholarshipRegistration({ params }) {
     </div>
   );
 }
-
-
-// "use client";
-// import { useState, useEffect } from "react";
-// import { useSession } from "next-auth/react";
-// import { usePathname } from "next/navigation";
-// import { useRouter } from "next/navigation";
-// import Navber from "@/app/components/Navber";
-
-// export default function ScholarshipRegistration({ params }) {
-//   const { data: session } = useSession();
-//   const pathname = usePathname();
-//   const router = useRouter();
-
-//   let scholarship_id = params?.id;
-//   if (!scholarship_id) {
-//     const parts = pathname.split("/");
-//     scholarship_id = parts[parts.length - 1];
-//   }
-
-//   console.log(scholarship_id, "scholarship_id");
-
-//   const [related_works, setRelatedWorks] = useState("");
-//   const [isPartTime, setIsPartTime] = useState("");
-//   const [scholarships, setScholarships] = useState({});
-
-//   const getDataById = async (scholarship_id) => {
-//     try {
-//       const res = await fetch(`http://localhost:3000/api/scholarships/${scholarship_id}`, {
-//         method: "GET",
-//         cache: "no-store",
-//       });
-
-//       if (!res.ok) {
-//         throw new Error("Failed to fetch");
-//       }
-
-//       const data = await res.json();
-//       setScholarships(data);
-//       console.log(data, "data");
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     if (scholarship_id) {
-//       getDataById(scholarship_id);
-//     }
-//   }, [scholarship_id]);
-
-//   const handleSubmit = async (event) => {
-//     event.preventDefault();
-  
-//     console.log(isPartTime, "isPartTime before submit");
-    
-//     if (!isPartTime) {
-//       alert("กรุณาเลือกประเภทงานในเวลา/นอกเวลา");
-//       return;
-//     }
-  
-//     const fileInput = event.target.querySelector('input[type="file"]');
-//     const formData = new FormData();
-  
-//     if (!session?.user?.student_id || !scholarship_id) {
-//       alert("Student ID หรือ Scholarship ID หายไป.");
-//       return;
-//     }
-  
-//     try {
-//       const checkRegistrationResponse = await fetch(`/api/student_scholarships/?student_id=${session.user.student_id}`,
-//         {
-//           method: "GET",
-//         }
-//       );
-  
-//       const checkRegistrationData = await checkRegistrationResponse.json();
-  
-//       if (checkRegistrationData.exists) {
-//         alert("เคยสมัครไปแล้ว");
-//         return;
-//       }
-  
-//       formData.append("student_id", session.user.student_id);
-//       formData.append("scholarship_id", scholarship_id);
-//       formData.append("related_works", related_works);
-//       formData.append("is_parttime", isPartTime);
-//       formData.append("scholarships", JSON.stringify(scholarships));
-  
-//       if (fileInput.files.length > 0) {
-//         formData.append("file", fileInput.files[0]);
-//       }
-  
-//       const response = await fetch("/api/student_scholarships", {
-//         method: "POST",
-//         body: formData,
-//       });
-  
-//       if (!response.ok) {
-//         const errorData = await response.json();
-//         if (errorData.error && errorData.error.includes("Duplicate entry")) {
-//           alert("เคยสมัครทุนนี้ไปแล้ว");
-//         } else {
-//           throw new Error("การส่งฟอร์มล้มเหลว");
-//         }
-//       } else {
-//         const result = await response.json();
-//         if (result.success) {
-//           alert("สมัครทุนการศึกษาสำเร็จ!");
-//           router.push("/welcome/showStudentScholarships");
-//         } else {
-//           alert("การสมัครทุนการศึกษาไม่สำเร็จ");
-//         }
-//       }
-//     } catch (error) {
-//       console.error("Error submitting form:", error);
-//       alert("เกิดข้อผิดพลาดขณะส่งฟอร์ม");
-//     }
-//   };
-  
-//   return (
-//     <>
-//     <Navber session={session}/> 
-//     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-teal-500">
-//       <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
-//         <h1 className="text-2xl font-bold text-center mb-6">สมัครทุนการศึกษา</h1>
-//         <form onSubmit={handleSubmit} className="space-y-6">
-//           <div className="flex flex-col space-y-2">
-//             <label htmlFor="file" className="font-medium text-gray-700">Upload File:</label>
-//             <input
-//               type="file"
-//               id="file"
-//               name="file"
-//               onChange={(e) => setRelatedWorks(e.target.value)}
-//               className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-//             />
-//           </div>
-
-//           <div className="flex flex-col space-y-2">
-//             <label className="font-medium text-gray-700">ปฎิบัติงานนอกเวลาได้หรือไม่</label>
-//             <div className="flex items-center space-x-4">
-//               <div>
-//                 <input
-//                   type="radio"
-//                   id="in_time"
-//                   value="Yes"
-//                   name="is_parttime"
-//                   checked={isPartTime === "Yes"}
-//                   onChange={(e) => setIsPartTime(e.target.value)}
-//                   className="focus:ring-blue-500"
-//                 />
-//                 <label htmlFor="in_time" className="ml-2 text-gray-600">ปฎิบัติงานนอกเวลาได้</label>
-//               </div>
-//               <div>
-//                 <input
-//                   type="radio"
-//                   id="out_time"
-//                   value="No"
-//                   name="is_parttime"
-//                   checked={isPartTime === "No"}
-//                   onChange={(e) => setIsPartTime(e.target.value)}
-//                   className="focus:ring-blue-500"
-//                 />
-//                 <label htmlFor="out_time" className="ml-2 text-gray-600">ปฎิบัติงานนอกเวลาไม่ได้</label>
-//               </div>
-//             </div>
-//           </div>
-
-//           <button
-//             type="submit"
-//             className="w-full bg-blue-500 text-white py-2 rounded-md shadow-md hover:bg-blue-600 transition duration-300"
-//           >
-//             สมัคร
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//     </>
-//   );
-// }

@@ -41,6 +41,8 @@ function EditStudentPage({ params }) {
     }
   };
 
+
+  
   // ดึงข้อมูลนักศึกษาโดยใช้ student_id
   const getDataById = async (student_id) => {
     try {
