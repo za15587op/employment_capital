@@ -4,6 +4,7 @@ import promisePool from '../lib/db';
 class Skills {
   constructor( skill_name) {
     this.skill_name = skill_name;
+    this.skill_name = skill_name;
   }
 
   // สร้างทักษะใหม่
