@@ -48,13 +48,17 @@ function ShowSkillTypes() {
     }
   };
 
+  // const create = () => {
+  //   router.push(`/skillTypes`);
+  // };
+
   return (
     <div>
       <Navber session={session}/>
       <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md mt-10">
         <h3 className="text-2xl font-bold mb-6 text-center">รายการประเภททักษะ</h3>
         {error && <div className="bg-red-100 text-red-600 p-2 rounded mb-4">{error}</div>}
-
+        {/* <button onClick={create()}></button> */}
         <table className="table-auto w-full bg-white border border-gray-300 shadow-md rounded-md">
           <thead>
             <tr className="bg-gray-200 text-gray-700">

@@ -139,38 +139,12 @@ function ShowScholarships() {
   return (
     <>
       <Navber session={session} />
-      <div className="แถบสี"></div> 
+      <div className="แถบสี"></div>
       <br /><br />
       <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
         <h3 className="text-2xl font-bold mb-6 text-center bg-blue-500 text-white px-5 py-3 rounded-lg hover:bg-blue-600">
           Scholarships List
         </h3>
-        {success && (
-          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-[#0fef76] to-[#09c9f6] border-2 border-[#0F1035] rounded-lg shadow-[0px_0px_20px_5px_rgba(15,239,118,0.5)] text-center transition-all duration-500 ease-out animate-pulse">
-            <div className="flex items-center justify-center space-x-4">
-              <div className="p-2 bg-green-100 rounded-full shadow-lg">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="w-10 h-10 text-green-600"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <div className="text-2xl font-bold text-white drop-shadow-lg">
-                {success}
-              </div>
-            </div>
-          </div>
-        )}
-
         <div className="flex justify-between items-center p-4">
           <div className="flex-grow"></div>
           <a href='/scholarships/create' className="bg-blue-500 text-white px-8 py-4 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
@@ -209,17 +183,12 @@ function ShowScholarships() {
                       <td className="py-2 px-4 whitespace-nowrap">{scholarship.academic_year}</td>
                       <td className="py-2 px-4 whitespace-nowrap">{scholarship.academic_term}</td>
                       <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_start_date}</td>
-                      <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_end_date}</td> 
+                      <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_end_date}</td>
                       <td className="py-2 px-4">
                         <button
-                          onClick={() =>
-                            toggleStatus(scholarship.scholarship_id, scholarship.scholarship_status)
-                          }
-                          className={`${
-                            scholarship.scholarship_status === 1
-                              ? "bg-green-500"
-                              : "bg-red-500"
-                          } text-white px-3 py-1 rounded-lg`}
+                          onClick={() => toggleStatus(scholarship.scholarship_id, scholarship.scholarship_status)}
+                          className={`${scholarship.scholarship_status === 1 ? "bg-green-500" : "bg-red-500"
+                            } text-white px-3 py-1 rounded-lg`}
                         >
                           {scholarship.scholarship_status === 1 ? "เปิด" : "ปิด"}
                         </button>
@@ -227,7 +196,7 @@ function ShowScholarships() {
                       <td className="py-2 px-4 text-right">
                         <button
                           onClick={() => handleAddData(scholarship.scholarship_id)}
-                          className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 mr-2"
+                          className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 mr-2"
                         >
                           เพิ่มหน่วยงาน
                         </button>
@@ -239,7 +208,7 @@ function ShowScholarships() {
                         </button>
                         <button
                           onClick={() => handleUpdate(scholarship.scholarship_id)}
-                          className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 mr-2"
+                          className="bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-indigo-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300 mr-2"
                         >
                           Edit
                         </button>
@@ -256,12 +225,38 @@ function ShowScholarships() {
               </table>
             </div>
           </div>
-        </div>   
-      </div>  
+          {success && (
+            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-[#0fef76] to-[#09c9f6] border-2 border-[#0F1035] rounded-lg shadow-[0px_0px_20px_5px_rgba(15,239,118,0.5)] text-center transition-all duration-500 ease-out animate-pulse">
+              <div className="flex items-center justify-center space-x-4">
+                <div className="p-2 bg-green-100 rounded-full shadow-lg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="w-10 h-10 text-green-600"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <div className="text-2xl font-bold text-white drop-shadow-lg">
+                  {success}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
       <br /><br />
       <Foter />
     </>
   );
+
 }
 
 export default ShowScholarships;

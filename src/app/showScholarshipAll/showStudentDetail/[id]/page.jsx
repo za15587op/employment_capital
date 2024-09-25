@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import Foter from "@/app/components/Foter";
+import Navbar from "@/app/components/Navber";
 
 export default function ShowStudentDetailPage({ params }) {
   const { data: session, status } = useSession();
@@ -129,11 +131,14 @@ export default function ShowStudentDetailPage({ params }) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   return (
+    <>
+    
+    <Navbar/>
     <div className="container mx-auto px-4 py-8">
       <form
         className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 space-y-6"
       >
-        <h1 className="text-3xl font-bold text-indigo-600 mb-6 text-center">แก้ไขข้อมูลการสมัครทุนจ้างงาน</h1>
+        <h1 className="text-3xl font-bold text-indigo-600 mb-6 text-center">ดูข้อมูลการสมัครทุนจ้างงาน</h1>
 
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-2">
@@ -215,5 +220,7 @@ export default function ShowStudentDetailPage({ params }) {
         </div>
       </form>
     </div>
+    <Foter/>
+    </>
   );
 }

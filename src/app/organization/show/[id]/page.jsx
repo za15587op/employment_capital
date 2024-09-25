@@ -169,12 +169,7 @@ function ShowPage({ params }) {
                                 เพิ่มหน่วยงาน
                                 </Link>
                         
-                        <Link
-                            href="/scholarshiporganization"
-                            className="inline-block bg-blue-500 text-white px-8 py-4 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 ml-2"
-                        >
-                            ดูหน่วยงาน
-                        </Link>
+              
                     </div>
                     <br></br>
                     <div className="flex flex-col md:flex-row bg-blue-600 p-2 rounded">
@@ -200,17 +195,17 @@ function ShowPage({ params }) {
                                                 <td className="py-2 px-4 text-right">
 
                                                 <button
-                                                        onClick={() => handleEvaluate(org.organization_id)}
-                                                       className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 ml-2 "
-                                                    >
-                                                        ประเมิน
-                                                    </button>
+                                                    onClick={() => handleEvaluate(org.organization_id)}
+                                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 ml-2"
+                                                >
+                                                    ประเมิน
+                                                </button>
                                                 <button
-                                                        onClick={() => handleShow(org.organization_id)}
-                                                       className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 ml-2 "
-                                                    >
-                                                        ดูคนสมัคร
-                                                    </button>
+                                                    onClick={() => handleShow(org.organization_id)}
+                                                    className="bg-purple-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-purple-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 ml-2"
+                                                >
+                                                    ดูคนสมัคร
+                                                </button>
                                                 <button
                                                     onClick={() => handleAddData(org.organization_id)}
                                                     className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 ml-2"
@@ -219,7 +214,7 @@ function ShowPage({ params }) {
                                                 </button>
                                                 <button
                                                     onClick={() => handleedit_add(org.organization_id)}
-                                                    className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 ml-2 "
+                                                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-300 ml-2"
                                                 >
                                                     ดูข้อมูลหน่วยงาน
                                                 </button>

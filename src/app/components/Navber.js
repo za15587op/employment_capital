@@ -178,16 +178,16 @@ function Navbar({ session }) {
                         </button>
                       </Link>
                     </div>
-                    <div className="text-center">
-                      <Link href="/homeAdmin">
+                    {/* <div className="text-center">
+                      <Link href="/skillTypes">
                         <button
                           className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                           style={{ fontSize: "20px" }}
                         >
-                          โปรไฟล์
+                          เพิ่มประเภททักษะ
                         </button>
                       </Link>
-                    </div>
+                    </div> */}
                     <div className="text-center">
                       <button
                         className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"

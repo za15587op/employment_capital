@@ -98,7 +98,8 @@ function ShowStudentScholarshipsPage() {
                 <div className="flex justify-between items-center mb-4">
                   <h4 className="text-xl font-semibold text-gray-800">ทุนการศึกษา #{index + 1}</h4>
                   <span className={`px-3 py-1 rounded-full text-sm ${item.student_status === 'approved' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'}`}>
-                    {item.student_status === 'approved' ? 'อนุมัติ' : 'อยู่ระหว่างดำเนินการ'}
+                    {/* {item.student_status === 'approved' ? 'อนุมัติ' : 'อยู่ระหว่างดำเนินการ'} */}
+                    {item.student_status}
                   </span>
                 </div>
                 <div className="text-gray-700">
