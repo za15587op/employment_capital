@@ -20,13 +20,14 @@ class ScholarshipRegistrations {
     student_id,
     scholarship_id,
     related_works,
+    join_org,
     student_status = "Pending"
   ) {
     try {
       const [result] = await promisePool.query(
-        `INSERT INTO scholarshipregistrations (student_id, scholarship_id, related_works, student_status) 
-         VALUES (?, ?, ?, ?)`,
-        [student_id, scholarship_id, related_works, student_status = "Pending"]
+        `INSERT INTO scholarshipregistrations (student_id, scholarship_id, related_works, join_org, student_status) 
+         VALUES (?, ?, ?, ?, ?)`,
+        [student_id, scholarship_id, related_works, JSON.stringify(join_org), student_status = "Pending"]
       );
       return result.insertId; // Return the ID of the created registration
     } catch (error) {
@@ -56,9 +57,9 @@ class ScholarshipRegistrations {
     try {
       const [result] = await promisePool.query(
         `UPDATE scholarshipregistrations 
-           SET related_works = ? , student_status = ?
+           SET related_works = ? ,join_org = ?, student_status = ?
            WHERE regist_id = ?`,
-        [updateData.related_works, student_status, regist_id]
+        [updateData.related_works,JSON.stringify(updateData.join_org), student_status, regist_id]
       );
 
       if (result.affectedRows === 0) {
@@ -129,6 +130,10 @@ class ScholarshipRegistrations {
         student_year: rows[0].student_year,
         student_phone: rows[0].student_phone,
         student_gpa: rows[0].student_gpa,
+        join_org:rows[0].join_org,
+        join_org: rows.map((row) => ({
+          join_org: JSON.parse(row.join_org)
+        })),
         datetime_available: rows.map((row) => ({
           date_available: row.date_available,
           is_parttime: row.is_parttime,

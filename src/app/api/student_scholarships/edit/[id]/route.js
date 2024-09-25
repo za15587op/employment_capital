@@ -81,13 +81,14 @@ export async function PUT(req, { params }) {
     const is_parttime = formData.get("is_parttime");
     const student_status = formData.get("student_status");
     const date_available = JSON.parse(formData.get("date_available")); // ได้รับค่า date_available เป็น array
+    const join_org = JSON.parse(formData.get("join_org")); 
     
     const filePath = await handleFileUpload(formData);
     const fileOrWorksPath = filePath || related_works;
 
     const updatedScholarship = await ScholarshipRegistrations.findOneAndUpdate(
       { regist_id: id },
-      { related_works: fileOrWorksPath, is_parttime , student_status },
+      { related_works: fileOrWorksPath, is_parttime , join_org , student_status },
       // { student_status:student_status}
     );
 

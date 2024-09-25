@@ -79,6 +79,7 @@ export async function POST(req) {
 
     const is_parttime = formData.get("is_parttime");
     const date_available = JSON.parse(formData.get("date_available"));
+    const join_org = JSON.parse(formData.get("join_org"));
 
     // ตรวจสอบว่ามีการอัปโหลดไฟล์หรือไม่ ถ้ามี ให้ใช้พาธไฟล์ที่อัปโหลดจริง ๆ
     const fileOrWorksPath = filePath || related_works;
@@ -88,6 +89,7 @@ export async function POST(req) {
       student_id,
       scholarship_id,
       fileOrWorksPath, // ใช้พาธไฟล์แทนที่ถ้ามีการอัปโหลดไฟล์
+      join_org,
       student_status
     );
 
@@ -96,7 +98,7 @@ export async function POST(req) {
 await DateTimeAvailable.create(
   registrationId,
   date_available, // ส่งเป็น JSON string ไปบันทึกในฐานข้อมูล
-  is_parttime,
+  is_parttime
 );
 
     // // บันทึกข้อมูลวันเวลาที่สามารถทำงานในฐานข้อมูล
