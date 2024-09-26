@@ -15,10 +15,11 @@ function ShowStudentScholarshipsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/login');
+    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (!session) {
+        router.push("/login");
     }
-  }, [status, router]);
+}, [session, status, router]);;
 
   const student_id = session?.user?.student_id;
 

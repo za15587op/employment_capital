@@ -1,10 +1,14 @@
-import { Inter } from "next/font/google";
+import { Kanit } from "next/font/google"; // แก้ไขเป็น Kanit
 import "./globals.css";
 import { AuthProvider } from "./provider";
 import { SessionProvider } from 'next-auth/react';
 import Navber from "./components/Navber";
 
-const inter = Inter({ subsets: ["latin"] });
+// นำเข้า Kanit จาก Google Fonts
+const kanit = Kanit({ 
+  subsets: ["latin"], 
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] // น้ำหนักที่ต้องการใช้
+});
 
 export const metadata = {
   title: "Create Next App",
@@ -14,12 +18,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-        <AuthProvider>
-      <body className={inter.className}>
+      <AuthProvider>
+        {/* เปลี่ยนเป็นใช้ className ของฟอนต์ Kanit */}
+        <body className={kanit.className}>
           {children}
         </body>
-          </AuthProvider>
+      </AuthProvider>
     </html>
   );
 }
-

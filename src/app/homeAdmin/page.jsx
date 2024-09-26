@@ -1,24 +1,38 @@
 "use client";
-import React from 'react';
+import React, { useEffect } from 'react'; // นำเข้า useEffect
 import Navber from '../components/Navber';
 import Foter from '../components/Foter';
 import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation'; // ใช้ useRouter แทน redirect
 import Image from 'next/image';
 
 function ProfilePage() {
   const { data: session, status } = useSession();
-console.log(session, "session2");
-  if (!session) redirect("/login");
+  const router = useRouter(); // เพิ่มการใช้ useRouter
+
+  console.log(session, "session2");
+
+  useEffect(() => {
+    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (!session) {
+      router.push("/login"); // ถ้าไม่มี session ให้ไปที่หน้า login
+    }
+  }, [session, status, router]);
+
+  // ถ้า session กำลังโหลด ให้แสดง "Loading..."
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  // ถ้าไม่มี session ให้รีไดเรกต์ไปหน้า login
+  if (!session) {
+    return null; // หรือแสดง Loading หรือ Redirect แทนการรีเทิร์นว่างๆ
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035] relative overflow-hidden">
-      {/* เคลื่อนไหวของพื้นหลัง */}
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-[#365486] to-[#0F1035] opacity-20 animate-movingBackground"></div>
-
-      {/* เพิ่มรายละเอียด UI */}
       <Navber session={session} />
-      
       <div className="relative p-10">
         <div className="logohome flex justify-center">
           <Image
@@ -33,11 +47,11 @@ console.log(session, "session2");
           บริการด้านทุนจ้างงานนิสิต มหาวิทยาลัยทักษิณ
         </h1>
         <p className="text-2xl font-bold mb-6 text-center mt-4 bg-white bg-opacity-20 p-6 rounded-lg shadow-lg text-white backdrop-blur-lg">
-          ยินดีตอนรับเข้าสู่ บริการด้านทุนจ้างงานนิสิต มหาวิทยาลัยทักษิณ <br /> {session.user.name}!
+          ยินดีตอนรับเข้าสู่ บริการด้านทุนจ้างงานนิสิต มหาวิทยาลัยทักษิณ <br /> {session?.user?.name}!
         </p>
         <div className="flex justify-center mt-10">
           <div className="bg-black bg-opacity-30 p-8 rounded-lg shadow-xl text-center hover:bg-opacity-50 transition duration-300">
-            <p className="text-xl font-semibold text-white">Role: {session.user.role}</p>
+            <p className="text-xl font-semibold text-white">Role: {session?.user?.role}</p>
           </div>
         </div>
       </div>

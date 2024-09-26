@@ -10,9 +10,7 @@ function EditStudentPage({ params }) {
   const { id: student_id } = params;
   const [postData, setPostData] = useState({});
   const router = useRouter();
-
   const [success, setSuccess] = useState(false); // Success state for notification
-
   // Student information
   const [studentID, setStudentID] = useState("");
   const [studentFirstName, setStudentFirstName] = useState("");
@@ -23,13 +21,18 @@ function EditStudentPage({ params }) {
   const [studentYear, setStudentYear] = useState("");
   const [studentGpa, setStudentGpa] = useState("");
   const [studentPhone, setStudentPhone] = useState("");
-
   // Skills information
   const [skills, setSkills] = useState([{ skill_name: "" }]);
   const [studentSkills, setStudentSkills] = useState([{ skill_level: "" }]);
   const [skillTypes, setSkillTypes] = useState([]);
   const [selectedSkillTypes, setSelectedSkillTypes] = useState([{ skill_type_id: "", skill_type_name: "" }]);
 
+  useEffect(() => {
+    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (!session) {
+        router.push("/login");
+    }
+}, [session, status, router]);
   // Fetch skill types from API
   const fetchSkillTypes = async () => {
     try {

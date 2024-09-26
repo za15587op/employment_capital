@@ -12,7 +12,7 @@ export default function Foter() {
         <img src="/logouser.png" alt="Logo" className="w-16 h-16" />
         <div>
           <h3 className="text-lg font-semibold leading-none">
-            กลุ่มงานช่วยเหลือทางเงินแก่นักศึกษา
+           ฝ่ายกิจการนิสิต มหาวิทยาลัยทักษิณ วิทยาเขตพัทลุง
           </h3>
           <p className="mt-2 text-sm opacity-75 leading-relaxed">
             222 หมู่ 2 ต.บ้านพร้าว อ.ป่าพะยอม จ.พัทลุง 93210  <br />

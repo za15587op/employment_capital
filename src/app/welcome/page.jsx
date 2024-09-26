@@ -9,14 +9,20 @@ function HomeStudentPage() {
   const [scholarships, setScholarships] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
+  useEffect(() => {
+    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (!session) {
+        router.push("/login");
+    }
+}, [session, status, router]);
   const formatDateToYYYYMMDD = (dateString) => {
     const date = new Date(dateString);
     return date.toISOString().split("T")[0]; // "yyyy-MM-dd"
   };
+  
 
   useEffect(() => {
     const fetchScholarships = async () => {

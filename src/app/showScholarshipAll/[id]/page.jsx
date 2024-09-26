@@ -9,7 +9,13 @@ function ShowScholarshipAllPage({ params }) {
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const router = useRouter();
-
+  const { data: session, status } = useSession();
+  useEffect(() => {
+    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (!session) {
+        router.push("/login");
+    }
+}, [session, status, router]);
   // // ฟังก์ชันสำหรับลบข้อมูลที่ซ้ำกัน โดยอ้างอิงจาก key ที่เป็นเอกลักษณ์ เช่น regist_id หรือ student_id
   // const removeDuplicates = (array, key) => {
   //   return array.filter((item, index, self) => 

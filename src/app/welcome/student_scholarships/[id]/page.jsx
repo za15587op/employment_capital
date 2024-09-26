@@ -8,10 +8,17 @@ import Navber from '@/app/components/Navber';
 import Foter from '@/app/components/Foter';
 
 export default function ScholarshipRegistration({ params }) {
-  const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
   const student_id = session?.user?.student_id || null;  // ตรวจสอบ session ก่อนใช้
+  const { data: session, status } = useSession();
+  
+  useEffect(() => {
+    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (!session) {
+        router.push("/login");
+    }
+}, [session, status, router]);
 
   let scholarship_id = params?.id;
   if (!scholarship_id) {

@@ -4,6 +4,8 @@ import Navber from "@/app/components/Navber";
 import Foter from "../components/Foter";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -16,17 +18,21 @@ function HomeStudentPage() {
     const [scholarships, setScholarships] = useState([]);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const router = useRouter();
-
     const videoRefs = [useRef(null)];
     const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-
     const formatDateToYYYYMMDD = (dateString) => {
         const date = new Date(dateString);
         return date.toISOString().split("T")[0];
     };
-
+    useEffect(() => {
+        if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+        if (!session) {
+            router.push("/login");
+        }
+    }, [session, status, router]);
+    
     const calculateDaysLeft = (endDate) => {
         const now = new Date();
         const end = new Date(endDate);
@@ -60,7 +66,7 @@ function HomeStudentPage() {
     }, []);
 
     const handleVideoEnded = () => {
-        const nextVideoIndex = (currentVideoIndex + 1) % videoRefs.length; // ใช้ % เพื่อวนซ้ำเมื่อถึงวิดีโอสุดท้าย
+        const nextVideoIndex = (currentVideoIndex + 1) % videoRefs.length; 
         setCurrentVideoIndex(nextVideoIndex);
         videoRefs[nextVideoIndex].current.play();
     };
@@ -83,7 +89,6 @@ function HomeStudentPage() {
             <div className="relative min-h-screen overflow-hidden bg-white">
                 <Navber session={session} />
                 <div className="แถบสี"></div>
-                {/* Header */}
                 <div className="py-10 flex justify-center">
                     <div className="relative inline-block px-10 py-6 bg-gradient-to-r from-blue-200 to-purple-200 rounded-xl shadow-xl">
                         <p className="text-4xl font-extrabold text-center text-blue-900 tracking-wider animate-pulse">
@@ -93,7 +98,6 @@ function HomeStudentPage() {
                     </div>
                 </div>
                 <div className="relative h-screen w-full">
-                    {/* Video Background */}
                     <video
                         ref={videoRefs[0]}
                         className={`absolute top-0 left-0 w-full h-full object-cover border-t-4 border-b-4 border-white ${currentVideoIndex === 0 ? 'block' : 'hidden'}`}
@@ -112,38 +116,34 @@ function HomeStudentPage() {
                     /> */}
                 </div>
 
-                {/* Swiper Carousel */}
-<div className="relative z-10 container mx-auto py-8">
-    <div className="relative p-8 bg-gradient-to-r from-blue-200 to-gray-700 rounded-2xl shadow-2xl border border-blue-200 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-400 via-gray-600 to-blue-800 opacity-50 rounded-2xl"></div>
-        <Swiper
-            spaceBetween={5} // เว้นระยะห่างระหว่างสไลด์เล็กน้อย
-            slidesPerView={2} // แสดง 2 รูปพร้อมกัน
-            centeredSlides={true} // จัดสไลด์ให้อยู่กึ่งกลาง
-            loop={true} // ทำให้สามารถเลื่อนกลับมาที่สไลด์แรกได้
-            autoplay={{ delay: 3500, disableOnInteraction: false }}
-            pagination={{ clickable: true, dynamicBullets: true }}
-            navigation={true}
-            modules={[Autoplay, Pagination, Navigation]}
-            className="relative z-10 mySwiper"
-        >
-            {[0, 1, 2, 3, 4, 5].map((num) => (
-                <SwiperSlide key={num} style={{ width: '500px' }}> {/* ปรับความกว้างของสไลด์ให้ใหญ่ขึ้น */}
-                    <div className="flex justify-center">
-                        <img
-                            src={`/${num}.jpg`}
-                            alt={`Slide ${num}`}
-                            className="max-w-[500px] max-h-[400px] w-full h-auto rounded-lg shadow-xl border-4 border-transparent hover:border-white transition-all duration-500 transform hover:scale-105"
-                        />
+                <div className="relative z-10 container mx-auto py-8">
+                    <div className="relative p-8 bg-gradient-to-r from-blue-200 to-gray-700 rounded-2xl shadow-2xl border border-blue-200 overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-400 via-gray-600 to-blue-800 opacity-50 rounded-2xl"></div>
+                        <Swiper
+                            spaceBetween={5} 
+                            slidesPerView={2} 
+                            centeredSlides={true} 
+                            loop={true} 
+                            autoplay={{ delay: 3500, disableOnInteraction: false }}
+                            pagination={{ clickable: true, dynamicBullets: true }}
+                            navigation={true}
+                            modules={[Autoplay, Pagination, Navigation]}
+                            className="relative z-10 mySwiper"
+                        >
+                            {[0, 1, 2, 3, 4, 5].map((num) => (
+                                <SwiperSlide key={num} style={{ width: '500px' }}> 
+                                    <div className="flex justify-center">
+                                        <img
+                                            src={`/${num}.jpg`}
+                                            alt={`Slide ${num}`}
+                                            className="max-w-[500px] max-h-[400px] w-full h-auto rounded-lg shadow-xl border-4 border-transparent hover:border-white transition-all duration-500 transform hover:scale-105"
+                                        />
+                                    </div>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
                     </div>
-                </SwiperSlide>
-            ))}
-        </Swiper>
-    </div>
-</div>
-
-
-                {/* ข้อมูลทุน */}
+                </div>
                 <div className="relative z-10 container mx-auto py-8 text-left">
                     <h1 className="text-4xl font-bold text-gray-900">ประกาศรับสมัครนิสิตทุนการจ้างงาน</h1>
                     <div className="mt-4 text-lg text-gray-700">
@@ -155,7 +155,6 @@ function HomeStudentPage() {
                         </div>
                     </div>
                 </div>
-                {/* รายละเอียดทุน */}
                 <div className="relative z-10 container mx-auto py-4 text-left text-gray-800">
                     <p>ทุนนิสิตจ้างงานเป็นโครงการหรือรูปแบบการสนับสนุนที่หลายมหาวิทยาลัยทั่วประเทศได้ริเริ่มเพื่อช่วยเหลือนิสิตนักศึกษาในการเพิ่มโอกาสการทำงานควบคู่ไปกับการศึกษา โดยการได้รับทุนประเภทนี้ นิสิตจะมีโอกาสทำงานในสถาบันการศึกษา หน่วยงานภาครัฐ หรือองค์กรเอกชน ซึ่งจะได้รับค่าตอบแทนเป็นรายได้เสริมพร้อมกับประสบการณ์ที่มีคุณค่าในอนาคต ทุนนิสิตจ้างงานนี้ไม่ได้เพียงแต่ช่วยให้นิสิตสามารถมีรายได้เท่านั้น แต่ยังเป็นการเปิดประตูให้พวกเขาได้รับโอกาสในการพัฒนาตัวเองทั้งทางด้านทักษะการทำงาน ความรับผิดชอบ และการปรับตัวเข้ากับชีวิตในอนาคต</p>
                     <h2 className="text-xl font-bold mt-4">คุณสมบัติของผู้สมัครทุนนิสิตจ้างงาน</h2>
@@ -166,8 +165,6 @@ function HomeStudentPage() {
                         <li>ผู้สมัครจะต้องยินยอมอนุญาตให้เก็บ รวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลแก่มหาวิทยาลัยอาทิ ประวัติส่วนบุคคล ที่อยู่ เบอร์โทรศัพท์ รูปภาพ และข้อมูล/เอกสาร เป็นต้น เพื่อใช้ประกอบการพิจารณาการคัดเลือกผู้ได้รับทุนการศึกษา ซึ่งไม่เกี่ยวการถกข้อมูลและบันทึกในระบบการรับสมัครทุนแบบออนไลน์การให้บริการสัมภาษณ์ ตลอดจนถึงการประกาศรายชื่อผู้ได้รับทุนการศึกษา</li>
                     </ul>
                 </div>
-
-                {/* Scholarship Cards Horizontal Layout */}
                 <div className="relative z-10 container mx-auto py-12">
                     {error && <div className="text-red-500 text-center mb-4">{error}</div>}
                     <div className="flex flex-wrap gap-8 justify-center">
@@ -204,9 +201,6 @@ function HomeStudentPage() {
                         ))}
                     </div>
                 </div>
-
-
-                {/* Modal Success */}
                 {success && (
                     <div className="fixed z-50 top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-80">
                         <div className="relative w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-green-400 to-blue-400 border-2 border-green-600 rounded-lg shadow-2xl text-center transition-all duration-500 ease-out animate-pulse">

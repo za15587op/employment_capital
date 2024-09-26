@@ -10,6 +10,12 @@ export default function ShowStudentDetailPage({ params }) {
   const pathname = usePathname();
   const router = useRouter();
 
+  useEffect(() => {
+    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (!session) {
+        router.push("/login");
+    }
+}, [session, status, router]);
   let regist_id = params?.id;
   if (!regist_id) {
     const parts = pathname.split("/");

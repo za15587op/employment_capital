@@ -17,6 +17,12 @@ function ShowScholarshipGenPDF() {
   const [success, setSuccess] = useState("PDF ถูกสร้างเรียบร้อยแล้ว!");
   const router = useRouter();
 
+  useEffect(() => {
+      if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+      if (!session) {
+          router.push("/login");
+      }
+  }, [session, status, router]); 
   // ฟังก์ชันดึงข้อมูลนักศึกษาจาก API
   const fetchGetData = async () => {
     try {

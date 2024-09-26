@@ -1,19 +1,31 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Navber from "../components/Navber";
 import Foter from "../components/Foter";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 function Report_adminPage() {
   const { data: session, status } = useSession();
+  const router = useRouter(); // ใช้ useRouter แทนการใช้ redirect แบบตรง
 
-  if (!session) redirect("/login");
+  useEffect(() => {
+    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (!session) {
+      router.push("/login"); // ถ้าไม่มี session ให้ไปที่หน้า login
+    }
+  }, [session, status, router]);
+
+  // รอจนกว่าจะตรวจสอบ session เสร็จ
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100">
       <Navber session={session} />
       <div className="แถบสี"></div>
+
       {/* Title Section */}
       <div className="py-10 flex justify-center">
         <div className="relative inline-block px-10 py-6 bg-gradient-to-r from-blue-200 to-purple-200 rounded-xl shadow-xl">
@@ -39,7 +51,7 @@ function Report_adminPage() {
             <img
               src={step.img}
               alt={`Step ${index + 1}`}
-              className="mx-auto w-20 h-20 shadow-lg" // Removed rounded background
+              className="mx-auto w-20 h-20 shadow-lg"
             />
             <p className="text-xl font-bold mt-6 text-blue-800">
               {step.text}
