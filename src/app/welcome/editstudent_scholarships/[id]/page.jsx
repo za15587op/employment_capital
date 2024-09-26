@@ -24,7 +24,6 @@ export default function EditScholarshipRegistration({ params }) {
   const [file, setFile] = useState(null);
   const [isPartTime, setIsPartTime] = useState("");
   const [dateAvailable, setDateAvailable] = useState([]);2
-  const [join_org, setJoinOrg] = useState([]);
   const [scholarship_id, setScholarshipId] = useState("");
   const [academic_year, setAcademicYear] = useState("");
   const [academic_term, setAcademicTerm] = useState("");
@@ -37,24 +36,7 @@ export default function EditScholarshipRegistration({ params }) {
   const [student_phone, setStudentPhone] = useState("");
 
   const weekDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
-  const organizations = [
-    "ฝ่ายการคลังและบริหารสินทรัพย์",
-    "สำนักงานวิทยาเขตพัทลุง",
-    "สำนักงานวิทยาเขตสงขลา",
-    "ฝ่ายยุทธศาสตร์และพัฒนาคุณภาพองค์กร",
-    "ฝ่ายกิจการนิสิต",
-    "งานสื่อสารองค์กร",
-    "สถาบันทรัพยากรการเรียนรู้และเทคโนโลยีดิจิทัล",
-    "ฝ่ายวิชาการและการเรียนรู้",
-    "คณะวิทยาศาสตร์และนวัตกรรมดิจิทัล",
-    "คณะวิศวกรรมศาสตร์",
-    "คณะเทคโนโลยีและการพัฒนาชุมชน",
-    "คณะพยาบาลศาสตร์",
-    "คณะวิทยาการสุขภาพและการกีฬา",
-    "คณะนิติศาสตร์",
-    "คณะอุตสาหกรรมเกษตรและชีวภาพ",
-    "คณะศึกษาศาสตร์"
-  ];
+  
 
   const getExistingData = async () => {
     try {
@@ -73,7 +55,6 @@ export default function EditScholarshipRegistration({ params }) {
       setIsPartTime(data.datetime_available[0]?.is_parttime);
       // แสดงค่า date_available ที่เป็น array
       setDateAvailable(data.datetime_available[0]?.date_available || []); // เข้าถึง date_available อย่างถูกต้อง
-      setJoinOrg(data.join_org[0]?.join_org || []); // เข้าถึง date_available อย่างถูกต้อง  
       setScholarshipId(data.scholarship_id);
       setAcademicTerm(data.academic_term);
       setAcademicYear(data.academic_year);
@@ -105,8 +86,7 @@ export default function EditScholarshipRegistration({ params }) {
       formData.append("regist_id", regist_id);
       formData.append("related_works", relatedWorks);
       formData.append("is_parttime", isPartTime);
-      formData.append("date_available", JSON.stringify(dateAvailable));
-      formData.append("join_org", JSON.stringify(join_org));     
+      formData.append("date_available", JSON.stringify(dateAvailable));   
       formData.append("academic_year", academic_year);
       formData.append("academic_term", academic_term);
       formData.append("scholarship_id", scholarship_id);
@@ -187,16 +167,6 @@ export default function EditScholarshipRegistration({ params }) {
       setDateAvailable(dateAvailable.filter((selectedDay) => selectedDay !== day)); // ลบวันถ้า checkbox ถูกยกเลิกเลือก
     }
   };
-
-  const handleOrgSelectionChange = (e, org) => {
-    const { checked } = e.target;
-    if (checked) {
-      setJoinOrg([...join_org, org]);
-    } else {
-      setJoinOrg(join_org.filter((selectedOrg) => selectedOrg !== org));
-    }
-  };
-  
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   
@@ -279,26 +249,6 @@ export default function EditScholarshipRegistration({ params }) {
           </div>
 
           {isPartTime === "fulltime" || isPartTime === "both" ? renderDaysCheckboxes() : null}
-
-          {/* ส่วนเลือกองค์กร */}
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-700">เลือกองค์กรที่อยากเข้าร่วม</h2>
-            <div className="flex flex-wrap gap-4">
-              {organizations.map((org, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id={org}
-                    value={org}
-                    checked={join_org.includes(org)}
-                    onChange={(e) => handleOrgSelectionChange(e, org)}
-                    className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
-                  />
-                  <label htmlFor={org} className="text-gray-700">{org}</label>
-                </div>
-              ))}
-            </div>
-          </div>
 
         </div>
 

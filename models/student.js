@@ -10,7 +10,9 @@ class Student {
     student_curriculum,
     student_year,
     student_gpa,
-    student_phone
+    student_phone,
+    join_org
+
   ) {
     this.user_id = user_id;
     this.student_id = student_id;
@@ -22,6 +24,7 @@ class Student {
     this.student_gpa = student_gpa;
     this.student_phone = student_phone;
     this.user_id = user_id;
+    this.join_org = join_org;
   }
 
 
@@ -50,12 +53,13 @@ class Student {
       student_year,
       student_gpa,
       student_phone,
+      join_org,
       user_id,
     } = studentData;
 
     try {
       const [result] = await promisePool.query(
-        "INSERT INTO student ( student_id, student_firstname, student_lastname, student_faculty, student_curriculum, student_year, student_gpa, student_phone, user_id) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO student ( student_id, student_firstname, student_lastname, student_faculty, student_curriculum, student_year, student_gpa, student_phone,join_org, user_id) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           student_id,
           student_firstname,
@@ -65,6 +69,7 @@ class Student {
           student_year,
           student_gpa,
           student_phone,
+          join_org,
           user_id
         ]
       );
@@ -109,6 +114,7 @@ class Student {
         student_year: rows[0].student_year,
         student_gpa: rows[0].student_gpa,
         student_phone: rows[0].student_phone,
+        join_org: rows[0].join_org,
         skills: rows.map(row => ({
           skill_name: row.skill_name
         })),
@@ -144,7 +150,7 @@ class Student {
         UPDATE student 
         SET student_firstname = ?, student_lastname = ?, student_faculty = ?, 
              student_curriculum = ?, student_year = ?, 
-            student_gpa = ?, student_phone = ?
+            student_gpa = ?, student_phone = ?, join_org = ?
         WHERE student_id = ?
         `,
         [
@@ -155,6 +161,7 @@ class Student {
           studentData.student_year,
           studentData.student_gpa,
           studentData.student_phone,
+          studentData.join_org,
           student_id
         ]
       );

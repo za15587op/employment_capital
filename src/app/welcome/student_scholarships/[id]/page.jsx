@@ -24,7 +24,6 @@ export default function ScholarshipRegistration({ params }) {
   const [related_works, setRelatedWorks] = useState("");
   const [isPartTime, setIsPartTime] = useState("");
   const [dateAvailable, setDateAvailable] = useState([]);
-  const [join_org, setJoinOrg] = useState([]);
   const [scholarships, setScholarships] = useState({});
   const [academic_year, setAcademicYear] = useState("");
   const [academic_term, setAcademicTerm] = useState("");
@@ -39,36 +38,6 @@ export default function ScholarshipRegistration({ params }) {
   const [successMessage, setSuccessMessage] = useState("");
 
   const weekDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
-
-  // กำหนดรายการองค์กร
-const organizations = [
-  "ฝ่ายการคลังและบริหารสินทรัพย์",
-  "สำนักงานวิทยาเขตพัทลุง",
-  "สำนักงานวิทยาเขตสงขลา",
-  "ฝ่ายยุทธศาสตร์และพัฒนาคุณภาพองค์กร",
-  "ฝ่ายกิจการนิสิต",
-  "งานสื่อสารองค์กร",
-  "สถาบันทรัพยากรการเรียนรู้และเทคโนโลยีดิจิทัล",
-  "ฝ่ายวิชาการและการเรียนรู้",
-  "คณะวิทยาศาสตร์และนวัตกรรมดิจิทัล",
-  "คณะวิศวกรรมศาสตร์",
-  "คณะเทคโนโลยีและการพัฒนาชุมชน",
-  "คณะพยาบาลศาสตร์",
-  "คณะวิทยาการสุขภาพและการกีฬา",
-  "คณะนิติศาสตร์",
-  "คณะอุตสาหกรรมเกษตรและชีวภาพ",
-  "คณะศึกษาศาสตร์"
-];
-
-// ฟังก์ชันจัดการการเลือกองค์กร
-const handleOrgSelectionChange = (e, org) => {
-  const { checked } = e.target;
-  if (checked) {
-    setJoinOrg([...join_org, org]);
-  } else {
-    setJoinOrg(join_org.filter((selectedOrg) => selectedOrg !== org));
-  }
-};
 
 
   const handlePartTimeChange = (e) => {
@@ -182,7 +151,6 @@ const handleOrgSelectionChange = (e, org) => {
       formData.append("is_parttime", isPartTime);
       formData.append("date_available", JSON.stringify(dateAvailable));
       formData.append("scholarships", JSON.stringify(scholarships));
-      formData.append("join_org", JSON.stringify(join_org));
 
       if (fileInput.files.length > 0) {
         formData.append("file", fileInput.files[0]);
@@ -312,26 +280,6 @@ const handleOrgSelectionChange = (e, org) => {
             </div>
 
             {isPartTime && renderDaysCheckboxes()}
-
-             {/* ส่วนเลือกองค์กร */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-700">เลือกองค์กรที่อยากเข้าร่วม</h2>
-          <div className="flex flex-wrap gap-4">
-            {organizations.map((org, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id={org}
-                  value={org}
-                  checked={join_org.includes(org)}
-                  onChange={(e) => handleOrgSelectionChange(e, org)}
-                  className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
-                />
-                <label htmlFor={org} className="text-gray-700">{org}</label>
-              </div>
-            ))}
-          </div>
-        </div>
 
           </div>
 
