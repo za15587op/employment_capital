@@ -31,7 +31,6 @@ export default function ScholarshipRegistration({ params }) {
   const [student_firstname, setStudentFirstName] = useState("");
   const [student_lastname, setStudentLastName] = useState("");
   const [student_faculty, setStudentFaculty] = useState("");
-  const [student_field, setStudentField] = useState("");
   const [student_curriculum, setStudentCurriculum] = useState("");
   const [student_year, setStudentYear] = useState("");
   const [student_gpa, setStudentGpa] = useState("");
@@ -113,7 +112,6 @@ const handleOrgSelectionChange = (e, org) => {
       setStudentFirstName(data.student_firstname);
       setStudentLastName(data.student_lastname);
       setStudentFaculty(data.student_faculty);
-      setStudentField(data.student_field);
       setStudentCurriculum(data.student_curriculum);
       setStudentYear(data.student_year);
       setStudentGpa(data.student_gpa);
@@ -261,7 +259,6 @@ const handleOrgSelectionChange = (e, org) => {
                 <label className="block">ชื่อ: {student_firstname}</label>
                 <label className="block">นามสกุล: {student_lastname}</label>
                 <label className="block">คณะ: {student_faculty}</label>
-                <label className="block">สาขา: {student_field}</label>
                 <label className="block">หลักสูตร: {student_curriculum}</label>
                 <label className="block">ปีการศึกษา: {student_year}</label>
                 <label className="block">เกรดเฉลี่ย (GPA): {student_gpa}</label>

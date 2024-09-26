@@ -52,9 +52,14 @@ export default function ShowStdOrgan() {
     router.push(`/organization/show/${scholarship_id}`);
   };
 
+  // const ViewDetails = (regist_id) => {
+  //   router.push(`/evaluateStudent/evaluateStudentDetail/${regist_id}`);
+  // };
+
   const ViewDetails = (regist_id) => {
-    router.push(`/showScholarshipAll/showStudentDetail/${regist_id}`);
-  };
+    router.push(`/evaluateStudent/evaluateStudentDetail/${organization_id}/${regist_id}`);
+    
+};
 
   const handleSubmit = async (event) => {
     event.preventDefault();

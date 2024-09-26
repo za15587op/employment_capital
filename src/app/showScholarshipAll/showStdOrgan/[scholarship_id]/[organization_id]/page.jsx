@@ -65,7 +65,7 @@ export default function ShowStdOrgan() {
     setSuccess("กำลังโหลดเพื่อดูรายละเอียดเพิ่มเติม!"); 
     setTimeout(() => {
       setShowSuccess(false);  
-      router.push(`/showScholarshipAll/showStudentDetail/${regist_id}`);
+      router.push(`/showScholarshipAll/showStudentDetail/${organization_id}/${regist_id}`);
     }, 3000);  
 
   };

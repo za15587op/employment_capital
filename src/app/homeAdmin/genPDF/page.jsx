@@ -68,14 +68,13 @@ function ShowScholarshipGenPDF() {
       student.student_id,
       `${student.student_firstname} ${student.student_lastname}`,
       student.student_faculty,
-      student.student_field,
-      student.student_gpa,
-      student.student_status,
+      student.student_curriculum,
+      student.student_gpa
     ]);
 
     // สร้างตารางข้อมูลนักศึกษา
     doc.autoTable({
-      head: [["ลำดับที่", "รหัสนิสิต", "ชื่อ-นามสกุล", "คณะ", "สาขา", "GPA", "สถานะ"]],
+      head: [["ลำดับที่", "รหัสนิสิต", "ชื่อ-นามสกุล", "คณะ", "สาขา", "GPA", ]],
       body: studentsData,
       startY: 44, // กำหนดตำแหน่งของตาราง (หลังจากหัวข้อทั้งหมด)
       styles: { font: "THSarabunNew", fontSize: 14 }, // เพิ่มการตั้งค่าฟอนต์และขนาดในตาราง
@@ -122,8 +121,8 @@ function ShowScholarshipGenPDF() {
                     (ID: {student.student_id})
                   </p>
                   <p>
-                    คณะ: {student.student_faculty} | สาขา:{" "}
-                    {student.student_field} | GPA: {student.student_gpa}
+                    คณะ: {student.student_faculty} | หลักสูตร:{" "}
+                    {student.student_curriculum} | GPA: {student.student_gpa}
                   </p>
                   <p>สถานะ: {student.student_status}</p>
                 </div>

@@ -64,7 +64,6 @@ function EditStudentPage({ params }) {
       setStudentFirstName(data.student_firstname || "");
       setStudentLastName(data.student_lastname || "");
       setStudentFaculty(data.student_faculty || "");
-      setStudentField(data.student_field || "");
       setStudentCurriculum(data.student_curriculum || "");
       setStudentYear(data.student_year || "");
       setStudentGpa(data.student_gpa || "");
@@ -133,7 +132,6 @@ function EditStudentPage({ params }) {
           student_firstname: studentFirstName,
           student_lastname: studentLastName,
           student_faculty: studentFaculty,
-          student_field: studentField,
           student_curriculum: studentCurriculum,
           student_year: studentYear,
           student_gpa: studentGpa,
@@ -200,13 +198,6 @@ function EditStudentPage({ params }) {
                 className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
               />
               <input
-                onChange={(e) => setStudentField(e.target.value)}
-                type="text"
-                placeholder="สาขา"
-                value={studentField}
-                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
-              />
-              <input
                 onChange={(e) => setStudentCurriculum(e.target.value)}
                 type="text"
                 placeholder="หลักสูตร"
@@ -270,12 +261,23 @@ function EditStudentPage({ params }) {
                     />
   
                     <label className="block text-gray-600 mt-2">ระดับทักษะ</label>
-                    <input
-                      type="number"
+                    <select
                       value={studentSkills[index]?.skill_level || ""}
-                      onChange={(e) => handleStudentSkillChange(index, "skill_level", e.target.value)}
+                      onChange={(e) =>
+                        handleStudentSkillChange(
+                          index,
+                          "skill_level",
+                          e.target.value
+                        )
+                      }
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    />
+                    >
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                    </select>
                   </div>
                 ))}
                 <button

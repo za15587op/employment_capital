@@ -7,7 +7,6 @@ class Student {
     student_firstname,
     student_lastname,
     student_faculty,
-    student_field,
     student_curriculum,
     student_year,
     student_gpa,
@@ -18,7 +17,6 @@ class Student {
     this.student_firstname = student_firstname;
     this.student_lastname = student_lastname;
     this.student_faculty = student_faculty;
-    this.student_field = student_field;
     this.student_curriculum = student_curriculum;
     this.student_year = student_year;
     this.student_gpa = student_gpa;
@@ -48,7 +46,6 @@ class Student {
       student_firstname,
       student_lastname,
       student_faculty,
-      student_field,
       student_curriculum,
       student_year,
       student_gpa,
@@ -58,13 +55,12 @@ class Student {
 
     try {
       const [result] = await promisePool.query(
-        "INSERT INTO student ( student_id, student_firstname, student_lastname, student_faculty, student_field, student_curriculum, student_year, student_gpa, student_phone, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO student ( student_id, student_firstname, student_lastname, student_faculty, student_curriculum, student_year, student_gpa, student_phone, user_id) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           student_id,
           student_firstname,
           student_lastname,
           student_faculty,
-          student_field,
           student_curriculum,
           student_year,
           student_gpa,
@@ -109,7 +105,6 @@ class Student {
         student_firstname: rows[0].student_firstname,
         student_lastname: rows[0].student_lastname,
         student_faculty: rows[0].student_faculty,
-        student_field: rows[0].student_field,
         student_curriculum: rows[0].student_curriculum,
         student_year: rows[0].student_year,
         student_gpa: rows[0].student_gpa,
@@ -148,7 +143,7 @@ class Student {
         `
         UPDATE student 
         SET student_firstname = ?, student_lastname = ?, student_faculty = ?, 
-            student_field = ?, student_curriculum = ?, student_year = ?, 
+             student_curriculum = ?, student_year = ?, 
             student_gpa = ?, student_phone = ?
         WHERE student_id = ?
         `,
@@ -156,7 +151,6 @@ class Student {
           studentData.student_firstname,
           studentData.student_lastname,
           studentData.student_faculty,
-          studentData.student_field,
           studentData.student_curriculum,
           studentData.student_year,
           studentData.student_gpa,

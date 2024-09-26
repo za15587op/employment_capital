@@ -2,29 +2,26 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-import Navber from '@/app/components/Navber';
-import Foter from '@/app/components/Foter';
+import Foter from "@/app/components/Foter";
+import { useParams } from "next/navigation"; // useParams for dynamic route params
+import Navbar from "@/app/components/Navber";
 
-export default function EditScholarshipRegistration({ params }) {
+export default function ShowStudentDetailPage({ params }) {
+  const { organization_id, regist_id } = useParams(); // Extract params from URL
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const router = useRouter();
-  const [success, setSuccess] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
 
-  const http = 'http://localhost:3000';
-
-  let regist_id = params?.id;
-  if (!regist_id) {
-    const parts = pathname.split("/");
-    regist_id = parts[parts.length - 1];
-  }
+  // let regist_id = params?.id;
+  // if (!regist_id) {
+  //   const parts = pathname.split("/");
+  //   regist_id = parts[parts.length - 1];
+  // }
 
   const [relatedWorks, setRelatedWorks] = useState("");
   const [file, setFile] = useState(null);
   const [isPartTime, setIsPartTime] = useState("");
-  const [dateAvailable, setDateAvailable] = useState([]);2
-  const [join_org, setJoinOrg] = useState([]);
+  const [dateAvailable, setDateAvailable] = useState([]);
   const [scholarship_id, setScholarshipId] = useState("");
   const [academic_year, setAcademicYear] = useState("");
   const [academic_term, setAcademicTerm] = useState("");
@@ -37,24 +34,6 @@ export default function EditScholarshipRegistration({ params }) {
   const [student_phone, setStudentPhone] = useState("");
 
   const weekDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
-  const organizations = [
-    "ฝ่ายการคลังและบริหารสินทรัพย์",
-    "สำนักงานวิทยาเขตพัทลุง",
-    "สำนักงานวิทยาเขตสงขลา",
-    "ฝ่ายยุทธศาสตร์และพัฒนาคุณภาพองค์กร",
-    "ฝ่ายกิจการนิสิต",
-    "งานสื่อสารองค์กร",
-    "สถาบันทรัพยากรการเรียนรู้และเทคโนโลยีดิจิทัล",
-    "ฝ่ายวิชาการและการเรียนรู้",
-    "คณะวิทยาศาสตร์และนวัตกรรมดิจิทัล",
-    "คณะวิศวกรรมศาสตร์",
-    "คณะเทคโนโลยีและการพัฒนาชุมชน",
-    "คณะพยาบาลศาสตร์",
-    "คณะวิทยาการสุขภาพและการกีฬา",
-    "คณะนิติศาสตร์",
-    "คณะอุตสาหกรรมเกษตรและชีวภาพ",
-    "คณะศึกษาศาสตร์"
-  ];
 
   const getExistingData = async () => {
     try {
@@ -73,7 +52,6 @@ export default function EditScholarshipRegistration({ params }) {
       setIsPartTime(data.datetime_available[0]?.is_parttime);
       // แสดงค่า date_available ที่เป็น array
       setDateAvailable(data.datetime_available[0]?.date_available || []); // เข้าถึง date_available อย่างถูกต้อง
-      setJoinOrg(data.join_org[0]?.join_org || []); // เข้าถึง date_available อย่างถูกต้อง  
       setScholarshipId(data.scholarship_id);
       setAcademicTerm(data.academic_term);
       setAcademicYear(data.academic_year);
@@ -96,49 +74,6 @@ export default function EditScholarshipRegistration({ params }) {
     }
   }, [regist_id]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const formData = new FormData();
-
-    try {
-      formData.append("student_id", session.user.student_id);
-      formData.append("regist_id", regist_id);
-      formData.append("related_works", relatedWorks);
-      formData.append("is_parttime", isPartTime);
-      formData.append("date_available", JSON.stringify(dateAvailable));
-      formData.append("join_org", JSON.stringify(join_org));     
-      formData.append("academic_year", academic_year);
-      formData.append("academic_term", academic_term);
-      formData.append("scholarship_id", scholarship_id);
-
-      if (file) {
-        formData.append("file", file);
-      }
-
-      const response = await fetch(`/api/student_scholarships/edit/${regist_id}`, {
-        method: "PUT",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("การส่งฟอร์มล้มเหลว");
-      }
-
-      const result = await response.json();
-      if (result.success) {
-        setSuccessMessage("แก้ไขข้อมูลการสมัครสำเร็จ!");
-        setSuccess(true);
-        setTimeout(() => {
-          router.push(`/welcome/showStudentScholarships`);
-        }, 2000);
-      } else {
-        alert("การแก้ไขข้อมูลไม่สำเร็จ");
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("เกิดข้อผิดพลาดขณะส่งฟอร์ม");
-    }
-  };
 
   const handlePartTimeChange = (e) => {
     const { value, checked } = e.target;
@@ -168,6 +103,7 @@ export default function EditScholarshipRegistration({ params }) {
               type="checkbox"
               id={`day_${index}`}
               value={day}
+              disabled
               checked={dateAvailable.includes(day)} // ตรวจสอบวันที่ที่ถูกเลือก
               onChange={(e) => handleDaySelectionChange(e, day)}
               className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
@@ -188,32 +124,25 @@ export default function EditScholarshipRegistration({ params }) {
     }
   };
 
-  const handleOrgSelectionChange = (e, org) => {
-    const { checked } = e.target;
-    if (checked) {
-      setJoinOrg([...join_org, org]);
-    } else {
-      setJoinOrg(join_org.filter((selectedOrg) => selectedOrg !== org));
-    }
-  };
-  
+ 
+  const Back = (scholarship_id) => {
+    router.push(`/evaluateStudent/${scholarship_id}/${organization_id}`);
+    
+};
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  
 
   return (
-  <div className="bg-gray-50 min-h-screen flex flex-col">
-    <Navber session={session} />
-
-    <div className="container mx-auto px-4 py-8 flex-grow">
+    <>
+    
+    <Navbar/>
+    <div className="container mx-auto px-4 py-8">
       <form
-        onSubmit={handleSubmit}
         className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 space-y-6"
       >
-        <h1 className="text-3xl font-bold text-indigo-600 mb-6 text-center">แก้ไขข้อมูลการสมัครทุนจ้างงาน</h1>
+        <h1 className="text-3xl font-bold text-indigo-600 mb-6 text-center">ดูข้อมูลการสมัครทุนจ้างงาน</h1>
 
         <div className="grid grid-cols-2 gap-6">
-          {/* ข้อมูลนักศึกษา */}
           <div className="space-y-2">
             <h2 className="text-lg font-semibold text-gray-700">ข้อมูลนักศึกษา</h2>
             <div className="text-gray-600">
@@ -227,7 +156,6 @@ export default function EditScholarshipRegistration({ params }) {
             </div>
           </div>
 
-          {/* ข้อมูลทุนการศึกษา */}
           <div className="space-y-2">
             <h2 className="text-lg font-semibold text-gray-700">ข้อมูลทุนการศึกษา</h2>
             <p className="text-gray-600">ปีการศึกษาที่: {academic_year}</p>
@@ -236,7 +164,6 @@ export default function EditScholarshipRegistration({ params }) {
         </div>
 
         <div className="flex flex-col space-y-4">
-          {/* ไฟล์ที่อัปโหลด */}
           <div>
             <label htmlFor="file" className="font-medium text-gray-700">ไฟล์ที่อัปโหลดแล้ว:</label>{" "}
             <a href={`${baseUrl}/${relatedWorks}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
@@ -246,18 +173,19 @@ export default function EditScholarshipRegistration({ params }) {
               type="file"
               id="file"
               name="file"
+              disabled
               onChange={(e) => setFile(e.target.files[0])}
               className="block mt-2 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
             />
           </div>
 
-          {/* การทำงานในเวลาและนอกเวลา */}
           <div className="flex space-x-4">
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
                 id="in_time"
                 value="in_time"
+                disabled
                 checked={isPartTime === "fulltime" || isPartTime === "both"}
                 onChange={handlePartTimeChange}
                 className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
@@ -270,6 +198,7 @@ export default function EditScholarshipRegistration({ params }) {
                 type="checkbox"
                 id="out_time"
                 value="out_time"
+                disabled
                 checked={isPartTime === "parttime" || isPartTime === "both"}
                 onChange={handlePartTimeChange}
                 className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
@@ -279,70 +208,20 @@ export default function EditScholarshipRegistration({ params }) {
           </div>
 
           {isPartTime === "fulltime" || isPartTime === "both" ? renderDaysCheckboxes() : null}
-
-          {/* ส่วนเลือกองค์กร */}
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-700">เลือกองค์กรที่อยากเข้าร่วม</h2>
-            <div className="flex flex-wrap gap-4">
-              {organizations.map((org, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id={org}
-                    value={org}
-                    checked={join_org.includes(org)}
-                    onChange={(e) => handleOrgSelectionChange(e, org)}
-                    className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
-                  />
-                  <label htmlFor={org} className="text-gray-700">{org}</label>
-                </div>
-              ))}
-            </div>
-          </div>
-
         </div>
 
-        {/* ปุ่มบันทึกการแก้ไข */}
         <div className="flex justify-center mt-6">
           <button
-            type="submit"
+            type="button"
+            onClick={() => Back(scholarship_id)}
             className="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-500 transition ease-in-out duration-300 transform hover:scale-105"
           >
-            บันทึกการแก้ไข
+            ย้อนกลับ
           </button>
         </div>
       </form>
     </div>
-
-    {/* Success Message */}
-    {success && (
-      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-green-400 to-blue-400 border-2 border-green-600 rounded-lg shadow-2xl text-center transition-all duration-500 ease-out">
-        <div className="flex items-center justify-center space-x-4">
-          <div className="p-2 bg-white rounded-full shadow-lg">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="w-10 h-10 text-green-600"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
-        </div>
-        <p className="mt-4 text-lg text-white font-semibold">
-          {successMessage}
-        </p>
-      </div>
-    )}
-
-    <Foter />
-  </div>
-);
+    <Foter/>
+    </>
+  );
 }
-
