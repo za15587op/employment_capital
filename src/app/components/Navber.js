@@ -85,7 +85,7 @@ function Navbar({ session }) {
             <>
               {sessionData.user.role === "student" && (
                 <>
-               <Link href="/welcome">
+               <Link href="/homeSt">
                     <button
                       className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                       style={{ fontSize: "20px" }}

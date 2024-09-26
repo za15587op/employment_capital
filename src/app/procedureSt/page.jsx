@@ -13,7 +13,7 @@ function Report_adminPage() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100">
       <Navber session={session} />
-
+      <div className="แถบสี"></div>
       {/* Title Section */}
       <div className="py-10 flex justify-center">
         <div className="relative inline-block px-10 py-6 bg-gradient-to-r from-blue-200 to-purple-200 rounded-xl shadow-xl">

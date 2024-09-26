@@ -4,7 +4,7 @@ import "jspdf-autotable";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "@/fonts/THSarabunNew-normal.js"; // นำฟอนต์เข้ามาเพื่อใช้ภาษาไทย
-import Navber from "@/app/components/Navber";
+import Navbar from "@/app/components/Navber";
 import Foter from "@/app/components/Foter";
 import { useSession } from "next-auth/react";
 
@@ -13,6 +13,8 @@ function ShowScholarshipGenPDF() {
   const { data: session, status } = useSession();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true); // เพิ่มสถานะการโหลด
+  const [showSuccess, setShowSuccess] = useState(false); // เพิ่ม state สำหรับแสดง success message
+  const [success, setSuccess] = useState("PDF ถูกสร้างเรียบร้อยแล้ว!");
   const router = useRouter();
 
   // ฟังก์ชันดึงข้อมูลนักศึกษาจาก API
@@ -70,12 +72,11 @@ function ShowScholarshipGenPDF() {
       student.student_faculty,
       student.student_field,
       student.student_gpa,
-      student.student_status,
     ]);
 
     // สร้างตารางข้อมูลนักศึกษา
     doc.autoTable({
-      head: [["ลำดับที่", "รหัสนิสิต", "ชื่อ-นามสกุล", "คณะ", "สาขา", "GPA", "สถานะ"]],
+      head: [["ลำดับที่", "รหัสนิสิต", "ชื่อ-นามสกุล", "คณะ", "สาขา", "GPA", ]],
       body: studentsData,
       startY: 44, // กำหนดตำแหน่งของตาราง (หลังจากหัวข้อทั้งหมด)
       styles: { font: "THSarabunNew", fontSize: 14 }, // เพิ่มการตั้งค่าฟอนต์และขนาดในตาราง
@@ -87,57 +88,102 @@ function ShowScholarshipGenPDF() {
 
     // บันทึกไฟล์ PDF
     doc.save("students_list.pdf");
+
+    // แสดงข้อความ success หลังจากสร้าง PDF
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 3000); // แสดงข้อความ success เป็นเวลา 3 วินาที
   };
 
   return (
-    <>
-    <Navber session = {session}/>
-    <div className="แถบสี"></div>
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <div className="max-w-2xl w-full bg-white p-6 shadow-md rounded-md">
-        <h1 className="text-2xl font-bold mb-4">รายชื่อนักศึกษาทั้งหมด</h1>
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-        {loading ? (
-          <p>กำลังโหลดข้อมูล...</p> // เพิ่มสถานะการโหลด
-        ) : getData.length > 0 ? (
-          <div>
-            <button
-              onClick={generatePDF}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Generate PDF
-            </button>
-
-            {/* ตัวอย่างแสดงข้อมูลนักศึกษา */}
-            <div className="mt-6">
-              {getData.map((student, index) => (
-                <div
-                  key={`${student.student_id}-${index}`}
-                  className="mb-4 border-b pb-2"
-                >
-                  <p>
-                    <strong>
-                      {student.student_firstname} {student.student_lastname}
-                    </strong>{" "}
-                    (ID: {student.student_id})
-                  </p>
-                  <p>
-                    คณะ: {student.student_faculty} | สาขา:{" "}
-                    {student.student_field} | GPA: {student.student_gpa}
-                  </p>
-                  <p>สถานะ: {student.student_status}</p>
-                </div>
-              ))}
-            </div>
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
+      <Navbar session={session} />
+      <div className="container mx-auto px-4 py-6">
+        <div className="bg-white shadow-lg rounded-lg px-6 py-6 w-full mb-6">
+          <div className="bg-blue-500 text-white px-5 py-3 rounded-lg w-full text-center shadow-lg">
+            <h3 className="text-2xl font-bold">พิมพ์รายชื่อนิสิตจ้างงาน ที่ผ่านการคัดเลือก</h3>
           </div>
-        ) : (
-          <p>ไม่พบข้อมูลนักศึกษา</p>
-        )}
+  
+          <div className="mt-6">
+            {error && <div className="text-red-500 mb-4">{error}</div>}
+            {loading ? (
+              <p>กำลังโหลดข้อมูล...</p>
+            ) : getData.length > 0 ? (
+              <>
+                {/* Moved the button to the right */}
+                <div className="mt-6 text-right">
+                  <button
+                    onClick={generatePDF}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  >
+                    Generate PDF
+                  </button>
+                </div>
+  
+                {/* ตัวอย่างแสดงข้อมูลนักศึกษา */}
+                <div className="mt-6">
+                  {getData.map((student, index) => (
+                    <div
+                      key={`${student.student_id}-${index}`}
+                      className="mb-4 border-b pb-2"
+                    >
+                      <div className="flex flex-wrap gap-4">
+                        <p className="flex-shrink-0">
+                          <strong>
+                            {student.student_firstname} {student.student_lastname}
+                          </strong>{" "}
+                          (ID: {student.student_id})
+                        </p>
+                        <p className="flex-shrink-0">
+                          คณะ: {student.student_faculty}
+                        </p>
+                        <p className="flex-shrink-0">
+                          สาขา: {student.student_field}
+                        </p>
+                        <p className="flex-shrink-0">
+                          GPA: {student.student_gpa}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <p>ไม่พบข้อมูลนักศึกษา</p>
+            )}
+          </div>
+  
+          {/* Success Message */}
+          {showSuccess && (
+            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-[#0fef76] to-[#09c9f6] border-2 border-[#0F1035] rounded-lg shadow-[0px_0px_20px_5px_rgba(15,239,118,0.5)] text-center transition-all duration-500 ease-out animate-pulse">
+              <div className="flex items-center justify-center space-x-4">
+                <div className="p-2 bg-green-100 rounded-full shadow-lg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="w-10 h-10 text-green-600"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <div className="text-2xl font-bold text-white drop-shadow-lg">
+                  {success}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+      <Foter />
     </div>
-    <Foter />
-    </>
   );
-}
+  }
+  
 
 export default ShowScholarshipGenPDF;

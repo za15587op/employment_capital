@@ -111,8 +111,7 @@ function EditScholarshipsPage({ params }) {
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-blue-500 text-white px-3 py-1 rounded-lg mr-2 hover:bg-blue-600 transform scale-110"></div>
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-          <h3 className="text-2xl font-bold mb-4 text-center">Edit Scholarships Page</h3>
-          {scholarship_id && <div className="text-center mb-4">Editing Scholarship ID: {scholarship_id}</div>}
+          <h3 className="text-2xl font-bold mb-4 text-center">แก้ไขทุนที่เปิดรับ</h3>
           {error && <div className="text-red-500 text-sm">{error}</div>}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>

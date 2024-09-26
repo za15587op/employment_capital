@@ -53,6 +53,7 @@ function HomeStudentPage() {
       <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100">
 
         <Navber session={session} />
+        <div className="แถบสี"></div>
         {/* Scholarship Cards */}
         <div className="relative z-10 container mx-auto py-12">
           {error && <div className="text-red-500 text-center mb-4">{error}</div>}

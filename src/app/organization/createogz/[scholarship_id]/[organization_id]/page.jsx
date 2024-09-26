@@ -146,8 +146,8 @@ function CreateogzPage({ params }) {
       <div className="แถบสี"></div>
       <div className="max-w-lg mx-auto p-6 mt-10 bg-white rounded-lg shadow-lg">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <h3 className="text-2xl font-semibold text-gray-800 mb-4">
-            Register Scholarship Organization
+          <h3 className="text-2xl font-semibold text-center text-gray-800 mb-4">
+           เพิ่มข้อมูลของหน่วยงาน
           </h3>
           {error && <div className="text-red-500 text-sm mb-4 text-center">{error}</div>}
 
