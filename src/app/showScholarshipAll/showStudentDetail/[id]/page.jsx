@@ -15,7 +15,8 @@ export default function ShowStudentDetailPage({ params }) {
     if (!session) {
         router.push("/login");
     }
-}, [session, status, router]);
+}, [session, status, router])
+;
   let regist_id = params?.id;
   if (!regist_id) {
     const parts = pathname.split("/");

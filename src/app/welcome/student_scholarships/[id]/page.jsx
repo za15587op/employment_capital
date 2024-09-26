@@ -12,13 +12,13 @@ export default function ScholarshipRegistration({ params }) {
   const router = useRouter();
   const student_id = session?.user?.student_id || null;  // ตรวจสอบ session ก่อนใช้
   const { data: session, status } = useSession();
-  
+
   useEffect(() => {
     if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
     if (!session) {
-        router.push("/login");
+      router.push("/login");
     }
-}, [session, status, router]);
+  }, [session, status, router]);
 
   let scholarship_id = params?.id;
   if (!scholarship_id) {
@@ -49,34 +49,34 @@ export default function ScholarshipRegistration({ params }) {
   const weekDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
 
   // กำหนดรายการองค์กร
-const organizations = [
-  "ฝ่ายการคลังและบริหารสินทรัพย์",
-  "สำนักงานวิทยาเขตพัทลุง",
-  "สำนักงานวิทยาเขตสงขลา",
-  "ฝ่ายยุทธศาสตร์และพัฒนาคุณภาพองค์กร",
-  "ฝ่ายกิจการนิสิต",
-  "งานสื่อสารองค์กร",
-  "สถาบันทรัพยากรการเรียนรู้และเทคโนโลยีดิจิทัล",
-  "ฝ่ายวิชาการและการเรียนรู้",
-  "คณะวิทยาศาสตร์และนวัตกรรมดิจิทัล",
-  "คณะวิศวกรรมศาสตร์",
-  "คณะเทคโนโลยีและการพัฒนาชุมชน",
-  "คณะพยาบาลศาสตร์",
-  "คณะวิทยาการสุขภาพและการกีฬา",
-  "คณะนิติศาสตร์",
-  "คณะอุตสาหกรรมเกษตรและชีวภาพ",
-  "คณะศึกษาศาสตร์"
-];
+  const organizations = [
+    "ฝ่ายการคลังและบริหารสินทรัพย์",
+    "สำนักงานวิทยาเขตพัทลุง",
+    "สำนักงานวิทยาเขตสงขลา",
+    "ฝ่ายยุทธศาสตร์และพัฒนาคุณภาพองค์กร",
+    "ฝ่ายกิจการนิสิต",
+    "งานสื่อสารองค์กร",
+    "สถาบันทรัพยากรการเรียนรู้และเทคโนโลยีดิจิทัล",
+    "ฝ่ายวิชาการและการเรียนรู้",
+    "คณะวิทยาศาสตร์และนวัตกรรมดิจิทัล",
+    "คณะวิศวกรรมศาสตร์",
+    "คณะเทคโนโลยีและการพัฒนาชุมชน",
+    "คณะพยาบาลศาสตร์",
+    "คณะวิทยาการสุขภาพและการกีฬา",
+    "คณะนิติศาสตร์",
+    "คณะอุตสาหกรรมเกษตรและชีวภาพ",
+    "คณะศึกษาศาสตร์"
+  ];
 
-// ฟังก์ชันจัดการการเลือกองค์กร
-const handleOrgSelectionChange = (e, org) => {
-  const { checked } = e.target;
-  if (checked) {
-    setJoinOrg([...join_org, org]);
-  } else {
-    setJoinOrg(join_org.filter((selectedOrg) => selectedOrg !== org));
-  }
-};
+  // ฟังก์ชันจัดการการเลือกองค์กร
+  const handleOrgSelectionChange = (e, org) => {
+    const { checked } = e.target;
+    if (checked) {
+      setJoinOrg([...join_org, org]);
+    } else {
+      setJoinOrg(join_org.filter((selectedOrg) => selectedOrg !== org));
+    }
+  };
 
 
   const handlePartTimeChange = (e) => {
@@ -201,7 +201,7 @@ const handleOrgSelectionChange = (e, org) => {
         method: "POST",
         body: formData,
       });
-      
+
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -253,7 +253,7 @@ const handleOrgSelectionChange = (e, org) => {
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100">
       <Navber session={session} />
-      
+
       <div className="container mx-auto px-4 py-8">
         <form
           onSubmit={handleSubmit}
@@ -323,25 +323,25 @@ const handleOrgSelectionChange = (e, org) => {
 
             {isPartTime && renderDaysCheckboxes()}
 
-             {/* ส่วนเลือกองค์กร */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-700">เลือกองค์กรที่อยากเข้าร่วม</h2>
-          <div className="flex flex-wrap gap-4">
-            {organizations.map((org, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id={org}
-                  value={org}
-                  checked={join_org.includes(org)}
-                  onChange={(e) => handleOrgSelectionChange(e, org)}
-                  className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
-                />
-                <label htmlFor={org} className="text-gray-700">{org}</label>
+            {/* ส่วนเลือกองค์กร */}
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold text-gray-700">เลือกองค์กรที่อยากเข้าร่วม</h2>
+              <div className="flex flex-wrap gap-4">
+                {organizations.map((org, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id={org}
+                      value={org}
+                      checked={join_org.includes(org)}
+                      onChange={(e) => handleOrgSelectionChange(e, org)}
+                      className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
+                    />
+                    <label htmlFor={org} className="text-gray-700">{org}</label>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
           </div>
 
