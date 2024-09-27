@@ -4,17 +4,19 @@ import Navber from '@/app/components/Navber';
 import Foter from '../components/Foter';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { Tooltip } from "@nextui-org/react";
+import { FaEdit, FaTrashAlt, FaEye } from "react-icons/fa"; // Use react-icons
 
 function ShowScholarships() {
   const [scholarships, setScholarships] = useState([]);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(""); // เพิ่มสถานะ success สำหรับการแจ้งเตือน
+  const [success, setSuccess] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
 
   const formatDateToYYYYMMDD = (dateString) => {
     const date = new Date(dateString);
-    return date.toISOString().split('T')[0]; // "yyyy-MM-dd"
+    return date.toISOString().split('T')[0];
   };
 
   useEffect(() => {
@@ -27,8 +29,6 @@ function ShowScholarships() {
           const res = await fetch('/api/scholarships');
           if (res.ok) {
             const data = await res.json();
-            console.log("Fetched data:", data); // ตรวจสอบข้อมูลที่ดึงมา
-  
             const formattedData = data.map(scholarship => ({
               ...scholarship,
               application_start_date: formatDateToYYYYMMDD(scholarship.application_start_date),
@@ -48,13 +48,12 @@ function ShowScholarships() {
     }
   }, [session, status, router]);
 
-  // ใช้ useEffect เพื่อทำให้การแจ้งเตือนหายไปหลังจาก 5 วินาที
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => {
-        setSuccess(""); // ซ่อนข้อความแจ้งเตือน
-      }, 5000); // 5 วินาที
-      return () => clearTimeout(timer); // ล้างเวลาเมื่อตัว component ถูก unmount
+        setSuccess("");
+      }, 5000);
+      return () => clearTimeout(timer);
     }
   }, [success]);
   
@@ -63,30 +62,10 @@ function ShowScholarships() {
     setSuccess("แก้ไขข้อมูลทุนสำเร็จ!");
   };
 
-  const handleAddData = (organization_id) => {
-    router.push(`/organization/create/${organization_id}`);
-
+  const handleAddData = (scholarship_id) => {
+    router.push(`/organization/create/${scholarship_id}`);
     setSuccess("เพิ่มหน่วยงานสำเร็จ!");
   };
-
-  
-  const handleorganization = (organization_id) => {
-      router.push(`/organization/show/${organization_id}`);
-      };
-
-  const handleShow = (scholarship_id) => {
-        router.push(`/showScholarshipAll/${scholarship_id}`);
-      };
-
-  // useEffect(() => {
-  //   if (scholarship_id) {
-  //     getDataById(scholarship_id);
-  //   }
-  // }, [scholarship_id]);
-  // const handleCreate = () => {
-  //   router.push(`/scholarships/create`);
-  // };
-
 
   const handleOrganization = (organization_id) => {
     router.push(`/organization/show/${organization_id}`);
@@ -184,40 +163,46 @@ function ShowScholarships() {
                       <td className="py-2 px-4 whitespace-nowrap">{scholarship.academic_term}</td>
                       <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_start_date}</td>
                       <td className="py-2 px-4 whitespace-nowrap">{scholarship.application_end_date}</td>
-                      <td className="py-2 px-4">
-                        <button
-                          onClick={() => toggleStatus(scholarship.scholarship_id, scholarship.scholarship_status)}
-                          className={`${scholarship.scholarship_status === 1 ? "bg-green-500" : "bg-red-500"
-                            } text-white px-3 py-1 rounded-lg`}
-                        >
-                          {scholarship.scholarship_status === 1 ? "เปิด" : "ปิด"}
-                        </button>
-                      </td>
                       <td className="py-2 px-4 text-right">
-                        <button
-                          onClick={() => handleAddData(scholarship.scholarship_id)}
-                          className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 mr-2"
-                        >
-                          เพิ่มหน่วยงาน
-                        </button>
-                        <button
-                          onClick={() => handleOrganization(scholarship.scholarship_id)}
-                          className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 mr-2"
-                        >
-                          ดูหน่วยงาน
-                        </button>
-                        <button
-                          onClick={() => handleUpdate(scholarship.scholarship_id)}
-                          className="bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-indigo-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300 mr-2"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(scholarship.scholarship_id)}
-                          className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300"
-                        >
-                          Delete
-                        </button>
+                        <div className="flex justify-center items-center space-x-3">
+                          <button
+                            className={`${scholarship.scholarship_status === 1 ? "bg-green-500" : "bg-red-500"
+                              } text-white px-3 py-1 rounded-lg`}
+                            onClick={() => toggleStatus(scholarship.scholarship_id, scholarship.scholarship_status)}
+                          >
+                            {scholarship.scholarship_status === 1 ? "เปิด" : "ปิด"}
+                          </button>
+                          <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                            onClick={() => handleAddData(scholarship.scholarship_id)}
+                          >
+                            เพิ่มหน่วยงาน
+                          </button>
+                          <Tooltip content="ดูหน่วยงาน">
+                            <span
+                              className="text-lg text-gray-400 cursor-pointer active:opacity-50"
+                              onClick={() => handleOrganization(scholarship.scholarship_id)}
+                            >
+                              <FaEye />
+                            </span>
+                          </Tooltip>
+                          <Tooltip content="แก้ไข">
+                            <span
+                              className="text-lg text-gray-400 cursor-pointer active:opacity-50"
+                              onClick={() => handleUpdate(scholarship.scholarship_id)}
+                            >
+                              <FaEdit />
+                            </span>
+                          </Tooltip>
+                          <Tooltip content="ลบ">
+                            <span
+                              className="text-lg text-red-500 cursor-pointer active:opacity-50"
+                              onClick={() => handleDelete(scholarship.scholarship_id)}
+                            >
+                              <FaTrashAlt />
+                            </span>
+                          </Tooltip>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -256,7 +241,6 @@ function ShowScholarships() {
       <Foter />
     </>
   );
-
 }
 
 export default ShowScholarships;

@@ -4,6 +4,7 @@ import Navber from "@/app/components/Navber";
 import Foter from "../components/Foter";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { BsClockFill } from 'react-icons/bs'; // นำเข้าไอคอนการนับเวลาถอยหลัง
 
 function HomeStudentPage() {
   const [scholarships, setScholarships] = useState([]);
@@ -18,11 +19,21 @@ function HomeStudentPage() {
         router.push("/login");
     }
 }, [session, status, router]);
+
+  // ฟังก์ชันสำหรับแปลงวันที่ให้เป็นรูปแบบ YYYY-MM-DD
   const formatDateToYYYYMMDD = (dateString) => {
     const date = new Date(dateString);
     return date.toISOString().split("T")[0]; // "yyyy-MM-dd"
   };
-  
+
+  // ฟังก์ชันสำหรับคำนวณจำนวนวันที่เหลือก่อนหมดเขตรับสมัคร
+  const calculateDaysLeft = (endDate) => {
+    const now = new Date();
+    const end = new Date(endDate);
+    const diffTime = end - now;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // แปลงเวลาเป็นจำนวนวัน
+    return diffDays;
+  };
 
   useEffect(() => {
     const fetchScholarships = async () => {
@@ -34,6 +45,7 @@ function HomeStudentPage() {
             ...scholarship,
             application_start_date: formatDateToYYYYMMDD(scholarship.application_start_date),
             application_end_date: formatDateToYYYYMMDD(scholarship.application_end_date),
+            daysLeft: calculateDaysLeft(scholarship.application_end_date), // เพิ่มข้อมูลวันเหลือ
           }));
           setScholarships(formattedData);
         } else {
@@ -57,9 +69,9 @@ function HomeStudentPage() {
   return (
     <>
       <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100">
-
         <Navber session={session} />
         <div className="แถบสี"></div>
+
         {/* Scholarship Cards */}
         <div className="relative z-10 container mx-auto py-12">
           {error && <div className="text-red-500 text-center mb-4">{error}</div>}
@@ -89,6 +101,12 @@ function HomeStudentPage() {
                   <span className="text-md">เทอมที่ {scholarship.academic_term}</span>
                   <span>เริ่มสมัครได้ตั้งแต่: {scholarship.application_start_date}</span>
                   <span>ปิดรับสมัครวันที่: {scholarship.application_end_date}</span>
+                </div>
+
+                {/* Countdown Information */}
+                <div className="mt-4 flex items-center justify-center text-red-500">
+                  <BsClockFill className="mr-2" />
+                  <span className="text-sm">เหลือเวลาอีก {scholarship.daysLeft} วันในการสมัคร</span>
                 </div>
 
                 {/* Apply Button */}
