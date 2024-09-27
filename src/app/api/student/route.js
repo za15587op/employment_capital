@@ -1,3 +1,135 @@
+// import { NextResponse } from "next/server";
+// import Student from "../../../../models/student"; // Student Model
+// import Skills from "../../../../models/skills"; // Skills Model
+// import StudentSkills from "../../../../models/studentskills"; // StudentSkills Model
+// import Skills_SkillTypes from "../../../../models/skills_skilltypes"; // Skills_SkillTypes Model
+
+// // POST: Create a new student
+// export async function POST(req) {
+//   try {
+//     const studentData = await req.json(); // Parse the incoming student data
+    
+
+//     // Destructure incoming data
+//     const {
+//       student_id,
+//       student_firstname,
+//       student_lastname,
+//       student_faculty,
+//       student_curriculum,
+//       student_year,
+//       student_gpa,
+//       student_phone,
+//       user_id,
+//       join_org,
+//       skills, // Array of skills from frontend
+//       selectedSkillTypes, // Skill type array from frontend
+//       studentSkills, // Skill levels array from frontend
+//     } = studentData;
+
+//     console.log(join_org);
+    
+
+//     // Create a student record
+//     const createdStudent = await Student.create({
+//       student_id,
+//       student_firstname,
+//       student_lastname,
+//       student_faculty,
+//       student_curriculum,
+//       student_year,
+//       student_gpa,
+//       student_phone,
+//       join_org,
+//       user_id,
+//     });
+
+//     // Check if student creation was successful
+//     if (!createdStudent) {
+//       throw new Error("Unable to create student");
+//     }
+
+//     if (!skills || !skills.length) {
+//       console.error("Skills array is missing or empty");
+//       throw new Error("Skills data is required");
+//     }
+    
+//     if (!studentSkills || !studentSkills.length) {
+//       console.error("StudentSkills array is missing or empty");
+//       throw new Error("StudentSkills data is required");
+//     }
+    
+//     if (!selectedSkillTypes || !selectedSkillTypes.length) {
+//       console.error("SelectedSkillTypes array is missing or empty");
+//       throw new Error("SelectedSkillTypes data is required");
+//     }
+    
+
+// // Loop through the skills array and process each skill
+// for (let i = 0; i < skills.length; i++) {
+//   const { name: skill_name, level: skill_level } = skills[i]; // ปรับการ destructure ให้ตรงกับโครงสร้างจริง
+//   const { skill_type_id } = selectedSkillTypes[i]; // ตรวจสอบว่ามีการใช้ selectedSkillTypes อย่างถูกต้อง
+
+
+//   console.log(skill_name);
+  
+//   // Create the skill in the Skills table
+//   const createdSkill = await Skills.create({
+//     skill_name,
+//   });
+
+//   // If skill creation fails, throw an error
+//   if (!createdSkill) {
+//     throw new Error("Unable to create skill");
+//   }
+
+//   // Link the skill to its type in the Skills_SkillTypes table
+//   await Skills_SkillTypes.create({
+//     student_id: createdStudent.id, // Use the ID of the newly created student
+//     skill_id: createdSkill.id, // Use the ID of the newly created skill
+//     skill_type_id,
+//   });
+
+//   // Link the student to the skill in the StudentSkills table
+//   await StudentSkills.create({
+//     student_id: createdStudent.id, // Use the ID of the newly created student
+//     skill_id: createdSkill.id, // Use the ID of the newly created skill
+//     skill_level,
+//   });
+// }
+
+
+
+//     // Return success response
+//     return NextResponse.json(
+//       { message: "Student and skills registered successfully." },
+//       { status: 201 }
+//     );
+//   } catch (error) {
+//     console.error("Error during registration:", error);
+//     return NextResponse.json(
+//       { message: "An error occurred during registration." },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+// // GET: Fetch all students
+// export async function GET(req) {
+//   try {
+//     const students = await Student.findAll(); // Use Sequelize's findAll method to retrieve all students
+
+//     return NextResponse.json(students, { status: 200 });
+//   } catch (error) {
+//     console.error("Error fetching students:", error);
+//     return NextResponse.json(
+//       { message: "Error occurred while fetching students." },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+
 import { NextResponse } from "next/server";
 import Student from "../../../../models/student"; // โมเดล Student
 import Skills from "../../../../models/skills"; // โมเดล Skills
@@ -15,12 +147,13 @@ export async function POST(req) {
       student_firstname,
       student_lastname,
       student_faculty,
-      student_field,
       student_curriculum,
       student_year,
       student_gpa,
       student_phone,
+      join_org,
       user_id,
+
       skills, // ทักษะที่รับมาจาก frontend
       selectedSkillTypes, // ประเภทของทักษะที่เลือก
       studentSkills, // ระดับทักษะของนักศึกษา
@@ -32,11 +165,11 @@ export async function POST(req) {
       student_firstname,
       student_lastname,
       student_faculty,
-      student_field,
       student_curriculum,
       student_year,
       student_gpa,
       student_phone,
+      join_org,
       user_id,
     });
     
@@ -84,103 +217,6 @@ export async function POST(req) {
     );
   }
 }
-
-
-// // POST: Create a new student
-// export async function POST(req) {
-//   try {
-//     const studentData = await req.json(); // Get the student data from the request
-
-//     console.log(studentData,"studentData");
-    
-
-//     await Student.create(studentData); // Use the create method from the Student model
-
-
-//     return NextResponse.json(
-//       { message: "User registered successfully." },
-//       { status: 201 }
-//     );
-//   } catch (error) {
-//     console.error("Error during registration:", error);
-//     return NextResponse.json(
-//       { message: "An error occurred during registration." },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-// // PUT: Update a student
-// export async function PUT(req) {
-//   try {
-//     const {
-//       student_id,
-//       student_firstname,
-//       student_lastname,
-//       student_faculty,
-//       student_field,
-//       student_curriculum,
-//       student_year,
-//       student_gpa,
-//       student_phone,
-//       user_id
-//     } = await req.json(); // Get the student data from the request
-
-//     // Use the update method from the Student model
-//     await Student.update(student_id, {
-//       student_id,
-//       student_firstname,
-//       student_lastname,
-//       student_faculty,
-//       student_field,
-//       student_curriculum,
-//       student_year,
-//       student_gpa,
-//       student_phone,
-//       user_id
-//     });
-
-//     return NextResponse.json(
-//       { message: "อัปเดตข้อมูลนักเรียนสำเร็จ." },
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error("เกิดข้อผิดพลาดระหว่างการอัปเดต:", error);
-//     return NextResponse.json(
-//       { message: "เกิดข้อผิดพลาดระหว่างการอัปเดต." },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-
-// // DELETE: Delete a student
-// export async function DELETE(req) {
-//   try {
-//     const url = new URL(req.url);
-//     const student_id = url.searchParams.get('student_id'); // Get student_id from URL query parameter
-
-//     if (!student_id) {
-//       return NextResponse.json(
-//         { message: "Student ID is required." },
-//         { status: 400 }
-//       );
-//     }
-
-//     await Student.delete(student_id); // Use the delete method from the Student model
-
-//     return NextResponse.json(
-//       { message: "ลบข้อมูลนักเรียนสำเร็จ." },
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error("เกิดข้อผิดพลาดระหว่างการลบ:", error);
-//     return NextResponse.json(
-//       { message: "เกิดข้อผิดพลาดระหว่างการลบ." },
-//       { status: 500 }
-//     );
-//   }
-// }
 
 // GET: Fetch all students
 export async function GET(req) {

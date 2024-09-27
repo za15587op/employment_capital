@@ -76,8 +76,8 @@ function ShowScholarshipGenPDF() {
       student.student_id,
       `${student.student_firstname} ${student.student_lastname}`,
       student.student_faculty,
-      student.student_field,
-      student.student_gpa,
+      student.student_curriculum,
+      student.student_gpa
     ]);
 
     // สร้างตารางข้อมูลนักศึกษา

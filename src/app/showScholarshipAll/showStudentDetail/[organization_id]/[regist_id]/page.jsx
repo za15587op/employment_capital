@@ -3,25 +3,20 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import Foter from "@/app/components/Foter";
+import { useParams } from "next/navigation"; // useParams for dynamic route params
 import Navbar from "@/app/components/Navber";
 
 export default function ShowStudentDetailPage({ params }) {
+  const { organization_id, regist_id } = useParams(); // Extract params from URL
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const router = useRouter();
 
-  useEffect(() => {
-    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
-    if (!session) {
-        router.push("/login");
-    }
-}, [session, status, router])
-;
-  let regist_id = params?.id;
-  if (!regist_id) {
-    const parts = pathname.split("/");
-    regist_id = parts[parts.length - 1];
-  }
+  // let regist_id = params?.id;
+  // if (!regist_id) {
+  //   const parts = pathname.split("/");
+  //   regist_id = parts[parts.length - 1];
+  // }
 
   const [relatedWorks, setRelatedWorks] = useState("");
   const [file, setFile] = useState(null);
@@ -33,7 +28,6 @@ export default function ShowStudentDetailPage({ params }) {
   const [student_firstname, setStudentFirstName] = useState("");
   const [student_lastname, setStudentLastName] = useState("");
   const [student_faculty, setStudentFaculty] = useState("");
-  const [student_field, setStudentField] = useState("");
   const [student_curriculum, setStudentCurriculum] = useState("");
   const [student_year, setStudentYear] = useState("");
   const [student_gpa, setStudentGpa] = useState("");
@@ -64,7 +58,6 @@ export default function ShowStudentDetailPage({ params }) {
       setStudentFirstName(data.student_firstname);
       setStudentLastName(data.student_lastname);
       setStudentFaculty(data.student_faculty);
-      setStudentField(data.student_field);
       setStudentCurriculum(data.student_curriculum);
       setStudentYear(data.student_year);
       setStudentGpa(data.student_gpa);
@@ -131,10 +124,12 @@ export default function ShowStudentDetailPage({ params }) {
     }
   };
 
+ 
   const Back = (scholarship_id) => {
-    router.push(`/showScholarshipAll/${scholarship_id}`);
-  };
-  
+    router.push(`/showScholarshipAll/showStdOrgan/${scholarship_id}/${organization_id}`);
+    
+};
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   return (
@@ -154,7 +149,6 @@ export default function ShowStudentDetailPage({ params }) {
               <label className="block">ชื่อ: {student_firstname}</label>
               <label className="block">นามสกุล: {student_lastname}</label>
               <label className="block">คณะ: {student_faculty}</label>
-              <label className="block">สาขา: {student_field}</label>
               <label className="block">หลักสูตร: {student_curriculum}</label>
               <label className="block">ปีการศึกษา: {student_year}</label>
               <label className="block">เกรดเฉลี่ย (GPA): {student_gpa}</label>

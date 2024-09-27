@@ -26,7 +26,7 @@ export async function GET(req, { params }) {
 export async function PUT(req, { params }) {
   try {
     const student_id = params.id;
-    const { student_firstname, student_lastname, student_faculty, student_field, student_curriculum, student_year, student_gpa, student_phone, skills, studentSkills, selectedSkillTypes } = await req.json();
+    const { student_firstname, student_lastname, student_faculty, student_curriculum, student_year, student_gpa, student_phone, join_org, skills, studentSkills, selectedSkillTypes } = await req.json();
 
     if (!student_id) {
       return NextResponse.json({ message: 'Student ID is required' }, { status: 400 });
@@ -39,11 +39,11 @@ export async function PUT(req, { params }) {
         student_firstname,
         student_lastname,
         student_faculty,
-        student_field,
         student_curriculum,
         student_year,
         student_gpa,
         student_phone,
+        join_org
       },
       skills,
       studentSkills,
