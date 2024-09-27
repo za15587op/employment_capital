@@ -339,8 +339,7 @@ import { useSession } from "next-auth/react";
 
 function StudentForm({ params }) {
   const router = useRouter();
-  const { data: session } = useSession();
-
+  const { data: session, status } = useSession();
   const [student_id, setStudentID] = useState("");
   const [student_firstname, setStudentFirstName] = useState("");
   const [student_lastname, setStudentLastName] = useState("");
@@ -382,6 +381,13 @@ function StudentForm({ params }) {
   const handleOrgChange = (event) => {
     setJoinOrg(event.target.value);
   };
+
+  useEffect(() => {
+    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (!session) {
+        router.push("/login");
+    }
+}, [session, status, router]);
 
   useEffect(() => {
     const fetchSkillTypes = async () => {

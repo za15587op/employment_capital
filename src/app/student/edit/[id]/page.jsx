@@ -10,9 +10,7 @@ function EditStudentPage({ params }) {
   const { id: student_id } = params;
   const [postData, setPostData] = useState({});
   const router = useRouter();
-
   const [success, setSuccess] = useState(false); // Success state for notification
-
   // Student information
   const [studentID, setStudentID] = useState("");
   const [studentFirstName, setStudentFirstName] = useState("");
@@ -52,6 +50,12 @@ function EditStudentPage({ params }) {
     "คณะศึกษาศาสตร์",
   ];
 
+  useEffect(() => {
+    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (!session) {
+        router.push("/login");
+    }
+}, [session, status, router]);
   // Fetch skill types from API
   const fetchSkillTypes = async () => {
     try {

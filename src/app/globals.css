@@ -1,7 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+body {
+  font-family: 'Kanit', sans-serif;
+}
 
 .header {
     display: flex;
@@ -89,6 +92,53 @@ footer{ /* ใช้แสดง  Copyright 2024 | Thaksin Univerity ของ f
 
 .animate-computerLines {
   animation: computerLines 10s linear infinite;
+}
+
+
+.custom-bullet {
+  width: 12px;
+  height: 12px;
+  background-color: gray;
+  border-radius: 50%;
+  opacity: 0.5;
+  margin: 0 5px;
+  transition: background-color 0.3s, opacity 0.3s;
+}
+
+.custom-bullet-active {
+  background-color: green;
+  opacity: 1;    
+}
+           
+.mySwiper {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+/* เพิ่ม CSS สำหรับตัวเลื่อน Swiper */
+.swiper-button-prev,
+.swiper-button-next {
+  color: black; /* เปลี่ยนสีตัวเลื่อนเป็นสีดำ */
+  opacity: 0.8; /* กำหนดความทึบ */
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  color: black; /* สีเมื่อโฮเวอร์ */
+  opacity: 1; /* ความทึบเต็มเมื่อโฮเวอร์ */
+}
+.swiper-pagination-bullet {
+  width: 20px !important;
+  height: 20px !important;
+  background-color: gray !important;
+  border: 2px solid white !important; /* ขอบสีขาว */
+  border-radius: 50% !important; /* ให้เป็นวงกลม */
+  opacity: 0.8 !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: black !important; /* สีของจุดเมื่อถูกเลือก */
+  border: 2px solid white !important; /* ขอบสีขาว */
+  opacity: 1 !important;
 }
 
 

@@ -8,10 +8,17 @@ import Navber from '@/app/components/Navber';
 import Foter from '@/app/components/Foter';
 
 export default function ScholarshipRegistration({ params }) {
-  const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
   const student_id = session?.user?.student_id || null;  // ตรวจสอบ session ก่อนใช้
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (!session) {
+      router.push("/login");
+    }
+  }, [session, status, router]);
 
   let scholarship_id = params?.id;
   if (!scholarship_id) {
@@ -160,7 +167,7 @@ export default function ScholarshipRegistration({ params }) {
         method: "POST",
         body: formData,
       });
-      
+
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -212,7 +219,7 @@ export default function ScholarshipRegistration({ params }) {
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100">
       <Navber session={session} />
-      
+
       <div className="container mx-auto px-4 py-8">
         <form
           onSubmit={handleSubmit}

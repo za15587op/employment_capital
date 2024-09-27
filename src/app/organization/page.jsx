@@ -106,7 +106,7 @@ function ShowogzPage({ params }) {
                 <br /><br />
                 <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-8">
                     <h3 className=" text-2xl font-bold mb-6 text-center bg-blue-500 text-white px-5 py-3 rounded-lg hover:bg-blue-600">
-                        Organization List
+                        หน่วยงานทั้งหมด
                     </h3>
                 </div>
                 <div className="flex justify-between items-center p-4">

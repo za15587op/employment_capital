@@ -157,7 +157,7 @@ function ShowPage({ params }) {
                 <div className="แถบสี"></div>
                 <br /><br />
                 <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-8">
-                    <h3 className=" text-2xl font-bold mb-6 text-center bg-blue-500 text-white px-5 py-3 rounded-lg hover:bg-blue-600"><p>Organization List</p> 
+                    <h3 className=" text-2xl font-bold mb-6 text-center bg-blue-500 text-white px-5 py-3 rounded-lg hover:bg-blue-600"><p>หน่วยงานที่มีอยู่ใน</p> 
                     ปีการศึกษา <span >{newacademic_year } เทอมการศึกษาที่ <span >{newacademic_term }</span></span>
                     </h3>
                 </div>

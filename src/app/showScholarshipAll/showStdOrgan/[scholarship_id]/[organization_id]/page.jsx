@@ -1,5 +1,5 @@
 "use client"; // Mark this as a Client Component
-
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation"; // Use next/navigation instead of next/router
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; // useParams for dynamic route params
@@ -7,12 +7,22 @@ import Navbar from "@/app/components/Navber";
 import Foter from "@/app/components/Foter";
 
 export default function ShowStdOrgan() {
+
   const { scholarship_id, organization_id } = useParams(); // Extract params from URL
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [studentData, setStudentData] = useState(null);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null); // Success message state
   const [showSuccess, setShowSuccess] = useState(false); // State to control the visibility of the success message
+  
+  
+  useEffect(() => {
+    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (!session) {
+        router.push("/login");
+    }
+}, [session, status, router]);
 
   useEffect(() => {
     if (scholarship_id && organization_id) {

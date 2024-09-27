@@ -11,8 +11,14 @@ export default function EditScholarshipRegistration({ params }) {
   const router = useRouter();
   const [success, setSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-
   const http = 'http://localhost:3000';
+
+  useEffect(() => {
+    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (!session) {
+        router.push("/login");
+    }
+}, [session, status, router]);
 
   let regist_id = params?.id;
   if (!regist_id) {

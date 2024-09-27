@@ -143,12 +143,12 @@ function ShowScholarships() {
       <br /><br />
       <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
         <h3 className="text-2xl font-bold mb-6 text-center bg-blue-500 text-white px-5 py-3 rounded-lg hover:bg-blue-600">
-          Scholarships List
+          หน้าเปิดรับสมัครทุนนิสิตจ้างงาน
         </h3>
         <div className="flex justify-between items-center p-4">
           <div className="flex-grow"></div>
           <a href='/scholarships/create' className="bg-blue-500 text-white px-8 py-4 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
-            เปิดรับสมัครทุน
+            เพิ่มทุน
           </a>
         </div>
         <br />
