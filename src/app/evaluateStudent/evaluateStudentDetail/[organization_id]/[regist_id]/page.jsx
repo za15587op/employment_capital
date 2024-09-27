@@ -19,7 +19,7 @@ export default function ShowStudentDetailPage({ params }) {
     }
 }, [session, status, router])
 ;
-  let regist_id = params?.id;
+  // let regist_id = params?.id;
   if (!regist_id) {
     const parts = pathname.split("/");
     regist_id = parts[parts.length - 1];
