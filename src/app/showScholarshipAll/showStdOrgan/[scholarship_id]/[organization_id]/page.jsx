@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation"; // Use next/navigation instead of next/router
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; // useParams for dynamic route params
-import Navbar from "@/app/components/Navber"; 
-import Foter from "@/app/components/Foter";  
+import Navbar from "@/app/components/Navber";
+import Foter from "@/app/components/Foter";
 
 export default function ShowStdOrgan() {
   const { scholarship_id, organization_id } = useParams(); // Extract params from URL
@@ -13,7 +13,6 @@ export default function ShowStdOrgan() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null); // Success message state
   const [showSuccess, setShowSuccess] = useState(false); // State to control the visibility of the success message
-
 
   useEffect(() => {
     if (scholarship_id && organization_id) {
@@ -24,9 +23,12 @@ export default function ShowStdOrgan() {
   const fetchStudentData = async (scholarship_id, organization_id) => {
     try {
       // Corrected fetch call
-      const res = await fetch(`/api/showScholarshipAll/showStdOrgan/${scholarship_id}/${organization_id}`, {
-        method: "GET",
-      });
+      const res = await fetch(
+        `/api/showScholarshipAll/showStdOrgan/${scholarship_id}/${organization_id}`,
+        {
+          method: "GET",
+        }
+      );
 
       if (!res.ok) {
         throw new Error("Failed to fetch student data");
@@ -51,38 +53,49 @@ export default function ShowStdOrgan() {
   }
 
   const Back = (scholarship_id) => {
-    setShowSuccess(true);  
-    setSuccess("กำลังกลับไปยังหน้าก่อนหน้านี้!"); 
+    setShowSuccess(true);
+    setSuccess("กำลังกลับไปยังหน้าก่อนหน้านี้!");
     setTimeout(() => {
-      setShowSuccess(false);  
+      setShowSuccess(false);
       router.push(`/organization/show/${scholarship_id}`);
-    }, 3000); 
-
+    }, 3000);
   };
 
   const ViewDetails = (regist_id) => {
-    setShowSuccess(true);  
-    setSuccess("กำลังโหลดเพื่อดูรายละเอียดเพิ่มเติม!"); 
+    setShowSuccess(true);
+    setSuccess("กำลังโหลดเพื่อดูรายละเอียดเพิ่มเติม!");
     setTimeout(() => {
-      setShowSuccess(false);  
-      router.push(`/showScholarshipAll/showStudentDetail/${organization_id}/${regist_id}`);
-    }, 3000);  
+      setShowSuccess(false);
+      router.push(
+        `/showScholarshipAll/showStudentDetail/${organization_id}/${regist_id}`
+      );
+    }, 3000);
+  };
 
+  const handleMatching = (organization_id) => {
+    router.push(`/matching_admin/${scholarship_id}/${organization_id}`);
   };
 
   // Ensure we get organization_name[0] from the first student, if available
-  const organizationName = studentData.length > 0 ? studentData[0].organization_name : organization_id;
-  const AcademicYear = studentData.length > 0 ? studentData[0].academic_year : organization_id;
-  const AcademicTerm = studentData.length > 0 ? studentData[0].academic_term : organization_id;
+  const organizationName =
+    studentData.length > 0 ? studentData[0].organization_name : organization_id;
+  const AcademicYear =
+    studentData.length > 0 ? studentData[0].academic_year : organization_id;
+  const AcademicTerm =
+    studentData.length > 0 ? studentData[0].academic_term : organization_id;
 
   return (
     <>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
         <Navbar />
-        <div className="แถบสี"></div><br /><br />
+        <div className="แถบสี"></div>
+        <br />
+        <br />
         <div className="bg-white shadow-lg rounded-lg px-6 py-6 w-full mb-6">
           <div className="bg-blue-500 text-white px-5 py-3 rounded-lg w-full text-center shadow-lg">
-            <h3 className="text-2xl font-bold">รายชื่อนิสิตที่สมัครทุนนิสิตจ้างงาน</h3>
+            <h3 className="text-2xl font-bold">
+              รายชื่อนิสิตที่สมัครทุนนิสิตจ้างงาน
+            </h3>
           </div>
         </div>
         <div className="container mx-auto p-8 mt-6 bg-white shadow-lg rounded-lg">
@@ -96,6 +109,13 @@ export default function ShowStdOrgan() {
             <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
               คณะ: {organizationName}
             </h1>
+
+            <button
+              onClick={() => handleMatching(organization_id)}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 ml-2"
+            >
+              จับคู่
+            </button>
             <button
               onClick={() => Back(scholarship_id)}
               className="bg-gradient-to-r from-blue-500 to-blue-400 text-white px-6 py-3 rounded-xl shadow-xl"
@@ -107,12 +127,24 @@ export default function ShowStdOrgan() {
           <table className="min-w-full bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 text-white rounded-lg shadow-lg overflow-hidden">
             <thead className="bg-blue-900">
               <tr className="bg-blue-900 border-b border-blue-700">
-                <th className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-300">ชื่อ</th>
-                <th className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-300">นามสกุล</th>
-                <th className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-300">คณะ</th>
-                <th className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-300">ชั้นปีที่</th>
-                <th className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-300">เบอร์โทร</th>
-                <th className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-300">ดำเนินการ</th>
+                <th className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-300">
+                  ชื่อ
+                </th>
+                <th className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-300">
+                  นามสกุล
+                </th>
+                <th className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-300">
+                  คณะ
+                </th>
+                <th className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-300">
+                  ชั้นปีที่
+                </th>
+                <th className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-300">
+                  เบอร์โทร
+                </th>
+                <th className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-300">
+                  ดำเนินการ
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -122,11 +154,21 @@ export default function ShowStdOrgan() {
                     key={index}
                     className="border-b border-blue-700 hover:bg-blue-800 transition-all duration-300 hover:shadow-lg "
                   >
-                    <td className="text-left py-3 px-4">{student.student_firstname}</td>
-                    <td className="text-left py-3 px-4">{student.student_lastname}</td>
-                    <td className="text-left py-3 px-4">{student.student_faculty}</td>
-                    <td className="text-left py-3 px-4">{student.student_year}</td>
-                    <td className="text-left py-3 px-4">{student.student_phone}</td>
+                    <td className="text-left py-3 px-4">
+                      {student.student_firstname}
+                    </td>
+                    <td className="text-left py-3 px-4">
+                      {student.student_lastname}
+                    </td>
+                    <td className="text-left py-3 px-4">
+                      {student.student_faculty}
+                    </td>
+                    <td className="text-left py-3 px-4">
+                      {student.student_year}
+                    </td>
+                    <td className="text-left py-3 px-4">
+                      {student.student_phone}
+                    </td>
                     <td className="text-left py-3 px-4">
                       <button
                         onClick={() => ViewDetails(student.regist_id)}
@@ -139,7 +181,9 @@ export default function ShowStdOrgan() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="text-center py-3 text-gray-500">ไม่มีข้อมูลสำหรับนิสิต</td>
+                  <td colSpan="6" className="text-center py-3 text-gray-500">
+                    ไม่มีข้อมูลสำหรับนิสิต
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -174,5 +218,4 @@ export default function ShowStdOrgan() {
       <Foter />
     </>
   );
-
 }
