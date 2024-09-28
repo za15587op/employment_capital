@@ -59,6 +59,7 @@ function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
       <Navbar />
+      <div className="แถบสี"></div>
       <div className="flex flex-1 justify-center items-center py-12 bg-opacity-60">
         <form
           onSubmit={handlerSubmit}

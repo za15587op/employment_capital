@@ -75,7 +75,7 @@ function ShowStudentScholarshipsPage() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100">
       <Navbar session={session} />
-
+      <div className="แถบสี"></div>
       {/* Title Section */}
       <div className="py-10 flex justify-center">
         <div className="relative inline-block px-10 py-4 bg-gradient-to-r from-blue-200 to-purple-200 rounded-lg shadow-xl">

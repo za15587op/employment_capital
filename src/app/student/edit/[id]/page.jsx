@@ -53,9 +53,9 @@ function EditStudentPage({ params }) {
   useEffect(() => {
     if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
     if (!session) {
-        router.push("/login");
+      router.push("/login");
     }
-}, [session, status, router]);
+  }, [session, status, router]);
   // Fetch skill types from API
   const fetchSkillTypes = async () => {
     try {
@@ -121,7 +121,7 @@ function EditStudentPage({ params }) {
   const handleOrgChange = (event) => {
     setJoinOrg(event.target.value);
   };
-  
+
 
   const handleSkillTypesChange = (index, event) => {
     const selectedSkillType = skillTypes.find(
@@ -214,7 +214,7 @@ function EditStudentPage({ params }) {
       {/* Background starts from the top and covers the whole page */}
       <div className="relative min-h-screen w-full bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100 overflow-hidden">
         <Navbar session={session} />
-
+        <div className="แถบสี"></div>
         <div className="relative min-h-screen p-6 flex flex-col items-center justify-center">
           <div className="max-w-3xl w-full bg-white shadow-2xl rounded-3xl p-10 border-4 border-blue-400 bg-opacity-80 backdrop-blur-lg transform transition-all">
             <h3 className="text-4xl font-extrabold text-center text-gray-800 mb-8">
@@ -222,147 +222,174 @@ function EditStudentPage({ params }) {
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-            <label>รหัสนิสิต</label>
-              <input
-                onChange={(e) => setStudentID(e.target.value)}
-                type="number"
-                placeholder="รหัสนิสิต"
-                value={studentID}
-                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
-              />
-              <label>ชื่อ</label>
-              <input
-                onChange={(e) => setStudentFirstName(e.target.value)}
-                type="text"
-                placeholder="ชื่อ"
-                value={studentFirstName}
-                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
-              />
-              <label>นามสกุล</label>
-              <input
-                onChange={(e) => setStudentLastName(e.target.value)}
-                type="text"
-                placeholder="นามสกุล"
-                value={studentLastName}
-                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
-              />
-              <label>คณะ</label>
-              <input
-                onChange={(e) => setStudentFaculty(e.target.value)}
-                type="text"
-                placeholder="คณะ"
-                value={studentFaculty}
-                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
-              />
-              <label>หลักสูตร</label>
-              <input
-                onChange={(e) => setStudentCurriculum(e.target.value)}
-                type="text"
-                placeholder="หลักสูตร"
-                value={studentCurriculum}
-                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
-              />
-              <label>ชั้นปี</label>
-              <input
-                onChange={(e) => setStudentYear(e.target.value)}
-                type="number"
-                placeholder="ชั้นปี"
-                value={studentYear}
-                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
-              />
-              <label>เกรดเฉลี่ย GPA(สะสม)</label>
-              <input
-                onChange={(e) => setStudentGpa(e.target.value)}
-                type="number"
-                step="0.01"
-                placeholder="เกรดเฉลี่ย GPA"
-                value={studentGpa}
-                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
-              />
-              <label>เบอร์โทร</label>
-              <input
-                onChange={(e) => setStudentPhone(e.target.value)}
-                type="tel"
-                placeholder="เบอร์โทร"
-                value={studentPhone}
-                className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
-              />
-              <label>หน่วยงานที่อยากเข้าร่วม</label>
-              <select
-                value={join_org} // ค่า join_org ที่ได้จากการดึงข้อมูล
-                onChange={handleOrgChange}
-                className="w-full p-2 mt-2 border-2 border-blue-400 rounded-md focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
-              >
-                <option value="">เลือกหน่วยงานที่อยากเข้าร่วม</option>
-                {organizations.map((org, index) => (
-                  <option key={index} value={org}>
-                    {org}
-                  </option>
-                ))}
-              </select>
+              <div className="mb-2">
+                <label className="block text-gray-700 text-sm font-bold mb-1">รหัสนิสิต</label>
+                <input
+                  onChange={(e) => setStudentID(e.target.value)}
+                  type="number"
+                  placeholder="รหัสนิสิต"
+                  value={studentID}
+                  className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+                />
+              </div>
 
+              <div className="mb-2">
+                <label className="block text-gray-700 text-sm font-bold mb-1">ชื่อ</label>
+                <input
+                  onChange={(e) => setStudentFirstName(e.target.value)}
+                  type="text"
+                  placeholder="ชื่อ"
+                  value={studentFirstName}
+                  className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+                />
+              </div>
+
+              <div className="mb-2">
+                <label className="block text-gray-700 text-sm font-bold mb-1">นามสกุล</label>
+                <input
+                  onChange={(e) => setStudentLastName(e.target.value)}
+                  type="text"
+                  placeholder="นามสกุล"
+                  value={studentLastName}
+                  className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+                />
+              </div>
+
+              <div className="mb-2">
+                <label className="block text-gray-700 text-sm font-bold mb-1">คณะ</label>
+                <input
+                  onChange={(e) => setStudentFaculty(e.target.value)}
+                  type="text"
+                  placeholder="คณะ"
+                  value={studentFaculty}
+                  className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+                />
+              </div>
+
+              <div className="mb-2">
+                <label className="block text-gray-700 text-sm font-bold mb-1">หลักสูตร</label>
+                <input
+                  onChange={(e) => setStudentCurriculum(e.target.value)}
+                  type="text"
+                  placeholder="หลักสูตร"
+                  value={studentCurriculum}
+                  className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+                />
+              </div>
+
+              <div className="mb-2">
+                <label className="block text-gray-700 text-sm font-bold mb-1">ชั้นปี</label>
+                <input
+                  onChange={(e) => setStudentYear(e.target.value)}
+                  type="number"
+                  placeholder="ชั้นปี"
+                  value={studentYear}
+                  className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+                />
+              </div>
+
+              <div className="mb-2">
+                <label className="block text-gray-700 text-sm font-bold mb-1">เกรดเฉลี่ย GPA (สะสม)</label>
+                <input
+                  onChange={(e) => setStudentGpa(e.target.value)}
+                  type="number"
+                  step="0.01"
+                  placeholder="เกรดเฉลี่ย GPA"
+                  value={studentGpa}
+                  className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+                />
+              </div>
+
+              <div className="mb-2">
+                <label className="block text-gray-700 text-sm font-bold mb-1">เบอร์โทร</label>
+                <input
+                  onChange={(e) => setStudentPhone(e.target.value)}
+                  type="tel"
+                  placeholder="เบอร์โทร"
+                  value={studentPhone}
+                  className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+                />
+              </div>
+
+              <div className="mb-2">
+                <label className="block text-gray-700 text-sm font-bold mb-1">หน่วยงานที่อยากเข้าร่วม</label>
+                <select
+                  value={join_org}
+                  onChange={handleOrgChange}
+                  className="w-full p-4 border-2 border-blue-400 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md bg-white bg-opacity-70 text-gray-800"
+                >
+                  <option value="">เลือกหน่วยงานที่อยากเข้าร่วม</option>
+                  {organizations.map((org, index) => (
+                    <option key={index} value={org}>
+                      {org}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div className="space-y-4">
-                <label className="block text-gray-700 font-medium">ทักษะ</label>
-                {skills.map((skill, index) => (
-                  <div
-                    key={index}
-                    className="relative bg-white bg-opacity-70 p-4 rounded-xl shadow-md border-2 border-blue-400"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => removeField(index)}
-                      className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                <div className="mb-2">
+                  <label className="block text-gray-700 text-sm font-bold mb-1">ทักษะ</label>
+                  {skills.map((skill, index) => (
+                    <div
+                      key={index}
+                      className="relative bg-white bg-opacity-70 p-4 rounded-xl shadow-md border-2 border-blue-400"
                     >
-                      ลบทักษะ
-                    </button>
-                    <label className="block text-gray-600">ประเภททักษะ</label>
-                    <select
-                      value={selectedSkillTypes[index]?.skill_type_name || ""}
-                      onChange={(e) => handleSkillTypesChange(index, e)}
-                      className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    >
-                      <option value="">เลือกประเภททักษะ</option>
-                      {skillTypes.map((skillType, idx) => (
-                        <option key={idx} value={skillType.skill_type_name}>
-                          {skillType.skill_type_name}
-                        </option>
-                      ))}
-                    </select>
+                      <button
+                        type="button"
+                        onClick={() => removeField(index)}
+                        className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                      >
+                        ลบทักษะ
+                      </button>
+                      <label className="block text-gray-700 text-sm font-bold mb-1">ประเภททักษะ</label>
+                      <select
+                        value={selectedSkillTypes[index]?.skill_type_name || ""}
+                        onChange={(e) => handleSkillTypesChange(index, e)}
+                        className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      >
+                        <option value="">เลือกประเภททักษะ</option>
+                        {skillTypes.map((skillType, idx) => (
+                          <option key={idx} value={skillType.skill_type_name}>
+                            {skillType.skill_type_name}
+                          </option>
+                        ))}
+                      </select>
 
-                    <label className="block text-gray-600 mt-2">
-                      ชื่อทักษะ
-                    </label>
-                    <input
-                      type="text"
-                      value={skill.skill_name}
-                      onChange={(e) =>
-                        handleSkillChange(index, "skill_name", e.target.value)
-                      }
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    />
+                      <label className="block text-gray-700 text-sm font-bold mb-1">
+                        ชื่อทักษะ
+                      </label>
+                      <input
+                        type="text"
+                        value={skill.skill_name}
+                        onChange={(e) =>
+                          handleSkillChange(index, "skill_name", e.target.value)
+                        }
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      />
 
-                    <label className="block text-gray-600 mt-2">
-                      ระดับทักษะ
-                    </label>
-                    <select
-                      value={studentSkills[index]?.skill_level || ""}
-                      onChange={(e) =>
-                        handleStudentSkillChange(
-                          index,
-                          "skill_level",
-                          e.target.value
-                        )
-                      }
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    >
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                    </select>
-                  </div>
-                ))}
+                      <label className="block text-gray-700 text-sm font-bold mb-1">
+                        ระดับทักษะ
+                      </label>
+                      <select
+                        value={studentSkills[index]?.skill_level || ""}
+                        onChange={(e) =>
+                          handleStudentSkillChange(
+                            index,
+                            "skill_level",
+                            e.target.value
+                          )
+                        }
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      >
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                      </select>
+                    </div>
+                  ))}
+                </div>
                 <button
                   type="button"
                   onClick={addField}
