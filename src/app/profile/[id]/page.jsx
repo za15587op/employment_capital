@@ -1,5 +1,5 @@
 "use client";
-import Navber from "./components/Navber";
+import Navbar from "./components/Navbar";
 import { useSession } from "next-auth/react";
 
 export default function Profile() {
@@ -8,7 +8,7 @@ export default function Profile() {
 
   return (
     <main >
-      <Navber session={session}/>
+      <Navbar session={session}/>
       <div>
         <h1>Welcome TO Web</h1>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe ab dolorem eos adipisci mollitia modi laudantium et dignissimos tenetur unde. Molestiae, officia. Nesciunt, atque. Possimus odit nam pariatur temporibus libero.

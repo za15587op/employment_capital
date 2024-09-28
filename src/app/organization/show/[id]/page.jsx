@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Navber from "@/app/components/Navber";
+import Navbar from "@/app/components/Navbar";
 import Foter from "@/app/components/Foter";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -152,7 +152,7 @@ function ShowPage({ params }) {
     return (
         <>
             <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
-                <Navber session={session} />
+                <Navbar session={session} />
                 
                 <div className="แถบสี"></div>
                 <br /><br />

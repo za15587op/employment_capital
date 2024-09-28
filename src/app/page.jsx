@@ -1,5 +1,5 @@
 
-import Navber from "./components/Navber";
+import Navber from "./components/Navbar";
 import Foter from "./components/Foter";
 import Image from "next/image";
 export default function Home() {

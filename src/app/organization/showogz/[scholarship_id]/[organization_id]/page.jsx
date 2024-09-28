@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Navber from "@/app/components/Navber";
+import Navbar from "@/app/components/Navbar";
 import Foter from "@/app/components/Foter";
 import { useSession } from "next-auth/react";
 import { PlusIcon, MinusIcon } from "@heroicons/react/24/solid";
@@ -146,7 +146,7 @@ function ViewCombinedPage({ params }) {
   };
   return (
     <div>
-      <Navber session={session} />
+      <Navbar session={session} />
       <div className="แถบสี"></div>
       <div className="max-w-lg mx-auto p-6 mt-10 bg-white rounded-lg shadow-lg">
         <h3 className="text-2xl font-semibold text-center text-gray-800 mb-4">ดูข้อมูลของหน่วยงาน</h3>

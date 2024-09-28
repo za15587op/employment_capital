@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Navber from "@/app/components/Navber";
+import Navbar from "@/app/components/Navbar";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
@@ -65,7 +65,7 @@ function ShowScholarshipAllPage({ params }) {
 
   return (
     <div>
-      <Navber />
+      <Navbar />
       {error && <p>{error}</p>}
       {data.length > 0 ? (
         <div>

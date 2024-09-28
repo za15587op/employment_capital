@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import promisePool from "../../../../lib/db"; // ปรับตามเส้นทางของฐานข้อมูลของคุณ
+import promisePool from "@/lib/db";  // If you're using absolute imports configured in Next.js
 import SkillTypes from "../../../../models/skilltypes";
 
 export async function POST(req) {

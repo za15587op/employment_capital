@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Navber from "@/app/components/Navber";
+import Navbar from "@/app/components/Navbar";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
@@ -54,7 +54,7 @@ function ShowSkillTypes() {
 
   return (
     <div>
-      <Navber session={session}/>
+      <Navbar session={session}/>
       <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md mt-10">
         <h3 className="text-2xl font-bold mb-6 text-center">รายการประเภททักษะ</h3>
         {error && <div className="bg-red-100 text-red-600 p-2 rounded mb-4">{error}</div>}

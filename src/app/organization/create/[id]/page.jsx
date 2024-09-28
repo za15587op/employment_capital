@@ -1,7 +1,7 @@
 "use client"; 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Navber from "@/app/components/Navber";
+import Navbar from "@/app/components/Navbar";
 import Foter from "@/app/components/Foter";
 import { useSession } from "next-auth/react";
 
@@ -128,7 +128,7 @@ function EditorganizationPage({ params }) {
 
   return (
     <div>
-      <Navber session={session} />
+      <Navbar session={session} />
       <div className="แถบสี"></div>
       <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-8">
         <h3 className=" text-2xl font-bold mb-6 text-center bg-blue-500 text-white px-5 py-3 rounded-lg hover:bg-blue-600">

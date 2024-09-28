@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation"; 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; 
-import Navbar from "@/app/components/Navber";
+import Navbar from "@/app/components/Navbar";
 import Foter from "@/app/components/Foter";
 
 export default function AdminPage() {
-  const { scholarship_id, organization_id } = useParams(); // Extract params from URL
+  let { scholarship_id, organization_id } = useParams(); // Extract params from URL
   const router = useRouter();
   const [studentData, setStudentData] = useState(null);
   const [error, setError] = useState(null);

@@ -4,7 +4,7 @@ import "jspdf-autotable";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "@/fonts/THSarabunNew-normal.js"; // นำฟอนต์เข้ามาเพื่อใช้ภาษาไทย
-import Navbar from "@/app/components/Navber";
+import Navbar from "@/app/components/Navbar";
 import Foter from "@/app/components/Foter";
 import { useSession } from "next-auth/react";
 

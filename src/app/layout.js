@@ -2,7 +2,7 @@ import { Kanit } from "next/font/google"; // แก้ไขเป็น Kanit
 import "./globals.css";
 import { AuthProvider } from "./provider";
 import { SessionProvider } from 'next-auth/react';
-import Navber from "./components/Navber";
+import Navber from "./components/Navbar";
 
 // นำเข้า Kanit จาก Google Fonts
 const kanit = Kanit({ 

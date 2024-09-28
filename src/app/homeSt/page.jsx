@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import Navber from "@/app/components/Navber";
+import Navbar from "@/app/components/Navbar";
 import Foter from "../components/Foter";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -87,7 +87,7 @@ function HomeStudentPage() {
     return (
         <>
             <div className="relative min-h-screen overflow-hidden bg-white">
-                <Navber session={session} />
+                <Navbar session={session} />
                 <div className="แถบสี"></div>
                 <div className="py-10 flex justify-center">
                     <div className="relative inline-block px-10 py-6 bg-gradient-to-r from-blue-200 to-purple-200 rounded-xl shadow-xl">

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-import Navber from '@/app/components/Navber';
+import Navbar from "@/app/components/Navbar";
 import Foter from '@/app/components/Foter';
 
 export default function EditScholarshipRegistration({ params }) {
@@ -179,7 +179,7 @@ export default function EditScholarshipRegistration({ params }) {
 
   return (
   <div className="bg-gray-50 min-h-screen flex flex-col">
-    <Navber session={session} />
+    <Navbar session={session} />
 
     <div className="container mx-auto px-4 py-8 flex-grow">
       <form

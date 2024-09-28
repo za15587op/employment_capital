@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import promisePool from "../../../../lib/db"; // Import connection to MySQL
+import promisePool from "@/lib/db";  // If you're using absolute imports configured in Next.js
 import scholarshiprequirement from "../../../../models/scholarshiprequirement"; // ตรวจสอบการ import ให้แน่ใจว่า path ถูกต้อง
 
 export async function POST(req) {

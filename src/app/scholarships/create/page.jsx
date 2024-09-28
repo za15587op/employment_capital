@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Navber from "@/app/components/Navber";
+import Navbar from "@/app/components/Navbar";
 import Foter from "@/app/components/Foter";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -62,7 +62,7 @@ function ScholarshipsForm() {
 
   return (
     <div>
-      <Navber session={session} />
+      <Navbar session={session} />
       <div className="แถบสี"></div>
       <div className="max-w-lg mx-auto p-6 mt-10 bg-white rounded-lg shadow-lg">
         <form onSubmit={handleSubmit} className="space-y-4">

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import Navber from '@/app/components/Navber';
+import Navbar from "@/app/components/Navbar";
 import Foter from '../components/Foter';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -117,7 +117,7 @@ function ShowScholarships() {
 
   return (
     <>
-      <Navber session={session} />
+      <Navbar session={session} />
       <div className="แถบสี"></div>
       <br /><br />
       <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">

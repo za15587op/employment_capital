@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Navber from "../components/Navber";
+import Navbar from "../components/Navbar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Foter from "../components/Foter";
@@ -61,7 +61,7 @@ function RegisterPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
-      <Navber />
+      <Navbar />
       <div className="flex flex-1 justify-center items-center py-12 bg-opacity-60">
         <form
           onSubmit={handleSubmit}

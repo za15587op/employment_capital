@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import Navber from '@/app/components/Navber';
+import Navbar from '@/app/components/Navbar';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
@@ -47,7 +47,7 @@ function SkillTypesForm() {
 
   return (
     <div>
-      <Navber session={session}/>
+      <Navbar session={session}/>
       <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-md mt-10">
         <h3 className="text-2xl font-bold mb-6 text-center">เพิ่มประเภททักษะ</h3>
 

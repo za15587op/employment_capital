@@ -1,4 +1,4 @@
-import promisePool from '../lib/db';
+import promisePool from "@/lib/db";  // If you're using absolute imports configured in Next.js
 
 class DateTimeAvailable {
   constructor(datetime_id, regist_id, date_available, is_parttime) {

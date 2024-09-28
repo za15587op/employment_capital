@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import promisePool from "../../../../lib/db"; // ตรวจสอบว่า path ถูกต้องกับที่ใช้งาน
+import promisePool from "@/lib/db";  // If you're using absolute imports configured in Next.js
 import Organization from "../../../../models/organization"; // ตรวจสอบการ import ให้แน่ใจว่า path ถูกต้อง
 
 export async function POST(req) {
