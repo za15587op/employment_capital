@@ -124,7 +124,7 @@ function ShowPage({ params }) {
     const handleAddData = (organization_id) => {
         setSuccess("กำลังเข้าสู่หน้าเพิ่มข้อมูลหน่วยงาน!");
         setTimeout(() => {
-          router.push(`/organization/createogz/${scholarship_id}/${organization_id}`);
+          router.push(`${apiUrl}/organization/createogz/${scholarship_id}/${organization_id}`);
           setSuccess(""); // Reset success message after navigation
         }, 1000);
     };
@@ -132,18 +132,18 @@ function ShowPage({ params }) {
     const handleedit_add = (organization_id) => {
         setSuccess("กำลังเข้าสู่หน้าดูข้อมูลหน่วยงาน!");
         setTimeout(() => {
-          router.push(`/organization/showogz/${scholarship_id}/${organization_id}`);
+          router.push(`${apiUrl}/organization/showogz/${scholarship_id}/${organization_id}`);
           setSuccess(""); // Reset success message after navigation
         }, 1000);
     };
 
     const handleShow = (organization_id) => {
-        router.push(`/showScholarshipAll/showStdOrgan/${scholarship_id}/${organization_id}`);
+        router.push(`${apiUrl}/showScholarshipAll/showStdOrgan/${scholarship_id}/${organization_id}`);
         
     };
     
     const handleEvaluate = (organization_id) => {
-        router.push(`/evaluateStudent/${scholarship_id}/${organization_id}`);
+        router.push(`${apiUrl}/evaluateStudent/${scholarship_id}/${organization_id}`);
         
     };
 

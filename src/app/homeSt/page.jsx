@@ -76,7 +76,7 @@ function HomeStudentPage() {
     const ApplyScholarship = (scholarship_id) => {
         setSuccess(true);
         setTimeout(() => {
-            router.push(`/welcome/student_scholarships/${scholarship_id}`);
+            router.push(`${apiUrl}/welcome/student_scholarships/${scholarship_id}`);
         }, 3000);
     };
 

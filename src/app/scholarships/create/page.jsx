@@ -48,7 +48,7 @@ function ScholarshipsForm() {
           setSuccess(true); // แสดงแจ้งเตือนว่าการดำเนินการสำเร็จ
           form.reset();
           setTimeout(() => {
-            router.push("/scholarships");
+            router.push(`${apiUrl}/scholarships`);
           }, 2000); // Redirect after 2 seconds
         } else {
           setError("เพิ่มทุนไม่สำเร็จ เนื่องจากปีการศึกษาทุนซ้ำกัน");

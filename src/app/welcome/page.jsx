@@ -17,7 +17,7 @@ function HomeStudentPage() {
   useEffect(() => {
     if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
     if (!session) {
-        router.push("/login");
+        router.push(`${apiUrl}/login`);
     }
 }, [session, status, router]);
 
@@ -63,7 +63,7 @@ function HomeStudentPage() {
   const ApplyScholarship = (scholarship_id) => {
     setSuccess(true);
     setTimeout(() => {
-      router.push(`/welcome/student_scholarships/${scholarship_id}`);
+      router.push(`${apiUrl}/welcome/student_scholarships/${scholarship_id}`);
     }, 2000);
   };
 

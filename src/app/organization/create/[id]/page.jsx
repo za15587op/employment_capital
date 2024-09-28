@@ -118,7 +118,7 @@ function EditorganizationPage({ params }) {
       setSuccess(true); // ตั้งค่า success เป็น true เมื่อบันทึกสำเร็จ
       e.target.reset();
       setTimeout(() => {
-        router.push(`/organization/show/${organization_id}`);
+        router.push(`${apiUrl}/organization/show/${organization_id}`);
       }, 2000); // Redirect after 2 seconds
       
     } catch (error) {

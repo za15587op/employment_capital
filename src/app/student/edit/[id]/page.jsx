@@ -54,7 +54,7 @@ function EditStudentPage({ params }) {
   useEffect(() => {
     if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
     if (!session) {
-      router.push("/login");
+      router.push(`${apiUrl}/login`);
     }
   }, [session, status, router]);
   // Fetch skill types from API
@@ -203,7 +203,7 @@ function EditStudentPage({ params }) {
 
       setTimeout(() => {
         setSuccess(false);
-        router.push("/welcome");
+        router.push(`${apiUrl}/welcome`);
       }, 2000);
     } catch (error) {
       console.log(error);

@@ -91,7 +91,7 @@ function EditScholarshipsPage({ params }) {
           setSuccess(true); // ตั้งค่า success เป็น true เมื่อแก้ไขสำเร็จ
           form.reset();
           setTimeout(() => {
-            router.push("/scholarships");
+            router.push(`${apiUrl}/scholarships`);
           }, 2000); // Redirect after 2 seconds
         } else {
           setError("แก้ไขทุนไม่สำเร็จ เนื่องจากปีการศึกษาทุนซ้ำกัน");

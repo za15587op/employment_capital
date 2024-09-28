@@ -36,7 +36,7 @@ function SkillTypesForm() {
           setSuccess("เพิ่มข้อมูลประเภททักษะสำเร็จ");
           form.reset();
           router.refresh();
-          router.push("/skillTypes");
+          router.push(`${apiUrl}/skillTypes`);
         } else {
           console.log("เพิ่มข้อมูลประเภททักษะไม่สำเร็จ");
         }

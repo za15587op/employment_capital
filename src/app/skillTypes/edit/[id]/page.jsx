@@ -65,7 +65,7 @@ function EditSkillTypePage({ params }) {
       }
 
       router.refresh();
-      router.push("/skillTypes");
+      router.push(`${apiUrl}/skillTypes`);
     } catch (error) {
       console.log(error);
     }

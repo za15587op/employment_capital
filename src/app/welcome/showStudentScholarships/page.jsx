@@ -18,7 +18,7 @@ function ShowStudentScholarshipsPage() {
   useEffect(() => {
     if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
     if (!session) {
-        router.push("/login");
+        router.push(`${apiUrl}/login`);
     }
 }, [session, status, router]);;
 
@@ -53,7 +53,7 @@ function ShowStudentScholarshipsPage() {
     setSuccessMessage("กำลังนำคุณไปยังหน้าสมัครทุนถัดไป...");
     setSuccess(true);
     setTimeout(() => {
-      router.push(`/welcome/editstudent_scholarships/${regist_id}`);
+      router.push(`${apiUrl}/welcome/editstudent_scholarships/${regist_id}`);
     }, 1500);
   };
 

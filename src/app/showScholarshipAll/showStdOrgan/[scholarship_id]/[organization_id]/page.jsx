@@ -67,7 +67,7 @@ export default function ShowStdOrgan() {
     setSuccess("กำลังกลับไปยังหน้าก่อนหน้านี้!");
     setTimeout(() => {
       setShowSuccess(false);
-      router.push(`/organization/show/${scholarship_id}`);
+      router.push(`${apiUrl}/organization/show/${scholarship_id}`);
     }, 3000);
   };
 
@@ -77,13 +77,13 @@ export default function ShowStdOrgan() {
     setTimeout(() => {
       setShowSuccess(false);
       router.push(
-        `/showScholarshipAll/showStudentDetail/${organization_id}/${regist_id}`
+        `${apiUrl}/showScholarshipAll/showStudentDetail/${organization_id}/${regist_id}`
       );
     }, 3000);
   };
 
   const handleMatching = (organization_id) => {
-    router.push(`/matching_admin/${scholarship_id}/${organization_id}`);
+    router.push(`${apiUrl}/matching_admin/${scholarship_id}/${organization_id}`);
   };
 
   // Ensure we get organization_name[0] from the first student, if available

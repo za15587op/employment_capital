@@ -16,7 +16,7 @@ function RegisterPage() {
 
   // ตรวจสอบ session เพื่อเปลี่ยนเส้นทาง
   if (session) {
-    router.replace("/welcome");
+    router.replace(`${apiUrl}/welcome`);
   }
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -50,7 +50,7 @@ function RegisterPage() {
           setSuccess(true); // Trigger success notification
           e.target.reset(); // รีเซ็ตฟอร์มหลังจากลงทะเบียนสำเร็จ
           setTimeout(() => {
-            router.push("/scholarships");
+            router.push(`${apiUrl}/scholarships`);
           }, 2000); // Redirect after 2 seconds
         } else {
           setError("การลงทะเบียนผู้ใช้ล้มเหลว");

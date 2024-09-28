@@ -138,7 +138,6 @@ export default function ShowStudentDetailPage({ params }) {
     
 };
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   return (
     <>
@@ -174,7 +173,7 @@ export default function ShowStudentDetailPage({ params }) {
         <div className="flex flex-col space-y-4">
           <div>
             <label htmlFor="file" className="font-medium text-gray-700">ไฟล์ที่อัปโหลดแล้ว:</label>{" "}
-            <a href={`${baseUrl}/${relatedWorks}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
+            <a href={`${apiUrl}/${relatedWorks}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
               ดูไฟล์ที่อัปโหลด
             </a>
             <input

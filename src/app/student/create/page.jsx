@@ -55,7 +55,7 @@ function StudentForm({ params }) {
   useEffect(() => {
     if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
     if (!session) {
-        router.push("/login");
+        router.push(`${apiUrl}/login`);
     }
 }, [session, status, router]);
 
@@ -161,7 +161,7 @@ function StudentForm({ params }) {
           form.reset();
           router.refresh();
           setTimeout(() => {
-            router.push("/welcome");
+            router.push(`${apiUrl}/welcome`);
           }, 2000); // Redirect after 2 seconds
         } else {
           console.log("student registration failed");

@@ -26,9 +26,9 @@ function LoginPage() {
         console.log(session, "student_id");
         
         if (!session.user.student_id) {
-          router.replace("/student/create"); // Redirect to create page if no student_id
+          router.replace(`${apiUrl}/student/create`); // Redirect to create page if no student_id
         } else {
-          router.replace(`/student/edit/${session.user.student_id}`); // Redirect to edit page if student_id exists
+          router.replace(`${apiUrl}/student/edit/${session.user.student_id}`); // Redirect to edit page if student_id exists
         }
       }
     }

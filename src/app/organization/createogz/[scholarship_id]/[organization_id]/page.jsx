@@ -88,7 +88,7 @@ function CreateogzPage({ params }) {
       setError("");
       setSuccess(true); // แสดง success message
       setTimeout(() => {
-        router.push(`/organization/show/${scholarship_id}`);
+        router.push(`${apiUrl}/organization/show/${scholarship_id}`);
       }, 1000); // Redirect after 1 second
     } catch (error) {
       console.error("Error:", error);

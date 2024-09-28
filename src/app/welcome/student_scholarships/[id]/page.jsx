@@ -17,7 +17,7 @@ export default function ScholarshipRegistration({ params }) {
   useEffect(() => {
     if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
     if (!session) {
-      router.push("/login");
+      router.push(`${apiUrl}/login`);
     }
   }, [session, status, router]);
 
@@ -183,7 +183,7 @@ export default function ScholarshipRegistration({ params }) {
         setSuccessMessage("สมัครทุนการศึกษาสำเร็จ!");
         setSuccess(true);
         setTimeout(() => {
-          router.push(`/welcome/showStudentScholarships`);
+          router.push(`${apiUrl}/welcome/showStudentScholarships`);
         }, 2000);
       }
     } catch (error) {
@@ -253,7 +253,7 @@ export default function ScholarshipRegistration({ params }) {
 
           <div className="flex flex-col space-y-4">
             <div>
-              <label htmlFor="file" className="font-medium text-gray-700">อัปโหลดไฟล์:(ถ้ามี*)</label>
+              <label htmlFor="file" className="font-medium text-gray-700">อัปโหลดไฟล์ผลงานที่เกี่ยวข้อง:(ถ้ามี*)</label>
               <input
                 type="file"
                 id="file"

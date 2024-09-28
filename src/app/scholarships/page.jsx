@@ -59,17 +59,17 @@ function ShowScholarships() {
   }, [success]);
   
   const handleUpdate = (scholarship_id) => {
-    router.push(`/scholarships/edit/${scholarship_id}`);
+    router.push(`${apiUrl}/scholarships/edit/${scholarship_id}`);
     setSuccess("แก้ไขข้อมูลทุนสำเร็จ!");
   };
 
   const handleAddData = (scholarship_id) => {
-    router.push(`/organization/create/${scholarship_id}`);
+    router.push(`${apiUrl}/organization/create/${scholarship_id}`);
     setSuccess("เพิ่มหน่วยงานสำเร็จ!");
   };
 
   const handleOrganization = (organization_id) => {
-    router.push(`/organization/show/${organization_id}`);
+    router.push(`${apiUrl}/organization/show/${organization_id}`);
     setSuccess("ดูหน่วยงานสำเร็จ!");
   };
 

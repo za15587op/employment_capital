@@ -11,13 +11,12 @@ export default function EditScholarshipRegistration({ params }) {
   const router = useRouter();
   const [success, setSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const http = 'http://localhost:3000';
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
     if (!session) {
-        router.push("/login");
+        router.push(`${apiUrl}/login`);
     }
 }, [session, status, router]);
 
@@ -116,7 +115,7 @@ export default function EditScholarshipRegistration({ params }) {
         setSuccessMessage("แก้ไขข้อมูลการสมัครสำเร็จ!");
         setSuccess(true);
         setTimeout(() => {
-          router.push(`/welcome/showStudentScholarships`);
+          router.push(`${apiUrl}/welcome/showStudentScholarships`);
         }, 2000);
       } else {
         alert("การแก้ไขข้อมูลไม่สำเร็จ");
@@ -175,7 +174,6 @@ export default function EditScholarshipRegistration({ params }) {
     }
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   
 
   return (
@@ -216,7 +214,7 @@ export default function EditScholarshipRegistration({ params }) {
           {/* ไฟล์ที่อัปโหลด */}
           <div>
             <label htmlFor="file" className="font-medium text-gray-700">ไฟล์ที่อัปโหลดแล้ว:</label>{" "}
-            <a href={`${baseUrl}/${relatedWorks}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
+            <a href={`${apiUrl}/${relatedWorks}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
               ดูไฟล์ที่อัปโหลด
             </a>
             <input
