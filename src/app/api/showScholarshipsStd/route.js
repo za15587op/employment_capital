@@ -15,16 +15,16 @@ export async function GET(req) {
     }
   }
 
-  import mysql from 'mysql2/promise';
+//   import mysql from 'mysql2/promise';
 
-async function testConnection() {
-  try {
-    const connection = await mysql.createConnection(process.env.MYSQL_URI);
-    const [rows] = await connection.query('SELECT * FROM employment_capital.user');
-    console.log('เชื่อมต่อฐานข้อมูลสำเร็จ:', rows);
-  } catch (error) {
-    console.error('การเชื่อมต่อฐานข้อมูลล้มเหลว:', error);
-  }
-}
+// async function testConnection() {
+//   try {
+//     const connection = await mysql.createConnection(process.env.MYSQL_URI);
+//     const [rows] = await connection.query('SELECT * FROM employment_capital.user');
+//     console.log('เชื่อมต่อฐานข้อมูลสำเร็จ:', rows);
+//   } catch (error) {
+//     console.error('การเชื่อมต่อฐานข้อมูลล้มเหลว:', error);
+//   }
+// }
 
-testConnection();
+// testConnection();
