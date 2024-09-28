@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import promisePool from "@/lib/db";  // If you're using absolute imports configured in Next.js
+import promisePool from "../../../../../lib/db";
 
 export async function GET(req, { params }) {
   try {
