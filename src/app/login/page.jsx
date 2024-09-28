@@ -1,6 +1,6 @@
 "use client"
 import React , {useState , useEffect } from 'react'
-import Navbar from '../components/Navbar'
+import Navbar from "@/app/components/Navbar";  // แก้ Navber เป็น Navbar
 import Foter from "../components/Foter";
 import Link from "next/link";
 import { signIn } from "next-auth/react";

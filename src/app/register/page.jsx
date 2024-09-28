@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Navbar from "../components/Navbar";
+import Navbar from "@/app/components/Navbar";  // แก้ Navber เป็น Navbar
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Foter from "../components/Foter";

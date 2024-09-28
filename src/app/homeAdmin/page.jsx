@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from 'react'; // นำเข้า useEffect
-import Navbar from '../components/Navbar';
+import Navbar from "@/app/components/Navbar";  // แก้ Navber เป็น Navbar
 import Foter from '../components/Foter';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation'; // ใช้ useRouter แทน redirect
