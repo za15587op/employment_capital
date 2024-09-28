@@ -5,12 +5,39 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 function Navbar({ session }) {
   const router = useRouter();
   const { data: sessionData, status } = useSession();
   const [student, setStudent] = useState(null); // เก็บข้อมูลนักศึกษา
   const [error, setError] = useState(null); // เก็บข้อผิดพลาด
+  const MySwal = withReactContent(Swal);
+
+  const handleSignOut = () => {
+    MySwal.fire({
+      title: 'คุณต้องการออกจากระบบใช่หรือไม่?',
+      text: "เมื่อออกจากระบบ คุณจะต้องเข้าสู่ระบบใหม่เพื่อใช้งานอีกครั้ง",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ออกจากระบบ',
+      cancelButtonText: 'ยกเลิก',
+      background: '#f9fafb', 
+      customClass: {
+        popup: 'rounded-lg shadow-lg',
+        title: 'font-bold text-gray-800',
+        confirmButton: 'bg-red-500 text-white font-bold rounded-md px-4 py-2',
+        cancelButton: 'bg-gray-300 text-gray-800 font-bold rounded-md px-4 py-2',
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        signOut(); 
+      }
+    });
+  };
 
   useEffect(() => {
     const fetchStudent = async () => {
@@ -51,6 +78,15 @@ function Navbar({ session }) {
       </div>
 
       <nav className="relative z-10 flex items-center justify-between p-4 bg-gray-800 w-full">
+        <div className="flex items-center justify-center w-full">
+          <Image
+            src="/thaksin3.png" 
+            alt="Thaksin University Logo"
+            width={80}
+            height={80}
+            className="mx-auto"
+          />
+        </div>
         <div
           className="absolute top-[-35px] left-0 flex items-center space-x-2 bg-[#0F1035] px-4 py-2 rounded-t-lg shadow-md"
           style={{
@@ -125,13 +161,15 @@ function Navbar({ session }) {
                   >
                     โปรไฟล์
                   </button>
-                  <button
+                   <div className="text-center">
+                      <button
                         className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                         style={{ fontSize: "20px" }}
-                        onClick={signOut}
+                        onClick={handleSignOut} 
                       >
                         ออกจากระบบ
                       </button>
+                    </div>
               </>
               )}
                 
@@ -178,21 +216,11 @@ function Navbar({ session }) {
                         </button>
                       </Link>
                     </div>
-                    {/* <div className="text-center">
-                      <Link href="/skillTypes">
-                        <button
-                          className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
-                          style={{ fontSize: "20px" }}
-                        >
-                          เพิ่มประเภททักษะ
-                        </button>
-                      </Link>
-                    </div> */}
                     <div className="text-center">
                       <button
                         className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                         style={{ fontSize: "20px" }}
-                        onClick={signOut}
+                        onClick={handleSignOut} 
                       >
                         ออกจากระบบ
                       </button>

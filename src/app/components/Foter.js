@@ -9,7 +9,7 @@ export default function Foter() {
     {/* ส่วนที่ 1: โลโก้และข้อมูลการติดต่อ */}
     <div className="flex flex-col space-y-4"> 
       <div className="flex items-start space-x-4"> 
-        <img src="/logouser.png" alt="Logo" className="w-16 h-16" />
+      <img src="/logoicon.png" alt="Logo" className="w-full h-auto max-w-[30%]" />
         <div>
           <h3 className="text-lg font-semibold leading-none">
            ฝ่ายกิจการนิสิต มหาวิทยาลัยทักษิณ วิทยาเขตพัทลุง
@@ -27,8 +27,8 @@ export default function Foter() {
       <div>
         <h3 className="text-lg font-semibold text-center">หน่วยงานบริการ</h3>
         <ul className="mt-4 space-y-2 text-sm text-center">
-          <li><a href="#" className="hover:text-red-400 transition-colors duration-300">สำนักงานกิจการนักศึกษา</a></li>
-          <li><a href="#" className="hover:text-red-400 transition-colors duration-300">สำนักงานทะเบียนนักศึกษา</a></li>
+          <li><a href="#" className="hover:text-red-400 transition-colors duration-300">สำนักงานกิจการนิสิต</a></li>
+          <li><a href="#" className="hover:text-red-400 transition-colors duration-300">สำนักงานทะเบียนนิสิต</a></li>
 
         </ul>
       </div>

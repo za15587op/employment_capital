@@ -33,6 +33,7 @@ function ProfilePage() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035] relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-[#365486] to-[#0F1035] opacity-20 animate-movingBackground"></div>
       <Navber session={session} />
+      <div className="แถบสี"></div>
       <div className="relative p-10">
         <div className="logohome flex justify-center">
           <Image
