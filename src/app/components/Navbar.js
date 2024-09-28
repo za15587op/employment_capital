@@ -13,6 +13,7 @@ function Navbar({ session }) {
   const { data: sessionData, status } = useSession();
   const [student, setStudent] = useState(null); // เก็บข้อมูลนักศึกษา
   const [error, setError] = useState(null); // เก็บข้อผิดพลาด
+
   const MySwal = withReactContent(Swal);
 
   const handleSignOut = () => {
