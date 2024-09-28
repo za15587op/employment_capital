@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import promisePool from "@/lib/db";  // If you're using absolute imports configured in Next.js
+import promisePool from "../../../../../lib/db"; // Import connection to MySQL
 
 export async function GET(req, { params }) {
   // ดึง organization_id จาก params

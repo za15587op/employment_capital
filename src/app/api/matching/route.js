@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import promisePool from "@/lib/db";  // ใช้การอ้างอิงแบบ absolute path
-
+import promisePool from '../../../../lib/db'; // ดึง connection ฐานข้อมูล
 
 export async function POST(req) {
   try {
