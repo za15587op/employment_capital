@@ -52,11 +52,11 @@ function EditStudentPage({ params }) {
   ];
 
   useEffect(() => {
-    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (status === "loading") return;
     if (!session) {
-      router.push(`${apiUrl}/login`);
+      router.push("/login");
     }
-  }, [session, status, router]);
+  }, [status, session, router]);
   // Fetch skill types from API
   const fetchSkillTypes = async () => {
     try {

@@ -13,13 +13,12 @@ export default function ScholarshipRegistration({ params }) {
   const router = useRouter();
   const student_id = session?.user?.student_id || null;  // ตรวจสอบ session ก่อนใช้
 
-
   useEffect(() => {
-    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (status === "loading") return;
     if (!session) {
-      router.push(`${apiUrl}/login`);
+      router.push("/login");
     }
-  }, [session, status, router]);
+  }, [status, session, router]);
 
   let scholarship_id = params?.id;
   if (!scholarship_id) {

@@ -53,11 +53,11 @@ function StudentForm({ params }) {
   };
 
   useEffect(() => {
-    if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
+    if (status === "loading") return;
     if (!session) {
-        router.push(`${apiUrl}/login`);
+      router.push("/login");
     }
-}, [session, status, router]);
+  }, [status, session, router]);
 
   useEffect(() => {
     const fetchSkillTypes = async () => {
