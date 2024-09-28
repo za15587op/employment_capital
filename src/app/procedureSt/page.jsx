@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import Navber from "../components/Navber";
+import Navbar from "@/app/components/Navbar";  // แก้ Navber เป็น Navbar
 import Foter from "../components/Foter";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -23,7 +23,7 @@ function Report_adminPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100">
-      <Navber session={session} />
+      <Navbar session={session} />
       <div className="แถบสี"></div>
 
       {/* Title Section */}

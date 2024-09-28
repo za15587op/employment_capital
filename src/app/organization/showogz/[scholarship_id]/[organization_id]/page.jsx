@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Navber from "@/app/components/Navber";
+import Navbar from "@/app/components/Navbar";
 import Foter from "@/app/components/Foter";
 import { useSession } from "next-auth/react";
 import { PlusIcon, MinusIcon } from "@heroicons/react/24/solid";
@@ -53,28 +53,32 @@ function ViewCombinedPage({ params }) {
       console.log(data);
 
       if (Array.isArray(data) && data.length > 0) {
-        const firstData = data[0];
-        setData(firstData);
-        setEditData({
-          organization_name: firstData.organization_name || "",
-          contactPhone: firstData.contactPhone || "",
-          amount: firstData.amount || 0,
-          workType: firstData.workType || "",
-          workTime: firstData.workTime ? JSON.parse(firstData.workTime) : [],
-        });
+        // กรองข้อมูลที่มี scholarship_organ_id เท่ากับ 464
+        const filteredData = data.filter(item => item.scholarship_organ_id === 464);
   
-        // วนลูปข้อมูลเพื่อดึงทักษะและระดับของทุกตัวที่มี scholarship_organ_id เดียวกัน
-        const skillsData = data.map((entry) => ({
-          skill_type_name: entry.skill_type_name || "",
-          required_level: entry.required_level || "",
-        }));
+        if (filteredData.length > 0) {
+          const firstData = filteredData[0]; 
+          setData(firstData);
+          setEditData({
+            organization_name: firstData.organization_name || "",
+            contactPhone: firstData.contactPhone || "",
+            amount: firstData.amount || 0,
+            workType: firstData.workType || "",
+            workTime: firstData.workTime ? JSON.parse(firstData.workTime) : [],
+          });
 
-        setSkills(skillsData); // ตั้งค่าทักษะทั้งหมดแทนที่จะเป็นแค่ตัวแรก
-
-      // จัดการข้อมูลประเภทงานและเวลาการทำงานเหมือนเดิม
-      setWorkType(firstData.workType || "");
-      setWorkTime(firstData.workTime ? JSON.parse(firstData.workTime) : []);
-        setLoading(false);
+          const skillData = filteredData.map(item => ({
+            skill_type_name: item.skill_type_name || "",
+            required_level: item.required_level || ""
+          }));
+          setSkills(skillData);
+  
+          setWorkType(firstData.workType || "");
+          setWorkTime(firstData.workTime ? JSON.parse(firstData.workTime) : []);
+          setLoading(false);
+        } else {
+          throw new Error("No matching data found");
+        }
       } else {
         throw new Error("No data found");
       }
@@ -83,7 +87,7 @@ function ViewCombinedPage({ params }) {
       setError("An error occurred while fetching data");
       setLoading(false);
     }
-  }; 
+  };
   
 
   if (loading) {
@@ -153,7 +157,7 @@ function ViewCombinedPage({ params }) {
   };
   return (
     <div>
-      <Navber session={session} />
+      <Navbar session={session} />
       <div className="แถบสี"></div>
       <div className="max-w-lg mx-auto p-6 mt-10 bg-white rounded-lg shadow-lg">
         <h3 className="text-2xl font-semibold text-center text-gray-800 mb-4">ดูข้อมูลของหน่วยงาน</h3>

@@ -34,11 +34,11 @@ export async function GET(req, { params }) {
 
 const UPLOAD_DIR = path.resolve(process.cwd(), "public/uploads");
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 async function handleFileUpload(formData) {
   const academic_year = JSON.parse(formData.get("academic_year"));

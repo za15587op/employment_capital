@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from 'react'; // นำเข้า useEffect
-import Navber from '../components/Navber';
+import Navbar from "@/app/components/Navbar";  // แก้ Navber เป็น Navbar
 import Foter from '../components/Foter';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation'; // ใช้ useRouter แทน redirect
@@ -32,8 +32,7 @@ function ProfilePage() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035] relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-[#365486] to-[#0F1035] opacity-20 animate-movingBackground"></div>
-      <Navber session={session} />
-      <div className="แถบสี"></div>
+      <Navbar session={session} />
       <div className="relative p-10">
         <div className="logohome flex justify-center">
           <Image

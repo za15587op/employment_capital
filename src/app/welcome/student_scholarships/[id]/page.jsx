@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-import Navber from '@/app/components/Navber';
+import Navbar from "@/app/components/Navbar";
 import Foter from '@/app/components/Foter';
 
 export default function ScholarshipRegistration({ params }) {
@@ -219,7 +219,7 @@ export default function ScholarshipRegistration({ params }) {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100">
-      <Navber session={session} />
+      <Navbar session={session} />
 
       <div className="container mx-auto px-4 py-8">
         <form

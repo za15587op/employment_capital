@@ -1,6 +1,6 @@
 "use client";
 import React from 'react'
-import Navber from '../components/Navber'
+import Navbar from "@/app/components/Navbar";  // แก้ Navber เป็น Navbar
 import Foter from '../components/Foter';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
@@ -15,7 +15,7 @@ function Report_adminPage() {
 
   return(
     <div>
-    <Navber session = {session}/>
+    <Navbar session = {session}/>
     <div className="แถบสี"></div> 
     <div>
         <br />

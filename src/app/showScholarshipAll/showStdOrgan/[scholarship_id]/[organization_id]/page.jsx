@@ -3,12 +3,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation"; // Use next/navigation instead of next/router
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; // useParams for dynamic route params
-import Navbar from "@/app/components/Navber";
+import Navbar from "@/app/components/Navbar";
 import Foter from "@/app/components/Foter";
 
 export default function ShowStdOrgan() {
 
-  const { scholarship_id, organization_id } = useParams(); // Extract params from URL
+  let { scholarship_id, organization_id } = useParams(); // Extract params from URL
   const { data: session, status } = useSession();
   const router = useRouter();
   const [studentData, setStudentData] = useState(null);

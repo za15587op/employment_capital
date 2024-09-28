@@ -1,7 +1,7 @@
 
 "use client";
 import React, { useState, useEffect } from "react";
-import Navber from "@/app/components/Navber";
+import Navbar from "@/app/components/Navbar";
 import Foter from "@/app/components/Foter";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -175,7 +175,7 @@ function StudentForm({ params }) {
     <>
       {/* Background starts from the top and covers the whole page */}
       <div className="relative min-h-screen w-full bg-gradient-to-br from-blue-500 via-blue-300 to-gray-100 overflow-hidden">
-        <Navber session={session} />
+        <Navbar session={session} />
      <div className="แถบสี"></div>
         <div className="relative min-h-screen p-6 flex flex-col items-center justify-center">
           <div className="max-w-3xl w-full bg-white shadow-2xl rounded-3xl p-10 border-4 border-blue-400 bg-opacity-80 backdrop-blur-lg transform transition-all">

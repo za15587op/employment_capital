@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import ScholarshipRegistrations from "../../../../models/scholarshipregistrations";
+import promisePool from '../../../../lib/db'; // ดึง connection ฐานข้อมูล
 
 export async function GET(req) {
     try {

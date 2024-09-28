@@ -4,10 +4,10 @@ import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import Foter from "@/app/components/Foter";
 import { useParams } from "next/navigation"; // useParams for dynamic route params
-import Navbar from "@/app/components/Navber";
+import Navbar from "@/app/components/Navbar";
 
 export default function ShowStudentDetailPage({ params }) {
-  const { organization_id, regist_id } = useParams(); // Extract params from URL
+  let { organization_id, regist_id } = useParams(); // Extract params from URL
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const router = useRouter();

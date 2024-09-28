@@ -1,6 +1,6 @@
 "use client"
 import React , {useState , useEffect } from 'react'
-import Navber from '../components/Navber'
+import Navbar from "@/app/components/Navbar";  // แก้ Navber เป็น Navbar
 import Foter from "../components/Foter";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
@@ -58,7 +58,7 @@ function LoginPage() {
   
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
-      <Navber />
+      <Navbar />
       <div className="แถบสี"></div>
       <div className="flex flex-1 justify-center items-center py-12 bg-opacity-60">
         <form

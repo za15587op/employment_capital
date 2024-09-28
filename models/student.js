@@ -12,7 +12,6 @@ class Student {
     student_gpa,
     student_phone,
     join_org
-
   ) {
     this.user_id = user_id;
     this.student_id = student_id;
@@ -27,18 +26,19 @@ class Student {
     this.join_org = join_org;
   }
 
-
   //ตอน เช็ค login
   static async findByStudentId(user_id) {
     try {
       // คิวรีเพื่อค้นหาข้อมูลนักเรียนตาม user_id
-      const [rows] = await promisePool.query
-      ("SELECT student_id FROM student WHERE user_id = ?", [user_id]);
-      
+      const [rows] = await promisePool.query(
+        "SELECT student_id FROM student WHERE user_id = ?",
+        [user_id]
+      );
+
       // คืนค่าข้อมูลที่พบ หรือ null หากไม่มีข้อมูล
       return rows[0] || null;
     } catch (error) {
-      console.error('Error fetching student:', error);
+      console.error("Error fetching student:", error);
       return null;
     }
   }
@@ -70,23 +70,22 @@ class Student {
           student_gpa,
           student_phone,
           join_org,
-          user_id
+          user_id,
         ]
       );
       return result;
-      
     } catch (error) {
       console.error("Error creating student:", error);
       throw new Error("Could not create student.");
     }
   }
 
-
-   // ใช้ดึงข้อมูลedit ตอน student 
-   static async findById(student_id) {
+  // ใช้ดึงข้อมูลedit ตอน student
+  static async findById(student_id) {
     try {
       // Query เพื่อดึงข้อมูลนักศึกษา พร้อมกับทักษะและระดับทักษะ
-      const [rows] = await promisePool.query(`
+      const [rows] = await promisePool.query(
+        `
         SELECT 
           student.*, 
           skills.skill_name, 
@@ -98,7 +97,9 @@ class Student {
         LEFT JOIN skills_skilltypes ON skills.skill_id = skills_skilltypes.skill_id
         LEFT JOIN skilltypes ON skilltypes.skill_type_id = skills_skilltypes.skill_type_id
         WHERE student.student_id = ?
-      `, [student_id]);
+      `,
+        [student_id]
+      );
 
       if (rows.length === 0) {
         return null; // คืนค่า null หากไม่พบข้อมูลนักศึกษา
@@ -115,35 +116,39 @@ class Student {
         student_gpa: rows[0].student_gpa,
         student_phone: rows[0].student_phone,
         join_org: rows[0].join_org,
-        skills: rows.map(row => ({
-          skill_name: row.skill_name
+        skills: rows.map((row) => ({
+          skill_name: row.skill_name,
         })),
-        studentSkills: rows.map(row =>({
+        studentSkills: rows.map((row) => ({
           skill_level: row.skill_level,
         })),
-        selectedSkillTypes: rows.map(row =>({
-          skill_type_name: row.skill_type_name
-        }))
-      
+        selectedSkillTypes: rows.map((row) => ({
+          skill_type_name: row.skill_type_name,
+        })),
       };
 
       return student;
     } catch (error) {
-      console.error('Error finding student by ID:', error);
+      console.error("Error finding student by ID:", error);
       throw error; // ส่งต่อข้อผิดพลาด
     }
   }
 
-//ยังมี dug อยู่ คือ ตอนอัพเดทถ้ามี
-  static async update(student_id, studentData, skills, studentSkills, selectedSkillTypes) {
-
+  //ยังมี dug อยู่ คือ ตอนอัพเดทถ้ามี
+  static async update(
+    student_id,
+    studentData,
+    skills,
+    studentSkills,
+    selectedSkillTypes
+  ) {
     console.log(student_id, "student_id");
-    
+
     const connection = await promisePool.getConnection();
-    
+
     try {
       await connection.beginTransaction(); // เริ่ม transaction
-  
+
       // อัปเดตข้อมูลนักศึกษา
       await connection.query(
         `
@@ -162,48 +167,53 @@ class Student {
           studentData.student_gpa,
           studentData.student_phone,
           studentData.join_org,
-          student_id
+          student_id,
         ]
       );
-  
+
       // ลบข้อมูลทักษะเดิมที่เกี่ยวข้องกับ student_id และตรวจสอบผล
       const [deleteResult] = await connection.query(
-        "DELETE FROM studentskills WHERE student_id = ?", [student_id]
+        "DELETE FROM studentskills WHERE student_id = ?",
+        [student_id]
       );
-  
+
       if (deleteResult.affectedRows > 0) {
-        console.log(`Deleted ${deleteResult.affectedRows} skill(s) for student_id: ${student_id}`);
+        console.log(
+          `Deleted ${deleteResult.affectedRows} skill(s) for student_id: ${student_id}`
+        );
       } else {
         console.log(`No skills to delete for student_id: ${student_id}`);
       }
-  
+
       // เพิ่มทักษะใหม่ใน student_skills
       for (let i = 0; i < skills.length; i++) {
         const { skill_name } = skills[i];
         const { skill_level } = studentSkills[i];
         const { skill_type_id } = selectedSkillTypes[i];
-  
+
         // ตรวจสอบว่าทักษะมีอยู่หรือไม่
         const [skillResult] = await connection.query(
-          "SELECT skill_id FROM skills WHERE skill_name = ?", [skill_name]
+          "SELECT skill_id FROM skills WHERE skill_name = ?",
+          [skill_name]
         );
-  
+
         let skill_id;
         if (skillResult.length > 0) {
           skill_id = skillResult[0].skill_id;
         } else {
           const [insertSkillResult] = await connection.query(
-            "INSERT INTO skills (skill_name) VALUES (?)", [skill_name]
+            "INSERT INTO skills (skill_name) VALUES (?)",
+            [skill_name]
           );
           skill_id = insertSkillResult.insertId;
         }
-  
+
         // เพิ่มข้อมูลลงใน student_skills
         await connection.query(
           "INSERT INTO studentskills (student_id, skill_id, skill_level) VALUES (?, ?, ?)",
           [student_id, skill_id, skill_level]
         );
-  
+
         // ตรวจสอบว่า skill_type_id ไม่เป็น NULL ก่อนทำการ INSERT
         if (skill_type_id) {
           await connection.query(
@@ -212,27 +222,24 @@ class Student {
           );
         }
       }
-  
+
       await connection.commit(); // ยืนยันการทำงาน (Commit)
       return { success: true };
-  
     } catch (error) {
       await connection.rollback(); // ย้อนกลับการทำงานหากเกิดข้อผิดพลาด
-      console.error('Error updating student:', error);
+      console.error("Error updating student:", error);
       throw error;
     } finally {
       connection.release(); // ปิดการเชื่อมต่อ
     }
   }
-  
-  
 
   // //ใช้ตอน showStudentScholarships
   // static async findByIdALL(student_id) {
   //   try {
   //     // คิวรีเพื่อค้นหาข้อมูลนักเรียนตาม student_id
   //     const [rows] = await promisePool.query("SELECT * FROM student WHERE student_id = ?", [student_id]);
-      
+
   //     // คืนค่าข้อมูลที่พบ หรือ null หากไม่มีข้อมูล
   //     return rows || null;
   //   } catch (error) {
@@ -241,8 +248,7 @@ class Student {
   //   }
   // }
 
-
-
+  
 }
 
 export default Student;
