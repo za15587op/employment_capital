@@ -303,8 +303,6 @@ export default function ScholarshipRegistration({ params }) {
 
             {isPartTime && renderDaysCheckboxes()}
 
-            นอกเวลาทำการที่กำหนด
-
           </div>
 
           <div className="flex justify-center mt-6">
