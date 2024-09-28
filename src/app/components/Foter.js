@@ -12,7 +12,7 @@ export default function Foter() {
       <img src="/logoicon.png" alt="Logo" className="w-full h-auto max-w-[30%]" />
         <div>
           <h3 className="text-lg font-semibold leading-none">
-           ฝ่ายกิจการนิสิต มหาวิทยาลัยทักษิณ วิทยาเขตพัทลุง
+           ฝ่ายกิจการนิสิต สำนักงานมหาวิทยาลัยทักษิณ วิทยาเขตพัทลุง
           </h3>
           <p className="mt-2 text-sm opacity-75 leading-relaxed">
             222 หมู่ 2 ต.บ้านพร้าว อ.ป่าพะยอม จ.พัทลุง 93210  <br />
@@ -39,13 +39,13 @@ export default function Foter() {
       <div>
         <h3 className="text-lg font-semibold">Follow us</h3>
         <div className="flex space-x-4 mt-4">
-          <a href="#" className="hover:scale-110 transition-transform duration-300">
+          <a href="https://www.facebook.com/share/AHdEVg5qQuoq9qmr/?mibextid=qi2Omg" className="hover:scale-110 transition-transform duration-300">
             <img src="/facebook.png" alt="Facebook" className="w-8 h-8" />
           </a>
-          <a href="#" className="hover:scale-110 transition-transform duration-300">
+          <a href="https://line.me/R/ti/p/dada.kunchao" className="hover:scale-110 transition-transform duration-300">
             <img src="/line.png" alt="Line" className="w-8 h-8" />
           </a>
-          <a href="#" className="hover:scale-110 transition-transform duration-300">
+          <a href="mailto:nudada2529@gmail.com" className="hover:scale-110 transition-transform duration-300">
             <img src="/email.png" alt="Email" className="w-8 h-8" />
           </a>
         </div>
