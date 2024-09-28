@@ -44,41 +44,31 @@ function ViewCombinedPage({ params }) {
       const res = await fetch(`/api/scholarshiporganization/${organization_id}`, {
         method: "GET",
       });
-  
+
       if (!res.ok) {
         throw new Error("Failed to fetch data");
       }
-  
+
       const data = await res.json();
       console.log(data);
-  
-      if (Array.isArray(data) && data.length > 0) {
-        // กรองข้อมูลที่มี scholarship_organ_id เท่ากับ 464
-        const filteredData = data.filter(item => item.scholarship_organ_id === 464);
-  
-        if (filteredData.length > 0) {
-          const firstData = filteredData[0]; 
-          setData(firstData);
-          setEditData({
-            organization_name: firstData.organization_name || "",
-            contactPhone: firstData.contactPhone || "",
-            amount: firstData.amount || 0,
-            workType: firstData.workType || "",
-            workTime: firstData.workTime ? JSON.parse(firstData.workTime) : [],
-          });
 
-          const skillData = filteredData.map(item => ({
-            skill_type_name: item.skill_type_name || "",
-            required_level: item.required_level || ""
-          }));
-          setSkills(skillData);
-  
-          setWorkType(firstData.workType || "");
-          setWorkTime(firstData.workTime ? JSON.parse(firstData.workTime) : []);
-          setLoading(false);
-        } else {
-          throw new Error("No matching data found");
-        }
+      if (Array.isArray(data) && data.length > 0) {
+        const firstData = data[0];
+        setData(firstData);
+        setEditData({
+          organization_name: firstData.organization_name || "",
+          contactPhone: firstData.contactPhone || "",
+          amount: firstData.amount || 0,
+          workType: firstData.workType || "",
+          workTime: firstData.workTime ? JSON.parse(firstData.workTime) : [],
+          required_level: firstData.required_level || "",
+          skill_type_name: firstData.skill_type_name || "",
+        });
+
+        setSkills(firstData.skills ? firstData.skills : [{ skill_type_name: firstData.skill_type_name || "", required_level: firstData.required_level || "" }]);
+        setWorkType(firstData.workType || "");
+        setWorkTime(firstData.workTime ? JSON.parse(firstData.workTime) : []);
+        setLoading(false);
       } else {
         throw new Error("No data found");
       }
@@ -88,7 +78,6 @@ function ViewCombinedPage({ params }) {
       setLoading(false);
     }
   };
-  
 
   if (loading) {
     return (
