@@ -203,6 +203,7 @@ function CreateogzPage({ params }) {
               <option value="">เลือกประเภทการทำงาน</option>
               <option value="ในเวลาทำการปกติ">ในเวลาทำการปกติ</option>
               <option value="นอกเวลาทำการที่กำหนด">นอกเวลาทำการที่กำหนด</option>
+              <option value="ทำได้ทั้งนอกเวลาและในเวลา">ทำได้ทั้งนอกเวลาและในเวลา</option>
             </select>
           </div>
 

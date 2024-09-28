@@ -6,12 +6,22 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Navbar from "@/app/components/Navbar";
 import Foter from '@/app/components/Foter';
+import AWS from 'aws-sdk';
 
 export default function ScholarshipRegistration({ params }) {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const router = useRouter();
   const student_id = session?.user?.student_id || null;  // ตรวจสอบ session ก่อนใช้
+
+
+
+  const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION,
+  });
+
   
 
   useEffect(() => {
@@ -53,16 +63,21 @@ export default function ScholarshipRegistration({ params }) {
   const handlePartTimeChange = (e) => {
     const { value, checked } = e.target;
     if (checked) {
-      if (value === "in_time" && isPartTime === "parttime") {
-        setIsPartTime("both");
-      } else if (value === "out_time" && isPartTime === "fulltime") {
-        setIsPartTime("both");
+      if (value === "ในเวลาทำการปกติ" && isPartTime === "นอกเวลาทำการที่กำหนด") {
+        setIsPartTime("ทำได้ทั้งในเวลาและนอกเวลา");
+      } else if (value === "นอกเวลาทำการที่กำหนด" && isPartTime === "ทำได้ทั้งในเวลาและนอกเวลา") {
+        setIsPartTime("ทำได้ทั้งในเวลาและนอกเวลา");
       } else {
-        setIsPartTime(value === "in_time" ? "fulltime" : "parttime");
+        setIsPartTime(value === "ในเวลาทำการปกติ" ? "ทำได้ทั้งในเวลาและนอกเวลา" : "นอกเวลาทำการที่กำหนด");
       }
     } else {
       setIsPartTime("");
     }
+
+    
+    ทำได้ทั้งในเวลาและนอกเวลา
+    ในเวลาทำการปกติ
+    นอกเวลาทำการที่กำหนด
   };
 
   const handleDaySelectionChange = (e, day) => {
@@ -128,6 +143,8 @@ export default function ScholarshipRegistration({ params }) {
       getDataById(scholarship_id);
     }
   }, [student_id, scholarship_id]);
+
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -268,24 +285,24 @@ export default function ScholarshipRegistration({ params }) {
                 <input
                   type="checkbox"
                   id="in_time"
-                  value="in_time"
-                  checked={isPartTime === "fulltime" || isPartTime === "both"}
+                  value="ในเวลาทำการปกติ"
+                  checked={isPartTime === "ในเวลาทำการปกติ" || isPartTime === "ทำได้ทั้งในเวลาและนอกเวลา"}
                   onChange={handlePartTimeChange}
                   className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
                 />
-                <label htmlFor="in_time" className="text-gray-700">ในเวลา</label>
+                <label htmlFor="in_time" className="text-gray-700">ในเวลาทำการปกติ</label>
               </div>
 
               <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
                   id="out_time"
-                  value="out_time"
-                  checked={isPartTime === "parttime" || isPartTime === "both"}
+                  value="นอกเวลาทำการที่กำหนด"
+                  checked={isPartTime === "นอกเวลาทำการที่กำหนด" || isPartTime === "ทำได้ทั้งในเวลาและนอกเวลา"}
                   onChange={handlePartTimeChange}
                   className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
                 />
-                <label htmlFor="out_time" className="text-gray-700">นอกเวลา</label>
+                <label htmlFor="out_time" className="text-gray-700">นอกเวลาทำการที่กำหนด</label>
               </div>
             </div>
 

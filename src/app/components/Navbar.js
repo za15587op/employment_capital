@@ -193,11 +193,11 @@ function Navbar({ session }) {
                           className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                           style={{ fontSize: "20px" }}
                         >
-                          เพิ่ม-แก้ไขข้อมูล
+                          ดูหน่วยงานทั้งหมด
                         </button>
                       </Link>
                     </div>
-                    <div className="text-center">
+                    {/* <div className="text-center">
                       <Link href="/matching_admin">
                         <button
                           className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
@@ -206,7 +206,7 @@ function Navbar({ session }) {
                           ดูผลการจับคู่
                         </button>
                       </Link>
-                    </div>
+                    </div> */}
                     <div className="text-center">
                       <Link href="/homeAdmin/genPDF">
                         <button

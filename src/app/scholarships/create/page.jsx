@@ -91,7 +91,7 @@ function ScholarshipsForm() {
           </div>
 
           <div>
-            <h3 className="text-gray-700">วันที่เริ่มต้น</h3>
+            <h3 className="text-gray-700">วันที่เปิดรับสมัครทุน</h3>
             <input
               onChange={(e) => setApplicationStartDate(e.target.value)}
               type="date"
@@ -99,7 +99,7 @@ function ScholarshipsForm() {
             />
           </div>
           <div>
-            <h3 className="text-gray-700">วันที่สิ้นสุด</h3>
+            <h3 className="text-gray-700">วันที่ปิดรับสมัครทุน</h3>
             <input
               onChange={(e) => setApplicationEndDate(e.target.value)}
               type="date"

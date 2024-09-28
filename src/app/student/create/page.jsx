@@ -161,7 +161,7 @@ function StudentForm({ params }) {
           form.reset();
           router.refresh();
           setTimeout(() => {
-            router.push(`${apiUrl}/welcome`);
+            router.push(`${apiUrl}/homeSt`);
           }, 2000); // Redirect after 2 seconds
         } else {
           console.log("student registration failed");

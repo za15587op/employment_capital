@@ -55,32 +55,28 @@ function ViewCombinedPage({ params }) {
       console.log(data);
 
       if (Array.isArray(data) && data.length > 0) {
-        // กรองข้อมูลที่มี scholarship_organ_id เท่ากับ 464
-        const filteredData = data.filter(item => item.scholarship_organ_id === 464);
+        const firstData = data[0];
+        setData(firstData);
+        setEditData({
+          organization_name: firstData.organization_name || "",
+          contactPhone: firstData.contactPhone || "",
+          amount: firstData.amount || 0,
+          workType: firstData.workType || "",
+          workTime: firstData.workTime ? JSON.parse(firstData.workTime) : [],
+        });
   
-        if (filteredData.length > 0) {
-          const firstData = filteredData[0]; 
-          setData(firstData);
-          setEditData({
-            organization_name: firstData.organization_name || "",
-            contactPhone: firstData.contactPhone || "",
-            amount: firstData.amount || 0,
-            workType: firstData.workType || "",
-            workTime: firstData.workTime ? JSON.parse(firstData.workTime) : [],
-          });
+        // วนลูปข้อมูลเพื่อดึงทักษะและระดับของทุกตัวที่มี scholarship_organ_id เดียวกัน
+        const skillsData = data.map((entry) => ({
+          skill_type_name: entry.skill_type_name || "",
+          required_level: entry.required_level || "",
+        }));
 
-          const skillData = filteredData.map(item => ({
-            skill_type_name: item.skill_type_name || "",
-            required_level: item.required_level || ""
-          }));
-          setSkills(skillData);
-  
-          setWorkType(firstData.workType || "");
-          setWorkTime(firstData.workTime ? JSON.parse(firstData.workTime) : []);
-          setLoading(false);
-        } else {
-          throw new Error("No matching data found");
-        }
+        setSkills(skillsData); // ตั้งค่าทักษะทั้งหมดแทนที่จะเป็นแค่ตัวแรก
+
+      // จัดการข้อมูลประเภทงานและเวลาการทำงานเหมือนเดิม
+      setWorkType(firstData.workType || "");
+      setWorkTime(firstData.workTime ? JSON.parse(firstData.workTime) : []);
+        setLoading(false);
       } else {
         throw new Error("No data found");
       }
@@ -89,7 +85,7 @@ function ViewCombinedPage({ params }) {
       setError("An error occurred while fetching data");
       setLoading(false);
     }
-  };
+  }; 
   
 
   if (loading) {

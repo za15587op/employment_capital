@@ -128,7 +128,7 @@ export default function ShowStdOrgan() {
             </button>
             <button
               onClick={() => Back(scholarship_id)}
-              className="bg-gradient-to-r from-blue-500 to-blue-400 text-white px-6 py-3 rounded-xl shadow-xl"
+              className="bg-gradient-to-r from-blue-500 to-blue-400 text-white px-6 py-3 rounded-xl shadow-xl ml-2"
             >
               ย้อนกลับ
             </button>
