@@ -1,4 +1,4 @@
-import promisePool from "@/lib/db";  // If you're using absolute imports configured in Next.js
+import promisePool from "../lib/db";
 
 class User {
   constructor(user_id, username, password, user_role = 'user') {

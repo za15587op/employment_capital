@@ -1,4 +1,4 @@
-import promisePool from "@/lib/db";  // If you're using absolute imports configured in Next.js
+import promisePool from '../lib/db';
 
 class ScholarshipOrganization {
   constructor(scholarship_organ_id, scholarship_id, organization_id, amount, workType, workTime) {

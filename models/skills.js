@@ -1,5 +1,5 @@
 
-import promisePool from "@/lib/db";  // If you're using absolute imports configured in Next.js
+import promisePool from '../lib/db';
 
 class Skills {
   constructor( skill_name) {
