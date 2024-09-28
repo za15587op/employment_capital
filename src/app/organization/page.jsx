@@ -15,6 +15,7 @@ function ShowogzPage({ params }) {
     const { data: session, status } = useSession();
     const router = useRouter();
     const [loading, setLoading] = useState(true); // State สำหรับติดตามสถานะการโหลด
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     
     useEffect(() => {
         if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
@@ -27,7 +28,7 @@ function ShowogzPage({ params }) {
 
     const fetchOrganization = async () => {
         try {
-          const resOrganization = await fetch("/api/organization", {
+          const resOrganization = await fetch(`${apiUrl}/api/organization`, {
             method: "GET",
           });
     
@@ -47,7 +48,7 @@ function ShowogzPage({ params }) {
 
     const getDataById = async (scholarship_id) => {
         try {
-          const res = await fetch(`http://localhost:3000/api/scholarships/${scholarship_id}`, {
+          const res = await fetch(`${apiUrl}/api/scholarships/${scholarship_id}`, {
             method: "GET",
             cache: "no-store",
           });

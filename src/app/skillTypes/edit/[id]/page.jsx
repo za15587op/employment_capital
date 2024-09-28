@@ -8,6 +8,7 @@ function EditSkillTypePage({ params }) {
   const [postData, setPostData] = useState({});
   const router = useRouter();
   const { data: session, status } = useSession();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   
   // ตั้งค่า state ด้วยข้อมูลที่ดึงมา
   const [newskill_type_name, setNewSkillTypeName] = useState("");
@@ -15,7 +16,7 @@ function EditSkillTypePage({ params }) {
   const getDataById = async (skill_type_id) => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/skillTypes/${skill_type_id}`,
+        `${apiUrl}/api/skillTypes/${skill_type_id}`,
         {
           method: "GET",
           cache: "no-store",
@@ -47,7 +48,7 @@ function EditSkillTypePage({ params }) {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/api/skillTypes/${skill_type_id}`,
+        `${apiUrl}/api/skillTypes/${skill_type_id}`,
         {
           method: "PUT",
           headers: {

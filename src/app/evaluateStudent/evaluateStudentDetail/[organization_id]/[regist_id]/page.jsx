@@ -11,6 +11,7 @@ export default function ShowStudentDetailPage({ params }) {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const router = useRouter();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
@@ -44,7 +45,7 @@ export default function ShowStudentDetailPage({ params }) {
 
   const getExistingData = async () => {
     try {
-      const res = await fetch(`/api/student_scholarships/edit/${regist_id}`, {
+      const res = await fetch(`${apiUrl}/api/student_scholarships/edit/${regist_id}`, {
         method: "GET",
       });
   
@@ -133,7 +134,7 @@ export default function ShowStudentDetailPage({ params }) {
 
  
   const Back = (scholarship_id) => {
-    router.push(`/evaluateStudent/${scholarship_id}/${organization_id}`);
+    router.push(`${apiUrl}/evaluateStudent/${scholarship_id}/${organization_id}`);
     
 };
 

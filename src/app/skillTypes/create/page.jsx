@@ -10,6 +10,7 @@ function SkillTypesForm() {
   const [success, setSuccess] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +20,7 @@ function SkillTypesForm() {
       return;
     } else {
       try {
-        const res = await fetch("http://localhost:3000/api/skillTypes", {
+        const res = await fetch(`${apiUrl}/api/skillTypes`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

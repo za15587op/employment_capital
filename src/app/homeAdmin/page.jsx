@@ -9,7 +9,8 @@ import Image from 'next/image';
 function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter(); // เพิ่มการใช้ useRouter
-
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  
   console.log(session, "session2");
 
   useEffect(() => {

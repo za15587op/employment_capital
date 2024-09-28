@@ -15,7 +15,7 @@ export default function ShowStdOrgan() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null); // Success message state
   const [showSuccess, setShowSuccess] = useState(false); // State to control the visibility of the success message
-  
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   
   useEffect(() => {
     if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
@@ -34,7 +34,7 @@ export default function ShowStdOrgan() {
     try {
       // Corrected fetch call
       const res = await fetch(
-        `/api/showScholarshipAll/showStdOrgan/${scholarship_id}/${organization_id}`,
+        `${apiUrl}/api/showScholarshipAll/showStdOrgan/${scholarship_id}/${organization_id}`,
         {
           method: "GET",
         }

@@ -10,6 +10,7 @@ function ShowScholarshipAllPage({ params }) {
   const [error, setError] = useState("");
   const router = useRouter();
   const { data: session, status } = useSession();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   useEffect(() => {
     if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
     if (!session) {
@@ -26,7 +27,7 @@ function ShowScholarshipAllPage({ params }) {
   // ฟังก์ชันสำหรับดึงข้อมูลทุนการศึกษา
   const fetchScholarShipReGist = async (scholarship_id) => {
     try {
-      const res = await fetch(`/api/showScholarshipAll/${scholarship_id}`, {
+      const res = await fetch(`${apiUrl}/api/showScholarshipAll/${scholarship_id}`, {
         method: "GET",
         cache: "no-store",
       });
@@ -55,11 +56,11 @@ function ShowScholarshipAllPage({ params }) {
 
 
   const ViewDetails = (regist_id) => {
-    router.push(`/showScholarshipAll/showStudentDetail/${regist_id}`);
+    router.push(`${apiUrl}/showScholarshipAll/showStudentDetail/${regist_id}`);
   };
 
   const Back = () => {
-    router.push(`/scholarships`);
+    router.push(`${apiUrl}/scholarships`);
   };
 
 

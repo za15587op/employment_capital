@@ -16,6 +16,7 @@ function ShowPage({ params }) {
     const { data: session, status } = useSession();
     const router = useRouter();
     const [loading, setLoading] = useState(true); // State สำหรับติดตามสถานะการโหลด
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     
     useEffect(() => {
         if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
@@ -28,7 +29,7 @@ function ShowPage({ params }) {
 
       const fetchOrganization = async () => {
         try {
-          const resOrganization = await fetch(`/api/organization/${scholarship_id}`, {
+          const resOrganization = await fetch(`${apiUrl}/api/organization/${scholarship_id}`, {
             method: "GET",
           });
       
@@ -49,7 +50,7 @@ function ShowPage({ params }) {
     
       const getDataById = async (scholarship_id) => {
         try {
-          const res = await fetch(`http://localhost:3000/api/scholarships/${scholarship_id}`, {
+          const res = await fetch(`${apiUrl}/api/scholarships/${scholarship_id}`, {
             method: "GET",
             cache: "no-store",
           });
@@ -98,7 +99,7 @@ function ShowPage({ params }) {
             try {
                 // ลบข้อมูลจาก organization
                 const resOrganization = await fetch(
-                    `/api/organization?organization_id=${organization_id}`,
+                    `${apiUrl}/api/organization?organization_id=${organization_id}`,
                     {
                         method: "DELETE",
                     }

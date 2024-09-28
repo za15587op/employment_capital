@@ -9,11 +9,12 @@ function ShowSkillTypes() {
   const [error, setError] = useState("");
   const router = useRouter();
   const { data: session, status } = useSession();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const fetchSkillTypes = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/skillTypes");
+        const res = await fetch(`${apiUrl}/api/skillTypes`);
         if (res.ok) {
           const data = await res.json();
           setSkillTypes(data);
@@ -29,14 +30,14 @@ function ShowSkillTypes() {
   }, []);
 
   const handleUpdate = (skill_type_id) => {
-    router.push(`/skillTypes/edit/${skill_type_id}`);
+    router.push(`${apiUrl}/skillTypes/edit/${skill_type_id}`);
   };
 
   const handleDelete = async (skill_type_id) => {
     const confirmed = confirm("Are you sure?");
     if (confirmed) {
       const res = await fetch(
-        `http://localhost:3000/api/skillTypes/?skill_type_id=${skill_type_id}`,
+        `${apiUrl}/api/skillTypes/?skill_type_id=${skill_type_id}`,
         {
           method: "DELETE",
         }

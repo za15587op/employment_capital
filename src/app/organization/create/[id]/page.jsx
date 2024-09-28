@@ -17,6 +17,7 @@ function EditorganizationPage({ params }) {
   const [existingOrganizations, setExistingOrganizations] = useState([]); // state สำหรับข้อมูล organization ที่มีอยู่แล้ว
   const router = useRouter();
   const { data: session, status } = useSession();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   // ตรวจสอบ Session เพื่อบังคับให้ผู้ใช้เข้าสู่ระบบก่อนเข้าหน้านี้
   useEffect(() => {
@@ -29,7 +30,7 @@ function EditorganizationPage({ params }) {
   // ฟังก์ชันสำหรับดึงข้อมูลทุนการศึกษาตาม scholarship_id
   const getDataById = async (scholarship_id) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/scholarships/${scholarship_id}`, {
+      const res = await fetch(`${apiUrl}api/scholarships/${scholarship_id}`, {
         method: "GET",
         cache: "no-store",
       });
@@ -60,7 +61,7 @@ function EditorganizationPage({ params }) {
 
   const fetchOrganizationList = async () => {
     try {
-      const res = await fetch("/api/organization", {
+      const res = await fetch(`${apiUrl}/api/organization`, {
         method: "GET",
       });
       if (!res.ok) {
@@ -93,7 +94,7 @@ function EditorganizationPage({ params }) {
 
     try {
       // บันทึกข้อมูล Organization
-      const organizationRes = await fetch("http://localhost:3000/api/organization", {
+      const organizationRes = await fetch(`${apiUrl}api/organization`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

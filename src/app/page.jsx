@@ -21,7 +21,7 @@ function Home() {
     const router = useRouter();
     const videoRefs = [useRef(null)];
     const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const handleVideoEnded = () => {
         const nextVideoIndex = (currentVideoIndex + 1) % videoRefs.length; 

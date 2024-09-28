@@ -12,6 +12,7 @@ export default function EditScholarshipRegistration({ params }) {
   const [success, setSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const http = 'http://localhost:3000';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
@@ -46,7 +47,7 @@ export default function EditScholarshipRegistration({ params }) {
 
   const getExistingData = async () => {
     try {
-      const res = await fetch(`/api/student_scholarships/edit/${regist_id}`, {
+      const res = await fetch(`${apiUrl}/api/student_scholarships/edit/${regist_id}`, {
         method: "GET",
       });
   
@@ -101,7 +102,7 @@ export default function EditScholarshipRegistration({ params }) {
         formData.append("file", file);
       }
 
-      const response = await fetch(`/api/student_scholarships/edit/${regist_id}`, {
+      const response = await fetch(`${apiUrl}/api/student_scholarships/edit/${regist_id}`, {
         method: "PUT",
         body: formData,
       });

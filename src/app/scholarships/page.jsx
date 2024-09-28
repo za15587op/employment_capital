@@ -13,6 +13,7 @@ function ShowScholarships() {
   const [success, setSuccess] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   const formatDateToYYYYMMDD = (dateString) => {
     const date = new Date(dateString);
@@ -26,7 +27,7 @@ function ShowScholarships() {
     } else {
       const fetchScholarships = async () => {
         try {
-          const res = await fetch('/api/scholarships');
+          const res = await fetch(`${apiUrl}/api/scholarships`);
           if (res.ok) {
             const data = await res.json();
             const formattedData = data.map(scholarship => ({
@@ -75,7 +76,7 @@ function ShowScholarships() {
   const handleDelete = async (scholarship_id) => {
     const confirmed = confirm("ต้องการลบทุนนี้ใช่หรือไม่?");
     if (confirmed) {
-      const res = await fetch(`/api/scholarships/?scholarship_id=${scholarship_id}`, {
+      const res = await fetch(`${apiUrl}/api/scholarships/?scholarship_id=${scholarship_id}`, {
         method: "DELETE",
       });
 
@@ -90,7 +91,7 @@ function ShowScholarships() {
     const newStatus = currentStatus === 1 ? 0 : 1;
   
     try {
-      const res = await fetch("/api/scholarships/toggle-status", {
+      const res = await fetch(`${apiUrl}/api/scholarships/toggle-status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -47,6 +47,8 @@ export default function ScholarshipRegistration({ params }) {
 
   const weekDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 
   const handlePartTimeChange = (e) => {
     const { value, checked } = e.target;
@@ -74,7 +76,7 @@ export default function ScholarshipRegistration({ params }) {
 
   const getStudentById = async (student_id) => {
     try {
-      const res = await fetch(`/api/student/${student_id}`, {
+      const res = await fetch(`${apiUrl}/api/student/${student_id}`, {
         method: "GET",
         cache: "no-store",
       });
@@ -100,7 +102,7 @@ export default function ScholarshipRegistration({ params }) {
 
   const getDataById = async (scholarship_id) => {
     try {
-      const res = await fetch(`/api/scholarships/${scholarship_id}`, {
+      const res = await fetch(`${apiUrl}/api/scholarships/${scholarship_id}`, {
         method: "GET",
         cache: "no-store",
       });
@@ -140,7 +142,7 @@ export default function ScholarshipRegistration({ params }) {
 
     try {
       const checkRegistrationResponse = await fetch(
-        `/api/student_scholarships/?student_id=${student_id}`,
+        `${apiUrl}/api/student_scholarships/?student_id=${student_id}`,
         {
           method: "GET",
         }
@@ -164,7 +166,7 @@ export default function ScholarshipRegistration({ params }) {
         formData.append("file", fileInput.files[0]);
       }
 
-      const response = await fetch("/api/student_scholarships", {
+      const response = await fetch(`${apiUrl}/api/student_scholarships`, {
         method: "POST",
         body: formData,
       });

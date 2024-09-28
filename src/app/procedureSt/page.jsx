@@ -39,7 +39,7 @@ function Report_adminPage() {
       {/* Step-by-Step Section */}
       <div className="flex justify-center mt-16 space-x-12">
         {[
-          { img: "/a.png", text: "คลิ๊ก “สมัครทุน”" },
+          { img: "/a.png", text: "คลิก “สมัครทุน”" },
           { img: "/b.png", text: "กรอกข้อมูลการสมัครทุน" },
           { img: "/c.png", text: "อยู่ในขั้นตอนดำเนินการ" },
           { img: "/d.png", text: "รอผลประกาศทุน และรับการแจ้งเตือน" },

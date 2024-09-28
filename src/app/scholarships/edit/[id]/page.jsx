@@ -16,6 +16,7 @@ function EditScholarshipsPage({ params }) {
   const router = useRouter();
   const [error, setError] = useState(""); 
   const [success, setSuccess] = useState(false); // เปลี่ยน success เป็น Boolean
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     if (status === "loading") return; // Wait until session status is determined
@@ -30,7 +31,7 @@ function EditScholarshipsPage({ params }) {
 
   const getDataById = async (scholarship_id) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/scholarships/${scholarship_id}`, {
+      const res = await fetch(`${apiUrl}/api/scholarships/${scholarship_id}`, {
         method: "GET",
         cache: "no-store",
       });
@@ -70,7 +71,7 @@ function EditScholarshipsPage({ params }) {
       return;
     } else {
       try {
-        const res = await fetch(`http://localhost:3000/api/scholarships/${scholarship_id}`, {
+        const res = await fetch(`${apiUrl}/api/scholarships/${scholarship_id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

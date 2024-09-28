@@ -15,7 +15,7 @@ export default function AdminPage() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [success, setSuccess] = useState("บันทึกสำเร็จ!");
   const [matchPercentage, setMatchPercentage] = useState({}); // Store matching percentages for each student
-
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     if (scholarship_id && organization_id) {
@@ -27,7 +27,7 @@ export default function AdminPage() {
   const fetchStudentData = async (scholarship_id, organization_id) => {
     try {
       const res = await fetch(
-        `/api/matching/${scholarship_id}/${organization_id}`,
+        `${apiUrl}/api/matching/${scholarship_id}/${organization_id}`,
         {
           method: "GET",
         }
@@ -62,12 +62,13 @@ export default function AdminPage() {
 
   // ฟังก์ชันดึงเปอร์เซ็นต์การแมตช์
   const fetchMatchingPercentages = async (students) => {
+    
     try {
       const percentages = await Promise.all(
         students.map(async (student) => {
           console.log("Student Data:", student);  // Log ค่า student
   
-          const response = await fetch('/api/matching', {
+          const response = await fetch(`${apiUrl}/api/matching`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -118,11 +119,11 @@ export default function AdminPage() {
   
 
   const Back = (scholarship_id) => {
-    router.push(`/organization/show/${scholarship_id}`);
+    router.push(`${apiUrl}/organization/show/${scholarship_id}`);
   };
 
   const ViewDetails = (regist_id) => {
-    router.push(`/evaluateStudent/evaluateStudentDetail/${organization_id}/${regist_id}`);
+    router.push(`${apiUrl}/evaluateStudent/evaluateStudentDetail/${organization_id}/${regist_id}`);
   };
 
   const handleSubmit = async (event) => {
@@ -136,7 +137,7 @@ export default function AdminPage() {
     );
 
     try {
-      const res = await fetch("/api/evaluateStudent", {
+      const res = await fetch(`${apiUrl}/api/evaluateStudent`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

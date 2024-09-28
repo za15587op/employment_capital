@@ -26,6 +26,7 @@ function StudentForm({ params }) {
   ]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false); // Update success to Boolean for notification
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   // List of organizations
   const organizations = [
@@ -61,7 +62,7 @@ function StudentForm({ params }) {
   useEffect(() => {
     const fetchSkillTypes = async () => {
       try {
-        const response = await fetch("/api/skillTypes");
+        const response = await fetch(`${apiUrl}/api/skillTypes`);
         if (!response.ok) throw new Error("ไม่สามารถดึงข้อมูลประเภททักษะได้");
         const data = await response.json();
         setSkillTypes(data);
@@ -133,7 +134,7 @@ function StudentForm({ params }) {
       return;
     } else {
       try {
-        const res = await fetch("/api/student", {
+        const res = await fetch(`${apiUrl}/api/student`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

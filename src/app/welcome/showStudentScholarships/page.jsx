@@ -10,6 +10,7 @@ function ShowStudentScholarshipsPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -26,7 +27,7 @@ function ShowStudentScholarshipsPage() {
   const fetchGetData = async () => {
     if (!student_id) return;
     try {
-      const res = await fetch(`/api/showStudentScholarships/${student_id}`, {
+      const res = await fetch(`${apiUrl}/api/showStudentScholarships/${student_id}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -59,7 +60,7 @@ function ShowStudentScholarshipsPage() {
   const handleDelete = async (regist_id) => {
     const confirmed = confirm("Are you sure?");
     if (confirmed) {
-      const res = await fetch(`/api/student_scholarships/?regist_id=${regist_id}`, {
+      const res = await fetch(`${apiUrl}/api/student_scholarships/?regist_id=${regist_id}`, {
         method: "DELETE"
       });
       if (res.ok) {

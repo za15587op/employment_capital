@@ -22,6 +22,7 @@ function EditStudentPage({ params }) {
   const [studentGpa, setStudentGpa] = useState("");
   const [studentPhone, setStudentPhone] = useState("");
   const [join_org, setJoinOrg] = useState("");
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   // Skills information
   const [skills, setSkills] = useState([{ skill_name: "" }]);
@@ -59,7 +60,7 @@ function EditStudentPage({ params }) {
   // Fetch skill types from API
   const fetchSkillTypes = async () => {
     try {
-      const res = await fetch("/api/skillTypes");
+      const res = await fetch(`${apiUrl}/api/skillTypes`);
       if (!res.ok) {
         throw new Error("Failed to fetch skill types");
       }
@@ -74,7 +75,7 @@ function EditStudentPage({ params }) {
   const getDataById = async (student_id) => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/student/${student_id}`,
+        `${apiUrl}/api/student/${student_id}`,
         {
           method: "GET",
           cache: "no-store",
@@ -171,7 +172,7 @@ function EditStudentPage({ params }) {
     e.preventDefault();
     try {
       const res = await fetch(
-        `http://localhost:3000/api/student/${student_id}`,
+        `${apiUrl}/api/student/${student_id}`,
         {
           method: "PUT",
           headers: {

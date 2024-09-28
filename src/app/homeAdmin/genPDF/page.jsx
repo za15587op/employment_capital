@@ -16,6 +16,7 @@ function ShowScholarshipGenPDF() {
   const [showSuccess, setShowSuccess] = useState(false); // เพิ่ม state สำหรับแสดง success message
   const [success, setSuccess] = useState("PDF ถูกสร้างเรียบร้อยแล้ว!");
   const router = useRouter();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
       if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
@@ -26,7 +27,7 @@ function ShowScholarshipGenPDF() {
   // ฟังก์ชันดึงข้อมูลนักศึกษาจาก API
   const fetchGetData = async () => {
     try {
-      const res = await fetch(`/api/genPDF/`, {
+      const res = await fetch(`${apiUrl}/api/genPDF/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

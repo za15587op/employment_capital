@@ -11,6 +11,7 @@ export default function ShowStudentDetailPage({ params }) {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const router = useRouter();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   // let regist_id = params?.id;
   // if (!regist_id) {
@@ -37,7 +38,7 @@ export default function ShowStudentDetailPage({ params }) {
 
   const getExistingData = async () => {
     try {
-      const res = await fetch(`/api/student_scholarships/edit/${regist_id}`, {
+      const res = await fetch(`${apiUrl}/api/student_scholarships/edit/${regist_id}`, {
         method: "GET",
       });
   

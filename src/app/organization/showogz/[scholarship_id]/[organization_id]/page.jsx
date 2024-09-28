@@ -30,6 +30,8 @@ function ViewCombinedPage({ params }) {
   const workTimeOptionsInTime = ["วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์"];
   const workTimeOptionsOutTime = ["วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์", "วันเสาร์", "วันอาทิตย์"];
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
   useEffect(() => {
     if (status === "loading") return;
     if (!session) {
@@ -41,7 +43,7 @@ function ViewCombinedPage({ params }) {
 
   const fetchCombinedData = async (organization_id) => {
     try {
-      const res = await fetch(`/api/scholarshiporganization/${organization_id}`, {
+      const res = await fetch(`${apiUrl}/api/scholarshiporganization/${organization_id}`, {
         method: "GET",
       });
 

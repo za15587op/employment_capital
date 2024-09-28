@@ -17,6 +17,7 @@ function CreateogzPage({ params }) {
   const [workTime, setWorkTime] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false); // ใช้ boolean สำหรับ success message
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   // State สำหรับจัดการทักษะและระดับทักษะ
   const [skills, setSkills] = useState([{ skill_type_name: "", required_level: "" }]);
@@ -47,7 +48,7 @@ function CreateogzPage({ params }) {
     }));
   
     try {
-      const responseOrg = await fetch("/api/scholarshiporganization", {
+      const responseOrg = await fetch(`${apiUrl}/api/scholarshiporganization`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +69,7 @@ function CreateogzPage({ params }) {
   
       const scholarship_organ_id = dataOrg.scholarship_organ_id;
   
-      const responseSkills = await fetch("/api/skillTypes", {
+      const responseSkills = await fetch(`${apiUrl}/api/skillTypes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

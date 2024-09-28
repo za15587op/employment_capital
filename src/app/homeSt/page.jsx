@@ -26,6 +26,8 @@ function HomeStudentPage() {
         const date = new Date(dateString);
         return date.toISOString().split("T")[0];
     };
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
     useEffect(() => {
         if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
         if (!session) {
@@ -44,7 +46,7 @@ function HomeStudentPage() {
     useEffect(() => {
         const fetchScholarships = async () => {
             try {
-                const res = await fetch("/api/showScholarshipsStd");
+                const res = await fetch(`${apiUrl}/api/showScholarshipsStd`);
                 if (res.ok) {
                     const data = await res.json();
                     const formattedData = data.map((scholarship) => ({

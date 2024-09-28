@@ -14,6 +14,7 @@ function ScholarshipsForm() {
   const [success, setSuccess] = useState(false); // เปลี่ยน success ให้เป็น Boolean สำหรับแจ้งเตือน
   const { data: session, status } = useSession();
   const router = useRouter();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     if (status === "loading") return; // Wait until session status is determined
@@ -28,7 +29,7 @@ function ScholarshipsForm() {
       return;
     } else {
       try {
-        const res = await fetch("http://localhost:3000/api/scholarships", {
+        const res = await fetch(`${apiUrl}/api/scholarships`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
