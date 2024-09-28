@@ -11,7 +11,7 @@ function Navbar({ session }) {
   const { data: sessionData, status } = useSession();
   const [student, setStudent] = useState(null); // เก็บข้อมูลนักศึกษา
   const [error, setError] = useState(null); // เก็บข้อผิดพลาด
-
+//tessst
   useEffect(() => {
     const fetchStudent = async () => {
       if (sessionData?.user?.student_id) {
