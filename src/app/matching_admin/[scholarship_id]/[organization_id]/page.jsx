@@ -242,56 +242,56 @@
 // }
 
 
-const studenttest = {
-  student_id: 1,
-  workTime: '["วันจันทร์", "วันอังคาร"]',  // เวลาทำงานของนิสิต
-  skill_level: 3,  // ระดับทักษะของนิสิต
-  workType: "พาร์ทไทม์"  // ประเภทงานของนิสิต
-};
+// const studenttest = {
+//   student_id: 1,
+//   workTime: '["วันจันทร์", "วันอังคาร"]',  // เวลาทำงานของนิสิต
+//   skill_level: 3,  // ระดับทักษะของนิสิต
+//   workType: "พาร์ทไทม์"  // ประเภทงานของนิสิต
+// };
 
-const requirementtest = {
-  workTime: '["วันจันทร์", "วันพฤหัสบดี", "วันศุกร์"]',  // เวลาทำงานที่ทุนต้องการ
-  required_level: 4,  // ระดับทักษะที่ต้องการ
-  workType: "พาร์ทไทม์"  // ประเภทงานที่ทุนต้องการ
-};
+// const requirementtest = {
+//   workTime: '["วันจันทร์", "วันพฤหัสบดี", "วันศุกร์"]',  // เวลาทำงานที่ทุนต้องการ
+//   required_level: 4,  // ระดับทักษะที่ต้องการ
+//   workType: "พาร์ทไทม์"  // ประเภทงานที่ทุนต้องการ
+// };
 
-// เรียกฟังก์ชัน calculateDistance และตรวจสอบค่า
-const distance = calculateDistancetest(studenttest, requirementtest);
-console.log("Total distance (for testing):", distance);
-
-
-
-function calculateDistancetest(student, requirement) {
-  console.log("calculateDistance function called"); // ตรวจสอบว่าฟังก์ชันถูกเรียกหรือไม่
-  console.log("Calculating distance for student:", student, "and requirement:", requirement);
-
-  const studentWorkTime = safeParse(student.workTime);
-  const requirementWorkTime = safeParse(requirement.workTime);
-
-  console.log("studentWorkTime:", studentWorkTime);
-  console.log("requirementWorkTime:", requirementWorkTime);
-
-  const workTimeDistance = studentWorkTime.some(day => requirementWorkTime.includes(day)) ? 0 : 1;
-  console.log("Work time distance:", workTimeDistance);
-
-  const studentSkillLevel =  0;
-  const requiredSkillLevel =  0;
-
-  // const studentSkillLevel = student.skill_level ?? 0;
-  // const requiredSkillLevel = requirement.required_level ?? 0;
-
-  console.log("Student skill level:", studentSkillLevel);
-  console.log("Required skill level:", requiredSkillLevel);
-
-  const skillDistance = Math.pow(studentSkillLevel - requiredSkillLevel, 2);
-  console.log("Skill distance:", skillDistance);
+// // เรียกฟังก์ชัน calculateDistance และตรวจสอบค่า
+// const distance = calculateDistancetest(studenttest, requirementtest);
+// console.log("Total distance (for testing):", distance);
 
 
-  const workTypeDistance = student.workType === requirement.workType ? 0 : 1;
-  console.log("Work type distance:", workTypeDistance);
 
-  totalDistancetest = Math.sqrt(skillDistance) + workTypeDistance + workTimeDistance;
-console.log(totalDistancetest,"totalDistancetest");
+// function calculateDistancetest(student, requirement) {
+//   console.log("calculateDistance function called"); // ตรวจสอบว่าฟังก์ชันถูกเรียกหรือไม่
+//   console.log("Calculating distance for student:", student, "and requirement:", requirement);
 
-  return totalDistancetest;
-}
+//   const studentWorkTime = safeParse(student.workTime);
+//   const requirementWorkTime = safeParse(requirement.workTime);
+
+//   console.log("studentWorkTime:", studentWorkTime);
+//   console.log("requirementWorkTime:", requirementWorkTime);
+
+//   const workTimeDistance = studentWorkTime.some(day => requirementWorkTime.includes(day)) ? 0 : 1;
+//   console.log("Work time distance:", workTimeDistance);
+
+//   const studentSkillLevel =  0;
+//   const requiredSkillLevel =  0;
+
+//   // const studentSkillLevel = student.skill_level ?? 0;
+//   // const requiredSkillLevel = requirement.required_level ?? 0;
+
+//   console.log("Student skill level:", studentSkillLevel);
+//   console.log("Required skill level:", requiredSkillLevel);
+
+//   const skillDistance = Math.pow(studentSkillLevel - requiredSkillLevel, 2);
+//   console.log("Skill distance:", skillDistance);
+
+
+//   const workTypeDistance = student.workType === requirement.workType ? 0 : 1;
+//   console.log("Work type distance:", workTypeDistance);
+
+//   totalDistancetest = Math.sqrt(skillDistance) + workTypeDistance + workTimeDistance;
+// console.log(totalDistancetest,"totalDistancetest");
+
+//   return totalDistancetest;
+// }
