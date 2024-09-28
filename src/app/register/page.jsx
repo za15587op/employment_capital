@@ -19,6 +19,8 @@ function RegisterPage() {
     router.replace("/welcome");
   }
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -31,7 +33,8 @@ function RegisterPage() {
       return;
     } else {
       try {
-        const res = await fetch("/api/register", {
+
+        const res = await fetch(`${apiUrl}/api/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
