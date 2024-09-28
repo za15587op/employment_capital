@@ -7,11 +7,11 @@ import DateTimeAvailable from "../../../../models/datetimeavailable";
 // กำหนดโฟลเดอร์ที่จะเก็บไฟล์ที่อัปโหลด
 const UPLOAD_DIR = path.resolve(process.cwd(), "public/uploads");
 
-export const config = {
-  api: {
-    bodyParser: false, // ปิดการแยกข้อมูลของ Next.js เพื่อจัดการข้อมูล multipart form data
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false, // ปิดการแยกข้อมูลของ Next.js เพื่อจัดการข้อมูล multipart form data
+//   },
+// };
 
 /// ฟังก์ชันช่วยจัดการอัปโหลดไฟล์และเปลี่ยนชื่อไฟล์
 async function handleFileUpload(formData) {
