@@ -63,21 +63,16 @@ export default function ScholarshipRegistration({ params }) {
   const handlePartTimeChange = (e) => {
     const { value, checked } = e.target;
     if (checked) {
-      if (value === "ในเวลาทำการปกติ" && isPartTime === "นอกเวลาทำการที่กำหนด") {
+      if (value === "in_time" && isPartTime === "นอกเวลาทำการที่กำหนด") {
         setIsPartTime("ทำได้ทั้งในเวลาและนอกเวลา");
-      } else if (value === "นอกเวลาทำการที่กำหนด" && isPartTime === "ทำได้ทั้งในเวลาและนอกเวลา") {
+      } else if (value === "out_time" && isPartTime === "ในเวลาที่กำหนด") {
         setIsPartTime("ทำได้ทั้งในเวลาและนอกเวลา");
       } else {
-        setIsPartTime(value === "ในเวลาทำการปกติ" ? "ทำได้ทั้งในเวลาและนอกเวลา" : "นอกเวลาทำการที่กำหนด");
+        setIsPartTime(value === "in_time" ? "ในเวลาที่กำหนด" : "นอกเวลาทำการที่กำหนด");
       }
     } else {
       setIsPartTime("");
     }
-
-    
-    ทำได้ทั้งในเวลาและนอกเวลา
-    ในเวลาทำการปกติ
-    นอกเวลาทำการที่กำหนด
   };
 
   const handleDaySelectionChange = (e, day) => {
@@ -285,28 +280,30 @@ export default function ScholarshipRegistration({ params }) {
                 <input
                   type="checkbox"
                   id="in_time"
-                  value="ในเวลาทำการปกติ"
-                  checked={isPartTime === "ในเวลาทำการปกติ" || isPartTime === "ทำได้ทั้งในเวลาและนอกเวลา"}
+                  value="in_time"
+                  checked={isPartTime === "ในเวลาที่กำหนด" || isPartTime === "ทำได้ทั้งในเวลาและนอกเวลา"}
                   onChange={handlePartTimeChange}
                   className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
                 />
-                <label htmlFor="in_time" className="text-gray-700">ในเวลาทำการปกติ</label>
+                <label htmlFor="in_time" className="text-gray-700">ในเวลา</label>
               </div>
 
               <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
                   id="out_time"
-                  value="นอกเวลาทำการที่กำหนด"
+                  value="out_time"
                   checked={isPartTime === "นอกเวลาทำการที่กำหนด" || isPartTime === "ทำได้ทั้งในเวลาและนอกเวลา"}
                   onChange={handlePartTimeChange}
                   className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
                 />
-                <label htmlFor="out_time" className="text-gray-700">นอกเวลาทำการที่กำหนด</label>
+                <label htmlFor="out_time" className="text-gray-700">นอกเวลา</label>
               </div>
             </div>
 
             {isPartTime && renderDaysCheckboxes()}
+
+            นอกเวลาทำการที่กำหนด
 
           </div>
 
