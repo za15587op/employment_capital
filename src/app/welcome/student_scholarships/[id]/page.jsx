@@ -207,7 +207,7 @@ export default function ScholarshipRegistration({ params }) {
   const renderDaysCheckboxes = () => {
     let daysToRender = [];
 
-    if (isPartTime === "ทำได้ทั้งในเวลาและนอกเวลา") {
+    if (isPartTime === "ในเวลาที่กำหนด") {
       daysToRender = weekDays;
     }
 
