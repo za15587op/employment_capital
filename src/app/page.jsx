@@ -1,11 +1,10 @@
-
-import Navber from "./components/Navbar";
+import Navbar from "@/app/components/Navbar";
 import Foter from "./components/Foter";
 import Image from "next/image";
 export default function Home() {
   return (
     <>
-      <Navber/> 
+      <Navbar/> 
       <h1 className="หน้าแรกแอดมิน">บริการด้านทุนจ้างงานนิสิต มหาวิทยาลัยทักษิณ</h1>
             <br />
       <div className="logohome">
