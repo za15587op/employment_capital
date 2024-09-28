@@ -14,6 +14,7 @@ function ShowStudentScholarshipsPage() {
 
   const { data: session, status } = useSession();
   const router = useRouter();
+  
 
   useEffect(() => {
     if (status === "loading") return;

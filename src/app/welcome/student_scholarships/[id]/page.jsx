@@ -12,6 +12,7 @@ export default function ScholarshipRegistration({ params }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const student_id = session?.user?.student_id || null;  // ตรวจสอบ session ก่อนใช้
+  
 
   useEffect(() => {
     if (status === "loading") return;

@@ -16,7 +16,7 @@ function LoginPage() {
   const router = useRouter();
   const {data : session } = useSession();
   console.log(session, "Session Data");
-
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     if (session && session.user) { // ตรวจสอบว่ามี session และ session.user ก่อน
