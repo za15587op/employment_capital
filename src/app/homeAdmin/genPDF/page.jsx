@@ -36,6 +36,8 @@
 
 //       if (res.ok) {
 //         const data = await res.json();
+//         console.log(data);
+        
 //         setGetData(data);
 //         setLoading(false); // ปิดการโหลดข้อมูลเมื่อเสร็จสิ้น
 //       } else {
@@ -235,6 +237,8 @@ function ShowScholarshipGenPDF() {
 
       if (res.ok) {
         const data = await res.json();
+        console.log(data);
+        
         setGetData(data);
         setLoading(false);
       } else {
@@ -254,7 +258,7 @@ function ShowScholarshipGenPDF() {
   // ฟังก์ชันสำหรับจัดกลุ่มนิสิตตามหน่วยงานที่ผ่านการประเมิน
   const groupByOrganization = () => {
     return getData.reduce((groups, student) => {
-      const organization = student.evaluated_org || "ไม่ทราบหน่วยงาน";
+      const organization = student.organization_name || "ไม่ทราบหน่วยงาน";
       if (!groups[organization]) {
         groups[organization] = [];
       }

@@ -40,6 +40,8 @@ function EditorganizationPage({ params }) {
       }
 
       const data = await res.json();
+      console.log(data);
+      
       
       // ตรวจสอบว่า data เป็น object ที่ถูกต้อง
       if (data && data.academic_year && data.academic_term) {
@@ -68,6 +70,8 @@ function EditorganizationPage({ params }) {
         throw new Error("Failed to fetch organization list");
       }
       const data = await res.json();
+      console.log(data);
+      
       setExistingOrganizations(data); // เก็บข้อมูลใน state สำหรับ organizations ที่มีอยู่แล้ว
     } catch (error) {
       console.error("Error fetching organization list:", error);

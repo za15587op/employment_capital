@@ -35,12 +35,12 @@ export async function POST(req) {
       ]
     );
 
-    const scholarship_id = resultScholarship.insertId; // รับ scholarship_id ที่เพิ่งสร้างใหม่
-    // เพิ่ม `scholarship_id`  ลงในตาราง `scholarshiporganization`
-    await connection.query(
-      'INSERT INTO scholarshiporganization (scholarship_id) VALUES (?)',
-      [scholarship_id]
-    );
+    // const scholarship_id = resultScholarship.insertId; // รับ scholarship_id ที่เพิ่งสร้างใหม่
+    // // เพิ่ม `scholarship_id`  ลงในตาราง `scholarshiporganization`
+    // await connection.query(
+    //   'INSERT INTO scholarshiporganization (scholarship_id) VALUES (?)',
+    //   [scholarship_id]
+    // );
 
     // Commit transaction ถ้าขั้นตอนทั้งหมดสำเร็จ
     await connection.commit();

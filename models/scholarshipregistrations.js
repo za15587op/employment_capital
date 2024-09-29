@@ -213,6 +213,9 @@ class ScholarshipRegistrations {
             FROM scholarshipregistrations
             JOIN scholarships ON scholarshipregistrations.scholarship_id = scholarships.scholarship_id
             JOIN student ON scholarshipregistrations.student_id = student.student_id
+            JOIN scholarshiporganization ON scholarshiporganization.scholarship_id = scholarships.scholarship_id
+            JOIN scholarshiprequirement ON scholarshiprequirement.scholarship_organ_id = scholarshiporganization.scholarship_organ_id
+            JOIN organization ON organization.organization_id = scholarshiporganization.organization_id
             WHERE scholarshipregistrations.student_status = 'Pass'
           `);
       return rows;

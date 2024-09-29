@@ -27,49 +27,6 @@ export async function POST(req) {
       organizationId = resultOrganization.insertId; 
     }
 
-    // ตรวจสอบว่ามีแถวที่มี scholarship_id และ organization_id เป็น NULL อยู่ในตาราง scholarshiporganization หรือไม่
-    const [existingNullEntry] = await connection.query(
-      'SELECT * FROM scholarshiporganization WHERE scholarship_id = ? AND organization_id IS NULL',
-      [scholarship_id]
-    );
-
-    let scholarship_organ_id;
-    if (existingNullEntry.length > 0) {
-      // ถ้ามีแถวที่มี scholarship_id และ organization_id เป็น NULL ให้ทำการอัปเดตแถวนั้น
-      await connection.query(
-        'UPDATE scholarshiporganization SET organization_id = ? WHERE scholarship_organ_id = ?',
-        [organizationId, existingNullEntry[0].scholarship_organ_id]
-      );
-      scholarship_organ_id = existingNullEntry[0].scholarship_organ_id;
-    } else {
-      // ตรวจสอบว่ามี scholarship_id และ organization_id อยู่ในตาราง scholarshiporganization หรือไม่
-      const [existingEntry] = await connection.query(
-        'SELECT * FROM scholarshiporganization WHERE scholarship_id = ? AND organization_id = ?',
-        [scholarship_id, organizationId]
-      );
-
-      if (existingEntry.length > 0) {
-        // ถ้ามี scholarship_id และ organization_id อยู่แล้ว ไม่ต้องทำอะไรเพิ่มเติม
-        return NextResponse.json(
-          { message: "organization_id นี้มีอยู่แล้วใน scholarshiporganization" },
-          { status: 400 }
-        );
-      } else {
-        // ถ้าไม่มี ให้ทำการเพิ่ม organization_id ใหม่ลงในตาราง scholarshiporganization
-        const [resultScholarshipOrg] = await connection.query(
-          'INSERT INTO scholarshiporganization (scholarship_id, organization_id) VALUES (?, ?)',
-          [scholarship_id, organizationId]
-        );
-        scholarship_organ_id = resultScholarshipOrg.insertId;
-      }
-    }
-
-    // // ทำการบันทึก scholarship_organ_id ลงในตาราง scholarshiprequirement
-    await connection.query(
-      'INSERT INTO scholarshiprequirement (scholarship_organ_id) VALUES (?)',
-      [scholarship_organ_id]
-    );
-
     // Commit transaction ถ้าขั้นตอนทั้งหมดสำเร็จ
     await connection.commit();
 
@@ -181,16 +138,16 @@ export async function DELETE(req) {
     )
 
     `;
-    await connection.query(deleteSkillsSkillTypes);
+    // await connection.query(deleteSkillsSkillTypes);
 
-    // ลบข้อมูลจากตาราง `skilltypes` ที่ไม่มีการอ้างอิงจาก `scholarshiprequirement`
-    const deleteSkillTypes = `
-      DELETE st
-      FROM skilltypes st
-      LEFT JOIN scholarshiprequirement sr ON st.skill_type_id = sr.skill_type_id
-      WHERE sr.skill_type_id IS NULL
-    `;
-    await connection.query(deleteSkillTypes);
+    // // ลบข้อมูลจากตาราง `skilltypes` ที่ไม่มีการอ้างอิงจาก `scholarshiprequirement`
+    // const deleteSkillTypes = `
+    //   DELETE st
+    //   FROM skilltypes st
+    //   LEFT JOIN scholarshiprequirement sr ON st.skill_type_id = sr.skill_type_id
+    //   WHERE sr.skill_type_id IS NULL
+    // `;
+    // await connection.query(deleteSkillTypes);
 
     // ลบข้อมูลจากตาราง `scholarshiporganization` ที่เกี่ยวข้องกับ `organization_id`
     const deleteScholarshipOrganization = `

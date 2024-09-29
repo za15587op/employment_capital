@@ -38,6 +38,8 @@ function ShowPage({ params }) {
           }
       
           const orgData = await resOrganization.json();
+          console.log(orgData);
+          
           setOrganization(orgData);
           setLoading(false); // ตั้งค่าสถานะว่าโหลดเสร็จแล้ว
         } catch (error) {
@@ -190,51 +192,52 @@ function ShowPage({ params }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {organization.length > 0 ? (
-                                        organization.map(org => (
-                                            <tr key={org.organization_id} className="border-b border-gray-400 hover:bg-gray-50">
-                                                <td className="py-2 px-4 whitespace-nowrap">{org.organization_name}</td>
-                                                <td className="py-2 px-4 whitespace-nowrap">{org.contactPhone}</td>
-                                                <td className="py-2 px-4 text-right">
-                                                <button
-                                                    onClick={() => handleEvaluate(org.organization_id)}
-                                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 ml-2"
-                                                >
-                                                    ประเมิน
-                                                </button>
-                                                <button
-                                                    onClick={() => handleShow(org.organization_id)}
-                                                    className="bg-purple-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-purple-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 ml-2"
-                                                >
-                                                    ดูคนสมัคร
-                                                </button>
-                                                <button
-                                                    onClick={() => handleAddData(org.organization_id)}
-                                                    className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 ml-2"
-                                                >
-                                                    เพิ่มข้อมูลหน่วยงาน
-                                                </button>
-                                                <button
-                                                    onClick={() => handleedit_add(org.organization_id)}
-                                                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-300 ml-2"
-                                                >
-                                                    ดูข้อมูลหน่วยงาน
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(org.organization_id)}
-                                                    className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 ml-2"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="8" className="text-center py-4">No data available</td>
-                                    </tr>
-                                )}
-                            </tbody>
+  {organization.length > 0 ? (
+    organization.map((org, index) => (
+      <tr key={`${org.organization_id}-${index}`} className="border-b border-gray-400 hover:bg-gray-50">
+        <td className="py-2 px-4 whitespace-nowrap">{org.organization_name}</td>
+        <td className="py-2 px-4 whitespace-nowrap">{org.contactPhone}</td>
+        <td className="py-2 px-4 text-right">
+          <button
+            onClick={() => handleEvaluate(org.organization_id)}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 ml-2"
+          >
+            ประเมิน
+          </button>
+          <button
+            onClick={() => handleShow(org.organization_id)}
+            className="bg-purple-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-purple-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 ml-2"
+          >
+            ดูคนสมัคร
+          </button>
+          <button
+            onClick={() => handleAddData(org.organization_id)}
+            className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 ml-2"
+          >
+            เพิ่มข้อมูลหน่วยงาน
+          </button>
+          <button
+            onClick={() => handleedit_add(org.organization_id)}
+            className="bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-300 ml-2"
+          >
+            ดูข้อมูลหน่วยงาน
+          </button>
+          <button
+            onClick={() => handleDelete(org.organization_id)}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 ml-2"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="8" className="text-center py-4">No data available</td>
+    </tr>
+  )}
+</tbody>
+
 
                             </table>
                         </div>
