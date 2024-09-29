@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState, useEffect } from "react";
 import Navbar from "@/app/components/Navbar";
@@ -118,7 +117,7 @@ function StudentForm({ params }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (
       !student_id ||
       !student_firstname ||
@@ -153,13 +152,19 @@ function StudentForm({ params }) {
             join_org,
           }),
         });
-
+  
         if (res.ok) {
-          const form = e.target;
+          const result = await res.json(); // ดึงข้อมูล response ที่ได้จากเซิร์ฟเวอร์ (รวมถึง student_id)
+  
+          // อัปเดต session ด้วย student_id ที่ได้รับ
+          await fetch(`$/api/update-session`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ student_id: result.student_id }),
+          });
+  
           setError("");
           setSuccess(true); // Trigger success notification
-          form.reset();
-          router.refresh();
           setTimeout(() => {
             router.push(`${apiUrl}/homeSt`);
           }, 2000); // Redirect after 2 seconds
@@ -171,6 +176,7 @@ function StudentForm({ params }) {
       }
     }
   };
+  
 
   return (
     <>
@@ -319,33 +325,6 @@ function StudentForm({ params }) {
                           {skillType.skill_type_name}
                         </option>
                       ))}
-                      {/* <option value="ความรู้พื้นฐานเกี่ยวกับการบริหารโครงการ การเงิน พัสดุ">
-                        ความรู้พื้นฐานเกี่ยวกับการบริหารโครงการ การเงิน พัสดุ
-                      </option>
-                      <option value="มีความรู้ด้านคอมพิวเตอร์ เช่น ซ่อมบำรุงได้ เขียนโปรแกรม">
-                        มีความรู้ด้านคอมพิวเตอร์ เช่น ซ่อมบำรุงได้ เขียนโปรแกรม
-                      </option>
-                      <option value="สามารถใช้โปรแกรม Microsoft Office ได้">
-                        สามารถใช้โปรแกรม Microsoft Office ได้
-                      </option>
-                      <option value="ความคิดสร้างสรรค์ ในการออกแบบ สามารถใช้งานโปรแกรม เช่น Canva, Adobe Illustrator, Adobe Photoshop และโปรแกรมตัดต่อวิดีโอ">
-                        ความคิดสร้างสรรค์ ในการออกแบบ สามารถใช้งานโปรแกรม เช่น
-                        Canva, Adobe Illustrator, Adobe Photoshop
-                        และโปรแกรมตัดต่อวิดีโอ
-                      </option>
-                      <option value="ทักษะด้านภาษาอังกฤษ การพูด อ่าน เขียน ภาษาอังกฤษ">
-                        ทักษะด้านภาษาอังกฤษ การพูด อ่าน เขียน ภาษาอังกฤษ
-                      </option>
-                      <option value="ทักษะในการสื่อสาร เช่น เขียนข่าวประชาสัมพันธ์">
-                        ทักษะในการสื่อสาร เช่น เขียนข่าวประชาสัมพันธ์
-                      </option>
-                      <option value="ทักษะในการถ่ายภาพ วิดีโอ">
-                        ทักษะในการถ่ายภาพ วิดีโอ
-                      </option>
-                      <option value="มีความรับผิดชอบ">มีความรับผิดชอบ</option>
-                      <option value="ทำงานอื่นๆ ตามที่ได้รับมอบหมาย">
-                        ทำงานอื่นๆ ตามที่ได้รับมอบหมาย
-                      </option> */}
                     </select>
 
                     <label className="block text-gray-600 mt-2">
