@@ -42,6 +42,8 @@ function HomeStudentPage() {
         const res = await fetch(`${apiUrl}/api/showScholarshipsStd`);
         if (res.ok) {
           const data = await res.json();
+          console.log(data);
+          
           const formattedData = data.map((scholarship) => ({
             ...scholarship,
             application_start_date: formatDateToYYYYMMDD(scholarship.application_start_date),
