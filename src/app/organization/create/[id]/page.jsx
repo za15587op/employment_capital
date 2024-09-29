@@ -94,7 +94,7 @@ function EditorganizationPage({ params }) {
 
     try {
       // บันทึกข้อมูล Organization
-      const organizationRes = await fetch(`${apiUrl}api/organization`, {
+      const organizationRes = await fetch(`${apiUrl}/api/organization`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

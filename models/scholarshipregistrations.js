@@ -299,7 +299,7 @@ class ScholarshipRegistrations {
         INNER JOIN scholarshiporganization ON scholarships.scholarship_id = scholarshiporganization.scholarship_id
         INNER JOIN datetimeavailable ON datetimeavailable.regist_id = scholarshipregistrations.regist_id
         INNER JOIN organization ON organization.organization_id = scholarshiporganization.organization_id
-        WHERE scholarships.scholarship_id =? AND scholarshiporganization.organization_id =?
+        WHERE scholarships.scholarship_id =? AND scholarshiporganization.organization_id =? AND scholarshipregistrations.student_status != 'Pass' AND scholarshipregistrations.student_status != 'Fail'
         GROUP BY 
           student.student_id, 
           scholarshipregistrations.join_org, 
@@ -342,6 +342,80 @@ class ScholarshipRegistrations {
       throw error; // ส่งต่อข้อผิดพลาด
     }
   }
+
+  // ใช้ดึงข้อมูล Matching
+  static async findByIdEditMatching({scholarship_id, organization_id}) {
+    try {
+      // Query เพื่อดึงข้อมูลนักศึกษา พร้อมกับทักษะและระดับทักษะ
+      const [rows] = await promisePool.query(`
+        SELECT 
+          student.student_id,
+          student.student_firstname,
+          student.student_lastname,
+          student.student_faculty,
+          student.student_curriculum,
+          student.student_year,
+          student.student_gpa,
+          student.student_phone,
+          scholarshipregistrations.student_status,
+          scholarshipregistrations.join_org,
+          scholarshipregistrations.regist_id,
+          GROUP_CONCAT(DISTINCT skills.skill_name ORDER BY skills.skill_name ASC) AS skill_names,
+          GROUP_CONCAT(DISTINCT studentskills.skill_level ORDER BY studentskills.skill_level ASC) AS skill_levels,
+          datetimeavailable.date_available,
+          organization.organization_name
+        FROM scholarshipregistrations
+        INNER JOIN student ON scholarshipregistrations.student_id = student.student_id
+        LEFT JOIN studentskills ON student.student_id = studentskills.student_id
+        LEFT JOIN skills ON studentskills.skill_id = skills.skill_id
+        INNER JOIN scholarships ON scholarshipregistrations.scholarship_id = scholarships.scholarship_id
+        INNER JOIN scholarshiporganization ON scholarships.scholarship_id = scholarshiporganization.scholarship_id
+        INNER JOIN datetimeavailable ON datetimeavailable.regist_id = scholarshipregistrations.regist_id
+        INNER JOIN organization ON organization.organization_id = scholarshiporganization.organization_id
+        WHERE scholarships.scholarship_id =? AND scholarshiporganization.organization_id =? AND scholarshipregistrations.student_status != 'Pending'
+        GROUP BY 
+          student.student_id, 
+          scholarshipregistrations.join_org, 
+          datetimeavailable.date_available, 
+          organization.organization_name, 
+          scholarshipregistrations.regist_id;`,
+        [scholarship_id, organization_id]
+      );
+      
+
+      if (rows.length === 0) {
+        return null; // คืนค่า null หากไม่พบข้อมูลนักศึกษา
+      }
+
+      // จัดกลุ่มข้อมูลให้เป็นรูปแบบที่ใช้งานง่าย
+      const student = {
+        student_id: rows[0].student_id,
+        student_firstname: rows[0].student_firstname,
+        student_lastname: rows[0].student_lastname,
+        student_faculty: rows[0].student_faculty,
+        student_curriculum: rows[0].student_curriculum,
+        student_year: rows[0].student_year,
+        student_gpa: rows[0].student_gpa,
+        student_phone: rows[0].student_phone,
+        student_status: rows[0].student_status, // Use the correct field
+        join_org: rows[0].join_org,
+        skills: rows[0].skill_names ? rows[0].skill_names.split(",") : [], // Split skill names into an array
+        skill_levels: rows[0].skill_levels
+          ? rows[0].skill_levels.split(",")
+          : [], // Split skill levels into an array
+        date_available: rows[0].date_available,
+        organization_name: rows[0].organization_name,
+      };
+
+      console.log(rows, "rows");
+
+      return rows;
+    } catch (error) {
+      console.error("Error finding student by ID:", error);
+      throw error; // ส่งต่อข้อผิดพลาด
+    }
+  }
+
 }
 
 export default ScholarshipRegistrations;

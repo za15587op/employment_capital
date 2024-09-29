@@ -27,7 +27,7 @@ export default function AdminPage() {
   const fetchStudentData = async (scholarship_id, organization_id) => {
     try {
       const res = await fetch(
-        `${apiUrl}/api/matching/${scholarship_id}/${organization_id}`,
+        `${apiUrl}/api/matching/edit/${scholarship_id}/${organization_id}`,
         {
           method: "GET",
         }
@@ -115,13 +115,6 @@ export default function AdminPage() {
       console.error("Error during matching:", error);
     }
   };
-
-  const handleEvaluate = (organization_id) => {
-    router.push(`${apiUrl}/evaluateStudent/editEvaluateStudent/${scholarship_id}/${organization_id}`);
-    
-};
-
-
   
   
 
@@ -189,12 +182,6 @@ export default function AdminPage() {
               <h1 className="text-xl font-bold text-gray-800">ปีการศึกษาที่: {AcademicYear}</h1>
               <h1 className="text-xl font-bold text-gray-800">เทอมการศึกษาที่: {AcademicTerm}</h1>
               <h1 className="text-xl font-bold text-gray-800">หน่วยงาน: {organizationName}</h1>
-              <button
-                onClick={() => handleEvaluate(organization_id)}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-              >
-                แก้ไขประเมิน
-              </button>
               <button
                 onClick={() => Back(scholarship_id)}
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
