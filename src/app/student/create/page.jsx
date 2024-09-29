@@ -157,7 +157,7 @@ function StudentForm({ params }) {
           const result = await res.json(); // ดึงข้อมูล response ที่ได้จากเซิร์ฟเวอร์ (รวมถึง student_id)
   
           // อัปเดต session ด้วย student_id ที่ได้รับ
-          await fetch(`$/api/update-session`, {
+          await fetch("/api/update-session", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ student_id: result.student_id }),
