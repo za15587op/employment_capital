@@ -153,6 +153,12 @@ export default function AdminPage() {
     }));
   };
 
+  
+  const organizationName = studentData?.length > 0 ? studentData[0].organization_name : organization_id;
+  const AcademicYear = studentData?.length > 0 ? studentData[0].academic_year : "";
+  const AcademicTerm = studentData?.length > 0 ? studentData[0].academic_term : "";
+
+
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
@@ -419,10 +425,6 @@ export default function AdminPage() {
 //       [regist_id]: student_status,
 //     }));
 //   };
-
-//   const organizationName = studentData?.length > 0 ? studentData[0].organization_name : organization_id;
-//   const AcademicYear = studentData?.length > 0 ? studentData[0].academic_year : "";
-//   const AcademicTerm = studentData?.length > 0 ? studentData[0].academic_term : "";
 
 //   return (
 //     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
