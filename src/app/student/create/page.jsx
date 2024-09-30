@@ -155,14 +155,16 @@ function StudentForm({ params }) {
   
         if (res.ok) {
           const data = await res.json();
-    
-          // // อัปเดต session ด้วย student_id ที่ได้รับ
-          // await fetch("/api/update-session", {
-          //   method: "POST",
-          //   headers: { "Content-Type": "application/json" },
-          //   body: JSON.stringify({ student_id: data.student_id }),
-          // });
-  
+          
+          // อัปเดต session ด้วย student_id ที่ได้รับ
+          await fetch("/api/update-session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ student_id: data.student_id }),
+            
+          });
+          console.log(body,"body");
+          
           setError("");
           setSuccess(true); // Trigger success notification
           setTimeout(() => {

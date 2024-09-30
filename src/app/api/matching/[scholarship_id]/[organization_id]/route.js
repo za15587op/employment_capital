@@ -1,7 +1,6 @@
 // src/app/api/showScholarshipAll/showStdOrgan/[scholarship_id]/[organization_id]/route.js
 
 import { NextResponse } from "next/server";
-import Student from "../../../../../../models/student";
 import ScholarshipRegistrations from "../../../../../../models/scholarshipregistrations";
 
 // ฟังก์ชัน API ที่ถูกต้องพร้อมพารามิเตอร์จาก dynamic route
