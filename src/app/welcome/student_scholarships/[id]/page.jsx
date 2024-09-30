@@ -31,6 +31,7 @@ export default function ScholarshipRegistration({ params }) {
     if (!session) {
       router.push("/login");
     }
+    router.refresh();
   }, [status, session, router]);
 
   let scholarship_id = params?.id;
