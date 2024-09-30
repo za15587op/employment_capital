@@ -15,8 +15,10 @@ export async function GET(req, { params }) {
     // Query เพื่อดึงข้อมูลหน่วยงานที่เกี่ยวข้องกับ scholarship_id
     const [rows] = await promisePool.query(
       `SELECT o.organization_id, o.organization_name, o.contactPhone
-       FROM organization o`,
-      // [scholarship_id]
+       FROM organization o 
+       JOIN scholarshiporganization so ON so.organization_id = o.organization_id 
+       WHERE so.scholarship_id = ?`,
+      [scholarship_id]
     );
 
     if (rows.length === 0) {
