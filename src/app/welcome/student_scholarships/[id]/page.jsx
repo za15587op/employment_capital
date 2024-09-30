@@ -12,9 +12,7 @@ export default function ScholarshipRegistration({ params }) {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const router = useRouter();
-  const student_id = session?.user?.student_id || null;  // ตรวจสอบ session ก่อนใช้
-  console.log(student_id,"student_id");
-  
+  const student_id = session.user.student_id || null;  // ตรวจสอบ session ก่อนใช้
 
 
 
@@ -31,7 +29,6 @@ export default function ScholarshipRegistration({ params }) {
     if (!session) {
       router.push("/login");
     }
-    router.refresh();
   }, [status, session, router]);
 
   let scholarship_id = params?.id;
