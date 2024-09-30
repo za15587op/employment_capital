@@ -155,21 +155,9 @@ function StudentForm({ params }) {
   
         if (res.ok) {
           const data = await res.json();
-          console.log(data,"data");
-          
-          
-          // อัปเดต session ด้วย student_id ที่ได้รับ
-          await fetch("/api/update-session", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ student_id: data.student_id }),
-            
-          });
-          console.log(body,"body");
 
-           // เรียก setSession เพื่ออัปเดต session ฝั่ง client (ใช้กับ next-auth)
-        const { setSession } = require('next-auth/react');
-        setSession({ ...session, user: { ...session.user, student_id: data.student_id } });
+          // อัปเดต session ในฝั่ง client ด้วย update()
+          update({ ...session, user: { ...session.user, student_id: data.student_id } });
 
           setError("");
           setSuccess(true); // Trigger success notification
