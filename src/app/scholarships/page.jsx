@@ -25,7 +25,6 @@ function ShowScholarships() {
     if (!session) {
       router.push("/login");
     } else {
-      
       const fetchScholarships = async () => {
         try {
           const res = await fetch(`${apiUrl}/api/scholarships`);

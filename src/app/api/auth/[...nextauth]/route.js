@@ -57,32 +57,25 @@ const authOptions = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                // return {
-                //   ...token,
-                //   id: user.id,
-                //   role: user.role,
-                //   student_id: user.student_id // Pass student_id from user to token
-                // };
-                token.id = user.id;
-                token.role = user.role;
-                token.student_id = user.student_id; // Pass student_id from user to token
+                return {
+                  ...token,
+                  id: user.id,
+                  role: user.role,
+                  student_id: user.student_id // Pass student_id from user to token
+                };
               }
             return token;
         },
         async session({ session, token }) {
-            // return {
-            //     ...session,
-            //     user: {
-            //         ...session.user,
-            //         id: token.id,
-            //         role: token.role,
-            //         student_id: token.student_id, // Include student_id in session
-            //     }
-            // };
-            session.user.id = token.id;
-      session.user.role = token.role;
-      session.user.student_id = token.student_id; // Include student_id in session
-      return session;
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    id: token.id,
+                    role: token.role,
+                    student_id: token.student_id, // Include student_id in session
+                }
+            };
         }
     }
 };
