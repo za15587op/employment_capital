@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 
 function StudentForm({ params }) {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session, status , update } = useSession();
   const [student_id, setStudentID] = useState("");
   const [student_firstname, setStudentFirstName] = useState("");
   const [student_lastname, setStudentLastName] = useState("");
@@ -156,7 +156,6 @@ function StudentForm({ params }) {
         if (res.ok) {
           const data = await res.json();
 
-          // อัปเดต session ในฝั่ง client ด้วย update()
           update({ ...session, user: { ...session.user, student_id: data.student_id } });
 
           setError("");
@@ -414,3 +413,4 @@ function StudentForm({ params }) {
 }
 
 export default StudentForm;
+
