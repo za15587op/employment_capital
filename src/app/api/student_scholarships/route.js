@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import ScholarshipRegistrations from "../../../../models/scholarshipregistrations";
 import DateTimeAvailable from "../../../../models/datetimeavailable";
-import { uploadFileToHostinger } from "../lib/fileUploadHelper"; // ใช้ import แบบ ESM
+const { uploadFileToHostinger } = require('./lib/fileUploadHelper');
 
-// ฟังก์ชันช่วยจัดการอัปโหลดไฟล์ไปยัง Hostinger หรือโฮสต์อื่น ๆ
 async function handleFileUpload(formData) {
   const scholarships = JSON.parse(formData.get("scholarships"));
   const file = formData.get("file");
