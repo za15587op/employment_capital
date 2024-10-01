@@ -121,6 +121,9 @@ function Navbar({ session }) {
             <>
               {sessionData.user.role === "student" && (
                 <>
+                 <div className="text-blue-500">
+                     {sessionData.user.name}!
+                  </div>
                   <Link href="/homeSt">
                     <button
                       className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
@@ -177,6 +180,9 @@ function Navbar({ session }) {
                 <div className="flex items-center justify-between px-4 py-2">
                   <div className="flex-grow flex justify-center items-center space-x-4">
                     <div className="text-center">
+                    <div className="text-blue-500"> 
+                     {sessionData.user.name}!
+                  </div>
                       <Link href="/scholarships">
                         <button
                           className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
@@ -218,13 +224,12 @@ function Navbar({ session }) {
                   </div>
                 </div>
               )}
+                   
             </>
           )}
-                            {/* <div className="text-blue-500">
-                    ยินดีต้อนรับ, {sessionData.user.name}!
-                  </div> */}
         </div>
       </nav>
+      
     </header>
   );
 }

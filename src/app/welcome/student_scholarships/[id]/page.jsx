@@ -156,9 +156,10 @@ export default function ScholarshipRegistration({ params }) {
       formData.append("date_available", JSON.stringify(dateAvailable));
       formData.append("scholarships", JSON.stringify(scholarships));
 
-      if (fileInput.files.length > 0) {
-        formData.append("file", fileInput.files[0]);
-      }
+      //ถ้าแก้เพิ่มไฟล์ตอน deploy ไม่ทันให้comment 160 - 162
+      // if (fileInput.files.length > 0) {
+      //   formData.append("file", fileInput.files[0]);
+      // }
 
       const response = await fetch(`${apiUrl}/api/student_scholarships`, {
         method: "POST",
@@ -243,7 +244,8 @@ export default function ScholarshipRegistration({ params }) {
           </div>
 
           <div className="flex flex-col space-y-4">
-            <div>
+          {/* //ถ้าแก้เพิ่มไฟล์ตอน deploy ไม่ทันให้comment 248 - 257 */}
+            {/* <div>
               <label htmlFor="file" className="font-medium text-gray-700">อัปโหลดไฟล์ผลงานที่เกี่ยวข้อง:(ถ้ามี*)</label>
               <input
                 type="file"
@@ -252,7 +254,7 @@ export default function ScholarshipRegistration({ params }) {
                 onChange={(e) => setRelatedWorks(e.target.value)}
                 className="block mt-2 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
               />
-            </div>
+            </div> */}
             <label>ปฎิบัติงานนอกเวลาได้หรือไม่ (สามารถเลือกได้เพียงหนึ่ง)</label>
             <div className="flex space-x-4">
               <div className="flex items-center space-x-2">

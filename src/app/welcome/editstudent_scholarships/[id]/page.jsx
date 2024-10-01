@@ -28,8 +28,8 @@ export default function EditScholarshipRegistration({ params }) {
 
   const [relatedWorks, setRelatedWorks] = useState("");
   const [file, setFile] = useState(null);
-  const [isPartTime, setIsPartTime] = useState("");
-  const [dateAvailable, setDateAvailable] = useState([]);2
+  const [isPartTime, setIsPartTime] = useState(""); // สำหรับ radio
+  const [dateAvailable, setDateAvailable] = useState([]); 
   const [scholarship_id, setScholarshipId] = useState("");
   const [academic_year, setAcademicYear] = useState("");
   const [academic_term, setAcademicTerm] = useState("");
@@ -42,25 +42,22 @@ export default function EditScholarshipRegistration({ params }) {
   const [student_phone, setStudentPhone] = useState("");
 
   const weekDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
-  
+  const weekendDays = ["เสาร์", "อาทิตย์"]; // เพิ่มวันเสาร์และวันอาทิตย์
 
   const getExistingData = async () => {
     try {
       const res = await fetch(`${apiUrl}/api/student_scholarships/edit/${regist_id}`, {
         method: "GET",
       });
-  
+
       if (!res.ok) {
         throw new Error("Failed to fetch");
       }
-  
+
       const data = await res.json();
-      console.log(data);
-  
       setRelatedWorks(data.related_works);
-      setIsPartTime(data.datetime_available[0]?.is_parttime);
-      // แสดงค่า date_available ที่เป็น array
-      setDateAvailable(data.datetime_available[0]?.date_available || []); // เข้าถึง date_available อย่างถูกต้อง
+      setIsPartTime(data.datetime_available[0]?.is_parttime); // เซ็ตค่าที่ดึงมาให้กับ isPartTime
+      setDateAvailable(data.datetime_available[0]?.date_available || []);
       setScholarshipId(data.scholarship_id);
       setAcademicTerm(data.academic_term);
       setAcademicYear(data.academic_year);
@@ -75,7 +72,6 @@ export default function EditScholarshipRegistration({ params }) {
       console.log(error);
     }
   };
-  
 
   useEffect(() => {
     if (regist_id) {
@@ -91,7 +87,7 @@ export default function EditScholarshipRegistration({ params }) {
       formData.append("student_id", session.user.student_id);
       formData.append("regist_id", regist_id);
       formData.append("related_works", relatedWorks);
-      formData.append("is_parttime", isPartTime);
+      formData.append("is_parttime", isPartTime); // เพิ่ม isPartTime
       formData.append("date_available", JSON.stringify(dateAvailable));   
       formData.append("academic_year", academic_year);
       formData.append("academic_term", academic_term);
@@ -127,28 +123,18 @@ export default function EditScholarshipRegistration({ params }) {
   };
 
   const handlePartTimeChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      if (value === "in_time" && isPartTime === "parttime") {
-        setIsPartTime("both");
-      } else if (value === "out_time" && isPartTime === "fulltime") {
-        setIsPartTime("both");
-      } else {
-        setIsPartTime(value === "in_time" ? "fulltime" : "parttime");
-      }
-    } else {
-      setIsPartTime("");
-      setDateAvailable([]);
-    }
+    setIsPartTime(e.target.value); // เปลี่ยนค่า isPartTime ตามค่าที่ผู้ใช้เลือก
   };
-  
+
   const renderDaysCheckboxes = () => {
-    const weekDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
-  
+    const availableDays = isPartTime === "นอกเวลาทำการที่กำหนด"
+      ? [...weekDays, ...weekendDays] // เพิ่มวันเสาร์และอาทิตย์เมื่อเลือกนอกเวลา
+      : weekDays;
+
     return (
       <div className="flex flex-wrap gap-4">
         <label className="font-semibold text-gray-600">เลือกวันที่คุณสามารถทำงานได้:</label>
-        {weekDays.map((day, index) => (
+        {availableDays.map((day, index) => (
           <div key={index} className="flex items-center space-x-2">
             <input
               type="checkbox"
@@ -164,7 +150,7 @@ export default function EditScholarshipRegistration({ params }) {
       </div>
     );
   };
-  
+
   const handleDaySelectionChange = (e, day) => {
     const { checked } = e.target;
     if (checked) {
@@ -173,8 +159,6 @@ export default function EditScholarshipRegistration({ params }) {
       setDateAvailable(dateAvailable.filter((selectedDay) => selectedDay !== day)); // ลบวันถ้า checkbox ถูกยกเลิกเลือก
     }
   };
-
-  
 
   return (
   <div className="bg-gray-50 min-h-screen flex flex-col">
@@ -212,7 +196,8 @@ export default function EditScholarshipRegistration({ params }) {
 
         <div className="flex flex-col space-y-4">
           {/* ไฟล์ที่อัปโหลด */}
-          <div>
+          {/* ถ้าแก้เพิ่มไฟล์ไม่ทันให้ 200 - 212 */}
+          {/* <div>
             <label htmlFor="file" className="font-medium text-gray-700">ไฟล์ที่อัปโหลดแล้ว:</label>{" "}
             <a href={`${apiUrl}/${relatedWorks}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
               ดูไฟล์ที่อัปโหลด
@@ -224,37 +209,38 @@ export default function EditScholarshipRegistration({ params }) {
               onChange={(e) => setFile(e.target.files[0])}
               className="block mt-2 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
             />
-          </div>
+          </div> */}
 
           {/* การทำงานในเวลาและนอกเวลา */}
+          <label>ปฎิบัติงานนอกเวลาได้หรือไม่ (สามารถเลือกได้เพียงหนึ่ง)</label>
           <div className="flex space-x-4">
             <div className="flex items-center space-x-2">
               <input
-                type="checkbox"
+                type="radio"
                 id="in_time"
-                value="in_time"
-                checked={isPartTime === "fulltime" || isPartTime === "both"}
+                value="ในเวลาที่กำหนด"
+                checked={isPartTime === "ในเวลาที่กำหนด"} // แสดงผลสถานะ
                 onChange={handlePartTimeChange}
                 className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
               />
-              <label htmlFor="in_time" className="text-gray-700">ในเวลา</label>
+              <label htmlFor="in_time" className="text-gray-700">ในเวลาที่กำหนด</label>
             </div>
 
             <div className="flex items-center space-x-2">
               <input
-                type="checkbox"
+                type="radio"
                 id="out_time"
-                value="out_time"
-                checked={isPartTime === "parttime" || isPartTime === "both"}
+                value="นอกเวลาทำการที่กำหนด"
+                checked={isPartTime === "นอกเวลาทำการที่กำหนด"} // แสดงผลสถานะ
                 onChange={handlePartTimeChange}
                 className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
               />
-              <label htmlFor="out_time" className="text-gray-700">นอกเวลา</label>
+              <label htmlFor="out_time" className="text-gray-700">นอกเวลาทำการที่กำหนด</label>
             </div>
           </div>
 
-          {isPartTime === "fulltime" || isPartTime === "both" ? renderDaysCheckboxes() : null}
-
+          {/* แสดงวันที่สามารถทำงานได้ */}
+          {isPartTime && renderDaysCheckboxes()}
         </div>
 
         {/* ปุ่มบันทึกการแก้ไข */}
@@ -300,4 +286,3 @@ export default function EditScholarshipRegistration({ params }) {
   </div>
 );
 }
-
