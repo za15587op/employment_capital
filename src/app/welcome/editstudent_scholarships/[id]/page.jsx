@@ -212,7 +212,6 @@ export default function EditScholarshipRegistration({ params }) {
           </div> */}
 
           {/* การทำงานในเวลาและนอกเวลา */}
-          <label>ปฎิบัติงานนอกเวลาได้หรือไม่ (สามารถเลือกได้เพียงหนึ่ง)</label>
           <div className="flex space-x-4">
             <div className="flex items-center space-x-2">
               <input

@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation"; 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; 
+import Navbar from "@/app/components/Navbar";
+import Foter from "@/app/components/Foter";
 
 export default function AdminPage() {
   let { scholarship_id, organization_id } = useParams(); // Extract params from URL
@@ -153,6 +155,10 @@ export default function AdminPage() {
     }));
   };
 
+  const ViewDetails = (regist_id) => {
+    router.push(`${apiUrl}/evaluateStudent/evaluateStudentDetail/${organization_id}/${regist_id}`);
+  };
+
   
   const organizationName = studentData?.length > 0 ? studentData[0].organization_name : organization_id;
   const AcademicYear = studentData?.length > 0 ? studentData[0].academic_year : "";
@@ -162,6 +168,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
+      <Navbar/>
       <div className="container mx-auto px-4 py-6">
         <div className="bg-white shadow-lg rounded-lg px-6 py-6 w-full mb-6">
           <div className="bg-blue-500 text-white px-5 py-3 rounded-lg w-full text-center shadow-lg">
@@ -187,6 +194,7 @@ export default function AdminPage() {
                     <th className="px-4 py-2 border">ผ่าน</th>
                     <th className="px-4 py-2 border">ไม่ผ่าน</th>
                     <th className="px-4 py-2 border">เปอร์เซ็นต์ Matching</th>
+                    <th className="px-4 py-2 border">ดูรายละเอียด</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -226,7 +234,14 @@ export default function AdminPage() {
                           ? `${matchPercentage[student.student_id].toFixed(2)}%`
                           : "กำลังโหลด..."}
                       </td>
-                  
+                      <td className="border px-4 py-2 text-center">
+                        <button
+                          onClick={() => ViewDetails(student.regist_id)}
+                          className="text-blue-500 hover:underline"
+                        >
+                          ดูรายละเอียด
+                        </button>
+                      </td> 
                     </tr>
                   ))}
                 </tbody>
@@ -245,6 +260,7 @@ export default function AdminPage() {
             </div>
           </form>
         </div>
+        <Foter/>
       </div>
 
     </div>

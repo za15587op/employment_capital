@@ -255,69 +255,71 @@ function ShowScholarshipGenPDF() {
     fetchGetData();
   }, []);
 
-  // ฟังก์ชันสำหรับจัดกลุ่มนิสิตตามหน่วยงานที่ผ่านการประเมิน
-  const groupByOrganization = () => {
-    return getData.reduce((groups, student) => {
-      const organization = student.organization_name || "ไม่ทราบหน่วยงาน";
-      if (!groups[organization]) {
-        groups[organization] = [];
-      }
-      groups[organization].push(student);
-      return groups;
-    }, {});
-  };
 
   const generatePDF = () => {
     if (getData.length === 0) {
       alert("ไม่มีข้อมูลในการสร้าง PDF");
       return;
     }
-
+  
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
-
+  
     // ตั้งค่าฟอนต์เป็น THSarabunNew
     doc.setFont("THSarabunNew", "normal");
-
+  
     // ใส่หัวข้อในเอกสาร PDF
-    doc.setFontSize(18);
-    doc.text("รายชื่อนักศึกษาที่ผ่านทุนจ้างงาน", pageWidth / 2, 22, { align: "center" });
-    doc.text("ทุนจ้างงานปีการศึกษาที่", pageWidth / 2, 30, { align: "center" });
-    doc.text("เทอมศึกษาที่", pageWidth / 2, 36, { align: "center" });
-
-    const groupedData = groupByOrganization();
-
-    Object.keys(groupedData).forEach((organization, index) => {
-      if (index > 0) doc.addPage(); // เพิ่มหน้าใหม่สำหรับแต่ละหน่วยงาน
-
-      doc.setFontSize(16);
-      doc.text(`หน่วยงาน: ${organization}`, pageWidth / 2, 44, { align: "center" });
-
-      const studentsData = groupedData[organization].map((student, idx) => [
-        idx + 1,
-        student.student_id,
-        `${student.student_firstname} ${student.student_lastname}`,
-        student.student_curriculum,
-        student.student_gpa,
-      ]);
-
-      doc.autoTable({
-        head: [["ลำดับที่", "รหัสนิสิต", "ชื่อ-นามสกุล", "สาขา", "GPA"]],
-        body: studentsData,
-        startY: 52,
-        styles: { font: "THSarabunNew", fontSize: 14 },
-        didDrawPage: (data) => {
-          doc.setFontSize(10);
-          doc.text(`${doc.internal.getNumberOfPages()}`, pageWidth - 20, 285);
-        },
-      });
+    doc.setFontSize(20);
+    doc.setTextColor(0, 0, 0); // สีดำสำหรับข้อความ
+    doc.text("รายชื่อนักศึกษาที่ผ่านทุนจ้างงาน", pageWidth / 2, 20, { align: "center" });
+  
+    // เพิ่มเส้นแบ่งใต้หัวข้อ
+    doc.setLineWidth(0.5);
+    doc.setDrawColor(0, 0, 0); // สีดำสำหรับเส้น
+    doc.line(15, 25, pageWidth - 15, 25);
+  
+    // เตรียมข้อมูลนักศึกษาทั้งหมด
+    const studentsData = getData.map((student, idx) => [
+      idx + 1,
+      student.student_id,
+      `${student.student_firstname} ${student.student_lastname}`,
+      student.student_curriculum,
+      student.student_gpa,
+    ]);
+  
+    // สร้างตารางข้อมูลนักศึกษาใน PDF เป็นขาวดำ
+    doc.autoTable({
+      head: [["ลำดับที่", "รหัสนิสิต", "ชื่อ-นามสกุล", "สาขา", "GPA"]],
+      body: studentsData,
+      startY: 30, // เริ่มต้นตารางใต้หัวข้อ
+      styles: {
+        font: "THSarabunNew",
+        fontSize: 14,
+        textColor: [0, 0, 0], // สีดำสำหรับข้อความในตาราง
+      },
+      headStyles: {
+        fillColor: [200, 200, 200], // สีเทาอ่อนสำหรับหัวตาราง
+        textColor: [0, 0, 0], // สีดำสำหรับข้อความหัวตาราง
+      },
+      bodyStyles: {
+        fillColor: [255, 255, 255], // สีขาวสำหรับพื้นหลัง
+      },
+      theme: "grid", // เพิ่มเส้นตารางรอบข้อมูล
+      didDrawPage: (data) => {
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0); // สีดำสำหรับหมายเลขหน้า
+        doc.text(`${doc.internal.getNumberOfPages()}`, pageWidth - 20, 285);
+      },
     });
-
+  
+    // บันทึก PDF
     doc.save("students_list.pdf");
-
+  
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
   };
+  
+  
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
@@ -327,7 +329,7 @@ function ShowScholarshipGenPDF() {
           <div className="bg-blue-500 text-white px-5 py-3 rounded-lg w-full text-center shadow-lg">
             <h3 className="text-2xl font-bold">พิมพ์รายชื่อนิสิตจ้างงาน ที่ผ่านการคัดเลือก</h3>
           </div>
-
+  
           <div className="mt-6">
             {error && <div className="text-red-500 mb-4">{error}</div>}
             {loading ? (
@@ -342,29 +344,24 @@ function ShowScholarshipGenPDF() {
                     Generate PDF
                   </button>
                 </div>
-
-                {/* แสดงข้อมูลนิสิตที่จัดกลุ่มตามหน่วยงาน */}
+  
+                {/* แสดงข้อมูลนิสิตที่ผ่านการคัดเลือกทั้งหมด */}
                 <div className="mt-6">
-                  {Object.entries(groupByOrganization()).map(([organization, students]) => (
-                    <div key={organization} className="mb-8">
-                      <h4 className="text-xl font-bold mb-4">หน่วยงาน: {organization}</h4>
-                      {students.map((student, index) => (
-                        <div
-                          key={`${student.student_id}-${index}`}
-                          className="mb-4 border-b pb-2"
-                        >
-                          <div className="flex flex-wrap gap-4">
-                            <p className="flex-shrink-0">
-                              <strong>
-                                {student.student_firstname} {student.student_lastname}
-                              </strong>{" "}
-                              (ID: {student.student_id})
-                            </p>
-                            <p className="flex-shrink-0">สาขา: {student.student_curriculum}</p>
-                            <p className="flex-shrink-0">GPA: {student.student_gpa}</p>
-                          </div>
-                        </div>
-                      ))}
+                  {getData.map((student, index) => (
+                    <div
+                      key={`${student.student_id}-${index}`}
+                      className="mb-4 border-b pb-2"
+                    >
+                      <div className="flex flex-wrap gap-4">
+                        <p className="flex-shrink-0">
+                          <strong>
+                            {student.student_firstname} {student.student_lastname}
+                          </strong>{" "}
+                          (ID: {student.student_id})
+                        </p>
+                        <p className="flex-shrink-0">สาขา: {student.student_curriculum}</p>
+                        <p className="flex-shrink-0">GPA: {student.student_gpa}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -373,7 +370,7 @@ function ShowScholarshipGenPDF() {
               <p>ไม่พบข้อมูลนักศึกษา</p>
             )}
           </div>
-
+  
           {showSuccess && (
             <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-[#0fef76] to-[#09c9f6] border-2 border-[#0F1035] rounded-lg shadow-[0px_0px_20px_5px_rgba(15,239,118,0.5)] text-center transition-all duration-500 ease-out animate-pulse">
               <div className="flex items-center justify-center space-x-4">
@@ -402,6 +399,7 @@ function ShowScholarshipGenPDF() {
       <Foter />
     </div>
   );
+  
 }
 
 export default ShowScholarshipGenPDF;
