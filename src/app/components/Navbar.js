@@ -26,7 +26,7 @@ function Navbar({ session }) {
       cancelButtonColor: '#d33',
       confirmButtonText: 'ออกจากระบบ',
       cancelButtonText: 'ยกเลิก',
-      background: '#f9fafb', 
+      background: '#f9fafb',
       customClass: {
         popup: 'rounded-lg shadow-lg',
         title: 'font-bold text-gray-800',
@@ -35,7 +35,7 @@ function Navbar({ session }) {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        signOut(); 
+        signOut();
       }
     });
   };
@@ -81,7 +81,7 @@ function Navbar({ session }) {
       <nav className="relative z-10 flex items-center justify-between p-4 bg-gray-800 w-full">
         <div className="flex items-center justify-center w-full">
           <Image
-            src="/thaksin3.png" 
+            src="/thaksin3.png"
             alt="Thaksin University Logo"
             width={80}
             height={80}
@@ -116,13 +116,12 @@ function Navbar({ session }) {
                   สมัครสมาชิก
                 </button>
               </Link>
-          </>
-          
+            </>
           ) : (
             <>
               {sessionData.user.role === "student" && (
                 <>
-               <Link href="/homeSt">
+                  <Link href="/homeSt">
                     <button
                       className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                       style={{ fontSize: "20px" }}
@@ -138,7 +137,7 @@ function Navbar({ session }) {
                       ขั้นตอนการสมัครทุน
                     </button>
                   </Link>
-                <Link href="/welcome">
+                  <Link href="/welcome">
                     <button
                       className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                       style={{ fontSize: "20px" }}
@@ -154,7 +153,6 @@ function Navbar({ session }) {
                       ติดตามผลการสมัคร
                     </button>
                   </Link>
-  
                   <button
                     onClick={handleProfileClick}
                     className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
@@ -162,18 +160,19 @@ function Navbar({ session }) {
                   >
                     โปรไฟล์
                   </button>
-                   <div className="text-center">
-                      <button
-                        className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
-                        style={{ fontSize: "20px" }}
-                        onClick={handleSignOut} 
-                      >
-                        ออกจากระบบ
-                      </button>
-                    </div>
-              </>
+
+                  <div className="text-center">
+                    <button
+                      className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                      style={{ fontSize: "20px" }}
+                      onClick={handleSignOut}
+                    >
+                      ออกจากระบบ
+                    </button>
+                  </div>
+                </>
               )}
-                
+
               {sessionData.user.role === "admin" && (
                 <div className="flex items-center justify-between px-4 py-2">
                   <div className="flex-grow flex justify-center items-center space-x-4">
@@ -197,16 +196,6 @@ function Navbar({ session }) {
                         </button>
                       </Link>
                     </div>
-                    {/* <div className="text-center">
-                      <Link href="/matching_admin">
-                        <button
-                          className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
-                          style={{ fontSize: "20px" }}
-                        >
-                          ดูผลการจับคู่
-                        </button>
-                      </Link>
-                    </div> */}
                     <div className="text-center">
                       <Link href="/homeAdmin/genPDF">
                         <button
@@ -221,7 +210,7 @@ function Navbar({ session }) {
                       <button
                         className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                         style={{ fontSize: "20px" }}
-                        onClick={handleSignOut} 
+                        onClick={handleSignOut}
                       >
                         ออกจากระบบ
                       </button>
@@ -231,6 +220,9 @@ function Navbar({ session }) {
               )}
             </>
           )}
+                            {/* <div className="text-blue-500">
+                    ยินดีต้อนรับ, {sessionData.user.name}!
+                  </div> */}
         </div>
       </nav>
     </header>

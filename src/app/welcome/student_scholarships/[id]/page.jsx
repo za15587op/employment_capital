@@ -12,17 +12,13 @@ export default function ScholarshipRegistration({ params }) {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const router = useRouter();
-  const student_id = session?.user?.student_id || null;  // ตรวจสอบ session ก่อนใช้
-
-
+  const student_id = session?.user?.student_id || null;
 
   const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     region: process.env.AWS_REGION,
   });
-
-  
 
   useEffect(() => {
     if (status === "loading") return;
@@ -37,8 +33,6 @@ export default function ScholarshipRegistration({ params }) {
     scholarship_id = parts[parts.length - 1];
   }
 
-
-  // สถานะที่ต้องใช้ในฟอร์ม
   const [related_works, setRelatedWorks] = useState("");
   const [isPartTime, setIsPartTime] = useState("");
   const [dateAvailable, setDateAvailable] = useState([]);
@@ -59,20 +53,9 @@ export default function ScholarshipRegistration({ params }) {
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-
   const handlePartTimeChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      if (value === "in_time" && isPartTime === "นอกเวลาทำการที่กำหนด") {
-        setIsPartTime("ทำได้ทั้งในเวลาและนอกเวลา");
-      } else if (value === "out_time" && isPartTime === "ในเวลาที่กำหนด") {
-        setIsPartTime("ทำได้ทั้งในเวลาและนอกเวลา");
-      } else {
-        setIsPartTime(value === "in_time" ? "ในเวลาที่กำหนด" : "นอกเวลาทำการที่กำหนด");
-      }
-    } else {
-      setIsPartTime("");
-    }
+    const { value } = e.target;
+    setIsPartTime(value);
   };
 
   const handleDaySelectionChange = (e, day) => {
@@ -139,8 +122,6 @@ export default function ScholarshipRegistration({ params }) {
     }
   }, [student_id, scholarship_id]);
 
-  
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -183,7 +164,6 @@ export default function ScholarshipRegistration({ params }) {
         body: formData,
       });
 
-
       if (!response.ok) {
         const errorData = await response.json();
         if (errorData.error && errorData.error.includes("Duplicate entry")) {
@@ -205,16 +185,10 @@ export default function ScholarshipRegistration({ params }) {
   };
 
   const renderDaysCheckboxes = () => {
-    let daysToRender = [];
-
-    if (isPartTime === "ในเวลาที่กำหนด") {
-      daysToRender = weekDays;
-    }
-
     return (
       <div className="flex flex-wrap gap-4">
         <label className="font-semibold text-gray-600">เลือกวันที่สามารถทำงานได้:</label>
-        {daysToRender.map((day, index) => (
+        {weekDays.map((day, index) => (
           <div key={index} className="flex items-center space-x-2">
             <input
               type="checkbox"
@@ -274,14 +248,14 @@ export default function ScholarshipRegistration({ params }) {
                 className="block mt-2 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
               />
             </div>
-            <label>ปฎิบัติงานนอกเวลาได้หรือไม่ (สามารถเลือกได้ทั้งสองเวลา)</label>
+            <label>ปฎิบัติงานนอกเวลาได้หรือไม่ (สามารถเลือกได้เพียงหนึ่ง)</label>
             <div className="flex space-x-4">
               <div className="flex items-center space-x-2">
                 <input
-                  type="checkbox"
+                  type="radio"
                   id="in_time"
-                  value="in_time"
-                  checked={isPartTime === "ในเวลาที่กำหนด" || isPartTime === "ทำได้ทั้งในเวลาและนอกเวลา"}
+                  value="ในเวลาที่กำหนด"
+                  checked={isPartTime === "ในเวลาที่กำหนด"}
                   onChange={handlePartTimeChange}
                   className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
                 />
@@ -290,10 +264,10 @@ export default function ScholarshipRegistration({ params }) {
 
               <div className="flex items-center space-x-2">
                 <input
-                  type="checkbox"
+                  type="radio"
                   id="out_time"
-                  value="out_time"
-                  checked={isPartTime === "นอกเวลาทำการที่กำหนด" || isPartTime === "ทำได้ทั้งในเวลาและนอกเวลา"}
+                  value="นอกเวลาทำการที่กำหนด"
+                  checked={isPartTime === "นอกเวลาทำการที่กำหนด"}
                   onChange={handlePartTimeChange}
                   className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
                 />
@@ -316,7 +290,6 @@ export default function ScholarshipRegistration({ params }) {
         </form>
       </div>
 
-      {/* Success Message */}
       {success && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[60%] lg:w-[40%] p-6 bg-gradient-to-r from-green-400 to-blue-400 border-2 border-green-600 rounded-lg shadow-2xl text-center transition-all duration-500 ease-out">
           <div className="flex items-center justify-center space-x-4">

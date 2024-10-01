@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import Navbar from "@/app/components/Navbar";
 import Foter from "@/app/components/Foter";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+
 
 function StudentForm({ params }) {
   const router = useRouter();
@@ -165,9 +166,10 @@ function StudentForm({ params }) {
   
           setError("");
           setSuccess(true); // Trigger success notification
-          setTimeout(() => {
+          setTimeout(async () => {
             router.push(`${apiUrl}/homeSt`);
-          }, 2000); // Redirect after 2 seconds
+            await signOut(); // Log the user out after successful submission
+          }, 2000); // Redirect and logout after 2 seconds
         } else {
           console.log("student registration failed");
         }

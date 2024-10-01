@@ -21,6 +21,13 @@ except Exception as e:
 
 try:
     with connection.cursor() as cursor:
+        
+        cursor.execute("""SELECT *
+            FROM studentskills
+ INNER JOIN student ON studentskills.student_id = student.student_id """)
+        
+        cursor.execute("""""")
+        
         # ดึงข้อมูลคุณสมบัติ (features) จากตาราง
         cursor.execute("""
             SELECT student.student_id, student.student_firstname, student.student_lastname,
