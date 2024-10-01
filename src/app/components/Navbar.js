@@ -124,6 +124,7 @@ function Navbar({ session }) {
                  <div className="text-blue-500">
                      {sessionData.user.name}!
                   </div>
+                   <br/>
                   <Link href="/homeSt">
                     <button
                       className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
@@ -179,10 +180,11 @@ function Navbar({ session }) {
               {sessionData.user.role === "admin" && (
                 <div className="flex items-center justify-between px-4 py-2">
                   <div className="flex-grow flex justify-center items-center space-x-4">
-                    <div className="text-center">
-                    <div className="text-blue-500"> 
+                  <div className="text-blue-500"> 
                      {sessionData.user.name}!
                   </div>
+                    <div className="text-center">
+                    
                       <Link href="/scholarships">
                         <button
                           className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"

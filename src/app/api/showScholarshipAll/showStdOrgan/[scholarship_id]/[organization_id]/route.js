@@ -22,7 +22,8 @@ export async function GET(req, { params }) {
     if (!result) {
       return NextResponse.json({ message: "No data found" }, { status: 404 });
     }
-
+    console.log(result);
+    
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.error("Error fetching data:", error);

@@ -45,7 +45,7 @@ export default function ShowStdOrgan() {
       }
 
       const data = await res.json();
-      console.log(data); // Log data for debugging
+      console.log(data,"data"); // Log data for debugging
       setStudentData(data);
       setSuccess("ข้อมูลถูกโหลดสำเร็จ!"); // Set success message
     } catch (error) {
@@ -88,11 +88,11 @@ export default function ShowStdOrgan() {
 
   // Ensure we get organization_name[0] from the first student, if available
   const organizationName =
-    studentData.length > 0 ? studentData[0].organization_name : organization_id;
+    studentData.length > 0 ? studentData[0].organization_name : "";
   const AcademicYear =
-    studentData.length > 0 ? studentData[0].academic_year : organization_id;
+    studentData.length > 0 ? studentData[0].academic_year : "";
   const AcademicTerm =
-    studentData.length > 0 ? studentData[0].academic_term : organization_id;
+    studentData.length > 0 ? studentData[0].academic_term : "";
 
   return (
     <>
@@ -119,13 +119,6 @@ export default function ShowStdOrgan() {
             <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
               คณะ: {organizationName}
             </h1>
-
-            <button
-              onClick={() => handleMatching(organization_id)}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 ml-2"
-            >
-              จับคู่
-            </button>
             <button
               onClick={() => Back(scholarship_id)}
               className="bg-gradient-to-r from-blue-500 to-blue-400 text-white px-6 py-3 rounded-xl shadow-xl ml-2"
