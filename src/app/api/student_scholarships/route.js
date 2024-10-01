@@ -5,7 +5,7 @@ import ScholarshipRegistrations from "../../../../models/scholarshipregistration
 import DateTimeAvailable from "../../../../models/datetimeavailable";
 
 // กำหนดโฟลเดอร์ที่จะเก็บไฟล์ที่อัปโหลด
-const UPLOAD_DIR = path.resolve(process.cwd(), "public/uploads");
+const UPLOAD_DIR = path.resolve(process.cwd(), "https://employment-capital-vercel-app.preview-domain.com/public/uploads");
 
 // export const config = {
 //   api: {
@@ -38,7 +38,7 @@ async function handleFileUpload(formData) {
     fs.writeFileSync(filePath, buffer);
 
     // ส่งคืนพาธไฟล์เพื่อนำไปเก็บในฐานข้อมูล
-    return `/uploads/${newFileName}`;
+    return `https://employment-capital-vercel-app.preview-domain.com/uploads/${newFileName}`;
   }
 
   return null; // กรณีที่ไม่มีการอัปโหลดไฟล์
