@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import ScholarshipRegistrations from "../../../../models/scholarshipregistrations";
 import DateTimeAvailable from "../../../../models/datetimeavailable";
-import { uploadFileToHostinger } from "./fileUploadHelper"; // ใช้ import แบบ ESM
+import { uploadFileToHostinger } from "../lib/fileUploadHelper"; // ใช้ import แบบ ESM
 
 // ฟังก์ชันช่วยจัดการอัปโหลดไฟล์ไปยัง Hostinger หรือโฮสต์อื่น ๆ
 async function handleFileUpload(formData) {
