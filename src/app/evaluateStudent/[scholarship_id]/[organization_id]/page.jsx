@@ -159,6 +159,11 @@ export default function AdminPage() {
     router.push(`${apiUrl}/evaluateStudent/evaluateStudentDetail/${organization_id}/${regist_id}`);
   };
 
+    const handleEvaluate = (organization_id) => {
+    router.push(`${apiUrl}/evaluateStudent/editEvaluateStudent/${scholarship_id}/${organization_id}`);
+    
+};
+
   
   const organizationName = studentData?.length > 0 ? studentData[0].organization_name : organization_id;
   const AcademicYear = studentData?.length > 0 ? studentData[0].academic_year : "";
@@ -181,7 +186,12 @@ export default function AdminPage() {
               <h1 className="text-xl font-bold text-gray-800">เทอมการศึกษาที่: {AcademicTerm}</h1>
               <h1 className="text-xl font-bold text-gray-800">หน่วยงาน: {organizationName}</h1>
             </div>
-
+             <button
+               onClick={() => handleEvaluate(organization_id)}
+               className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+              >
+                แก้ไขประเมิน
+             </button>
             {studentData?.length > 0 ? (
               <table className="min-w-full bg-white table-auto border-collapse border">
                 <thead>
