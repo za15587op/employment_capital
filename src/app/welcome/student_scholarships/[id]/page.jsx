@@ -50,6 +50,7 @@ export default function ScholarshipRegistration({ params }) {
   const [successMessage, setSuccessMessage] = useState("");
 
   const weekDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
+  const weekendDays = ["เสาร์", "อาทิตย์"]; // Add weekend days
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -185,10 +186,14 @@ export default function ScholarshipRegistration({ params }) {
   };
 
   const renderDaysCheckboxes = () => {
+    const availableDays = isPartTime === "นอกเวลาทำการที่กำหนด"
+      ? [...weekDays, ...weekendDays] // Include Saturday and Sunday if outside working hours
+      : weekDays;
+  
     return (
       <div className="flex flex-wrap gap-4">
         <label className="font-semibold text-gray-600">เลือกวันที่สามารถทำงานได้:</label>
-        {weekDays.map((day, index) => (
+        {availableDays.map((day, index) => (
           <div key={index} className="flex items-center space-x-2">
             <input
               type="checkbox"
