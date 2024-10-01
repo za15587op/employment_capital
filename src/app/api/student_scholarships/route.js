@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import ScholarshipRegistrations from "../../../../models/scholarshipregistrations";
 import DateTimeAvailable from "../../../../models/datetimeavailable";
-const { uploadFileToHostinger } = require('./lib/fileUploadHelper');
+const { uploadFileToHostinger } = require('../../../../lib/fileUploadHelper');
+
 
 async function handleFileUpload(formData) {
   const scholarships = JSON.parse(formData.get("scholarships"));
