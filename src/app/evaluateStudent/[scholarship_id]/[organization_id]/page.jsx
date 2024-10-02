@@ -141,6 +141,7 @@ export default function AdminPage() {
       }
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
+      setSuccess("ข้อมูลถูกโหลดสำเร็จ!");
 
     } catch (error) {
       console.error("Error updating student status:", error);
