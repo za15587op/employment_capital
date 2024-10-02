@@ -27,14 +27,14 @@ function HomeStudentPage() {
     return date.toISOString().split("T")[0]; // "yyyy-MM-dd"
   };
 
-  // ฟังก์ชันสำหรับคำนวณจำนวนวันที่เหลือก่อนหมดเขตรับสมัคร
-  const calculateDaysLeft = (endDate) => {
-    const now = new Date();
-    const end = new Date(endDate);
-    const diffTime = end - now;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // แปลงเวลาเป็นจำนวนวัน
-    return diffDays;
-  };
+  // // ฟังก์ชันสำหรับคำนวณจำนวนวันที่เหลือก่อนหมดเขตรับสมัคร
+  // const calculateDaysLeft = (endDate) => {
+  //   const now = new Date();
+  //   const end = new Date(endDate);
+  //   const diffTime = end - now;
+  //   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // แปลงเวลาเป็นจำนวนวัน
+  //   return diffDays;
+  // };
 
   useEffect(() => {
     const fetchScholarships = async () => {
@@ -48,7 +48,7 @@ function HomeStudentPage() {
             ...scholarship,
             application_start_date: formatDateToYYYYMMDD(scholarship.application_start_date),
             application_end_date: formatDateToYYYYMMDD(scholarship.application_end_date),
-            daysLeft: calculateDaysLeft(scholarship.application_end_date), // เพิ่มข้อมูลวันเหลือ
+            // daysLeft: calculateDaysLeft(scholarship.application_end_date), // เพิ่มข้อมูลวันเหลือ
           }));
           setScholarships(formattedData);
         } else {
@@ -107,10 +107,10 @@ function HomeStudentPage() {
                 </div>
 
                 {/* Countdown Information */}
-                <div className="mt-4 flex items-center justify-center text-red-500">
+                {/* <div className="mt-4 flex items-center justify-center text-red-500">
                   <BsClockFill className="mr-2" />
                   <span className="text-sm">เหลือเวลาอีก {scholarship.daysLeft} วันในการสมัคร</span>
-                </div>
+                </div> */}
 
                 {/* Apply Button */}
                 <div className="mt-8 flex justify-center">
