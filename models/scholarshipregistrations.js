@@ -365,7 +365,9 @@ class ScholarshipRegistrations {
           GROUP_CONCAT(DISTINCT skills.skill_name ORDER BY skills.skill_name ASC) AS skill_names,
           GROUP_CONCAT(DISTINCT studentskills.skill_level ORDER BY studentskills.skill_level ASC) AS skill_levels,
           datetimeavailable.date_available,
-          organization.organization_name
+          organization.organization_name,
+           scholarships.academic_year,
+          scholarships.academic_term  
         FROM scholarshipregistrations
         INNER JOIN student ON scholarshipregistrations.student_id = student.student_id
         LEFT JOIN studentskills ON student.student_id = studentskills.student_id

@@ -39,7 +39,7 @@ export default function AdminPage() {
 
       const data = await res.json();
       console.log("Fetched student data:", data); // Log ข้อมูลนักศึกษาเพื่อดีบัก
-      setStudentData(data);
+      setStudentData(data, '');
       setSuccess("ข้อมูลถูกโหลดสำเร็จ!");
 
       // ดึงเปอร์เซ็นต์การแมตช์
