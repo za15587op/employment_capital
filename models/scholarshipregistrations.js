@@ -285,7 +285,7 @@ class ScholarshipRegistrations {
           student.student_gpa,
           student.student_phone,
           scholarshipregistrations.student_status,
-          scholarshipregistrations.join_org,
+          student.join_org,
           scholarshipregistrations.regist_id,
           GROUP_CONCAT(DISTINCT skills.skill_name ORDER BY skills.skill_name ASC) AS skill_names,
           GROUP_CONCAT(DISTINCT studentskills.skill_level ORDER BY studentskills.skill_level ASC) AS skill_levels,
@@ -301,10 +301,10 @@ class ScholarshipRegistrations {
         INNER JOIN scholarshiporganization ON scholarships.scholarship_id = scholarshiporganization.scholarship_id
         INNER JOIN datetimeavailable ON datetimeavailable.regist_id = scholarshipregistrations.regist_id
         INNER JOIN organization ON organization.organization_id = scholarshiporganization.organization_id
-        WHERE scholarships.scholarship_id =? AND scholarshiporganization.organization_id =? AND scholarshipregistrations.student_status != 'Pass' AND scholarshipregistrations.student_status != 'Fail'
+        WHERE scholarships.scholarship_id =? AND scholarshiporganization.organization_id =? AND scholarshipregistrations.student_status = 'Pending'
         GROUP BY 
           student.student_id, 
-          scholarshipregistrations.join_org, 
+          student.join_org, 
           datetimeavailable.date_available, 
           organization.organization_name, 
           scholarshipregistrations.regist_id;`,
@@ -360,7 +360,7 @@ class ScholarshipRegistrations {
           student.student_gpa,
           student.student_phone,
           scholarshipregistrations.student_status,
-          scholarshipregistrations.join_org,
+          student.join_org,
           scholarshipregistrations.regist_id,
           GROUP_CONCAT(DISTINCT skills.skill_name ORDER BY skills.skill_name ASC) AS skill_names,
           GROUP_CONCAT(DISTINCT studentskills.skill_level ORDER BY studentskills.skill_level ASC) AS skill_levels,
@@ -377,7 +377,7 @@ class ScholarshipRegistrations {
         WHERE scholarships.scholarship_id =? AND scholarshiporganization.organization_id =? AND scholarshipregistrations.student_status != 'Pending'
         GROUP BY 
           student.student_id, 
-          scholarshipregistrations.join_org, 
+          student.join_org, 
           datetimeavailable.date_available, 
           organization.organization_name, 
           scholarshipregistrations.regist_id;`,
