@@ -122,7 +122,7 @@ function Navbar({ session }) {
               {sessionData.user.role === "student" && (
                 <>
                  <div className="text-blue-500">
-                     {sessionData.user.name}!
+                     {sessionData.user.name}
                   </div>
                    <br/>
                   <Link href="/homeSt">
@@ -181,7 +181,7 @@ function Navbar({ session }) {
                 <div className="flex items-center justify-between px-4 py-2">
                   <div className="flex-grow flex justify-center items-center space-x-4">
                   <div className="text-blue-500"> 
-                     {sessionData.user.name}!
+                     {sessionData.user.name}
                   </div>
                     <div className="text-center">
                     
