@@ -35,10 +35,10 @@ function HomeStudentPage() {
         }
     }, [session, status, router]);
     
-    const calculateDaysLeft = (endDate) => {
-        const now = new Date();
+    const calculateDaysLeft = (startDate,endDate) => {
+        const start = new Date(startDate);
         const end = new Date(endDate);
-        const diffTime = end - now;
+        const diffTime = end - start;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         return diffDays;
     };
@@ -49,11 +49,21 @@ function HomeStudentPage() {
                 const res = await fetch(`${apiUrl}/api/showScholarshipsStd`);
                 if (res.ok) {
                     const data = await res.json();
+
+                              // ฟังก์ชันสำหรับแปลงวันที่ให้เป็นรูปแบบ YYYY-MM-DD และแปลงเป็นพุทธศักราช
+const formatDateToBuddhistEra = (dateString) => {
+    const date = new Date(dateString);
+    const yearBE = date.getFullYear() + 543; // แปลงปีเป็นพุทธศักราช
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // เติม 0 ข้างหน้าเดือนถ้าเป็นเลขตัวเดียว
+    const day = date.getDate().toString().padStart(2, "0"); // เติม 0 ข้างหน้าวันถ้าเป็นเลขตัวเดียว
+    return `${yearBE}-${month}-${day}`; // ส่งคืนรูปแบบ พ.ศ.-MM-DD
+  };
+
                     const formattedData = data.map((scholarship) => ({
                         ...scholarship,
-                        application_start_date: formatDateToYYYYMMDD(scholarship.application_start_date),
-                        application_end_date: formatDateToYYYYMMDD(scholarship.application_end_date),
-                        daysLeft: calculateDaysLeft(scholarship.application_end_date), // คำนวณจำนวนวัน
+                        application_start_date: formatDateToBuddhistEra(scholarship.application_start_date),
+                        application_end_date: formatDateToBuddhistEra(scholarship.application_end_date),
+                        daysLeft: calculateDaysLeft(scholarship.application_start_date , scholarship.application_end_date), // เพิ่มข้อมูลวันเหลือ
                     }));
                     setScholarships(formattedData);
                 } else {
