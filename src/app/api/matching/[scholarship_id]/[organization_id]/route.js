@@ -14,7 +14,7 @@ export async function GET(req, { params }) {
 
   try {
     // ดึงข้อมูลโดยใช้พารามิเตอร์ที่ส่งมา
-    const result = await ScholarshipRegistrations.findByIdMatching({
+    const result = await ScholarshipRegistrations.findByIdEvaluate({
       scholarship_id,
       organization_id,
     });

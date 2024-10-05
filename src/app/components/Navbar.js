@@ -204,7 +204,7 @@ function Navbar({ session }) {
                         </button>
                       </Link>
                     </div>
-                    <div className="text-center">
+                    {/* <div className="text-center">
                       <Link href="/homeAdmin/genPDF">
                         <button
                           className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
@@ -213,7 +213,7 @@ function Navbar({ session }) {
                           ออกรายงาน
                         </button>
                       </Link>
-                    </div>
+                    </div> */}
                     <div className="text-center">
                       <button
                         className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"

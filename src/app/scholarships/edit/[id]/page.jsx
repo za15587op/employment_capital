@@ -69,7 +69,14 @@ function EditScholarshipsPage({ params }) {
     if (!application_start_date || !application_end_date || !academic_year || !academic_term) {
       setError("กรุณากรอกข้อมูลให้ครบถ้วน!");
       return;
-    } else {
+    } 
+
+      // ตรวจสอบเงื่อนไขวันที่เปิดและปิดรับสมัคร
+      if (new Date(application_start_date) > new Date(application_end_date)) {
+        setError("วันที่เปิดรับสมัครต้องน้อยกว่าวันปิดรับสมัคร");
+        return;
+      }
+
       try {
         const res = await fetch(`${apiUrl}/api/scholarships/${scholarship_id}`, {
           method: "PUT",
@@ -100,7 +107,7 @@ function EditScholarshipsPage({ params }) {
       } catch (error) {
         setError("An error occurred during submission.");
         console.log("error", error);
-      }
+
     }
   };
 

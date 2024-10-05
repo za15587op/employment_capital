@@ -193,7 +193,7 @@ export default function ScholarshipRegistration({ params }) {
   
     return (
       <div className="flex flex-wrap gap-4">
-        <label className="font-semibold text-gray-600">เลือกวันที่สามารถทำงานได้:</label>
+        <label className="font-semibold text-gray-600">เลือกวันที่สามารถทำงานได้ :</label>
         {availableDays.map((day, index) => (
           <div key={index} className="flex items-center space-x-2">
             <input
@@ -245,7 +245,7 @@ export default function ScholarshipRegistration({ params }) {
 
           <div className="flex flex-col space-y-4">
           {/* //ถ้าแก้เพิ่มไฟล์ตอน deploy ไม่ทันให้comment 248 - 257 */}
-            {/* <div>
+            <div>
               <label htmlFor="file" className="font-medium text-gray-700">อัปโหลดไฟล์ผลงานที่เกี่ยวข้อง:(ถ้ามี*)</label>
               <input
                 type="file"
@@ -254,7 +254,7 @@ export default function ScholarshipRegistration({ params }) {
                 onChange={(e) => setRelatedWorks(e.target.value)}
                 className="block mt-2 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
               />
-            </div> */}
+            </div>
             <label>ปฎิบัติงานนอกเวลาได้หรือไม่ (สามารถเลือกได้เพียงหนึ่ง)</label>
             <div className="flex space-x-4">
               <div className="flex items-center space-x-2">
@@ -266,7 +266,7 @@ export default function ScholarshipRegistration({ params }) {
                   onChange={handlePartTimeChange}
                   className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
                 />
-                <label htmlFor="in_time" className="text-gray-700">ในเวลา</label>
+                <label htmlFor="in_time" className="text-gray-700">ในเวลา (8.00น. - 17.00น.)</label>
               </div>
 
               <div className="flex items-center space-x-2">
@@ -278,7 +278,7 @@ export default function ScholarshipRegistration({ params }) {
                   onChange={handlePartTimeChange}
                   className="h-5 w-5 border-gray-300 rounded focus:ring-indigo-500"
                 />
-                <label htmlFor="out_time" className="text-gray-700">นอกเวลา</label>
+                <label htmlFor="out_time" className="text-gray-700">นอกเวลา (17.00น. - 20.00น.)</label>
               </div>
             </div>
 

@@ -197,7 +197,7 @@ export default function EditScholarshipRegistration({ params }) {
         <div className="flex flex-col space-y-4">
           {/* ไฟล์ที่อัปโหลด */}
           {/* ถ้าแก้เพิ่มไฟล์ไม่ทันให้ 200 - 212 */}
-          {/* <div>
+          <div>
             <label htmlFor="file" className="font-medium text-gray-700">ไฟล์ที่อัปโหลดแล้ว:</label>{" "}
             <a href={`${apiUrl}/${relatedWorks}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
               ดูไฟล์ที่อัปโหลด
@@ -209,7 +209,7 @@ export default function EditScholarshipRegistration({ params }) {
               onChange={(e) => setFile(e.target.files[0])}
               className="block mt-2 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
             />
-          </div> */}
+          </div>
 
           {/* การทำงานในเวลาและนอกเวลา */}
           <div className="flex space-x-4">

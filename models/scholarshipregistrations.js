@@ -206,15 +206,17 @@ class ScholarshipRegistrations {
     }
   }
 
-  static async getGenPDF() {
+  static async getGenPDF( scholarship_id,organization_id) {
     try {
       const [rows] = await promisePool.query(`
             SELECT *
             FROM scholarshipregistrations
            inner JOIN scholarships ON scholarshipregistrations.scholarship_id = scholarships.scholarship_id
            inner JOIN student ON scholarshipregistrations.student_id = student.student_id
-            WHERE scholarshipregistrations.student_status = 'Pass'
-          `);
+           INNER JOIN scholarshiporganization ON scholarships.scholarship_id = scholarshiporganization.scholarship_id
+           INNER JOIN organization ON scholarshiporganization.organization_id = organization.organization_id
+            WHERE scholarshipregistrations.student_status = 'Pass' AND scholarships.scholarship_id = ? AND scholarshiporganization.organization_id = ?
+          `,[scholarship_id,organization_id]);
       return rows;
     } catch (error) {
       console.error("Error fetching getGenPDF:", error);
@@ -271,7 +273,7 @@ class ScholarshipRegistrations {
   }
 
   // ใช้ดึงข้อมูล Matching
-  static async findByIdMatching({scholarship_id, organization_id}) {
+  static async findByIdEvaluate({scholarship_id, organization_id}) {
     try {
       // Query เพื่อดึงข้อมูลนักศึกษา พร้อมกับทักษะและระดับทักษะ
       const [rows] = await promisePool.query(`
@@ -346,7 +348,7 @@ class ScholarshipRegistrations {
   }
 
   // ใช้ดึงข้อมูล Matching
-  static async findByIdEditMatching({scholarship_id, organization_id}) {
+  static async findByIdEditEvaluate({scholarship_id, organization_id}) {
     try {
       // Query เพื่อดึงข้อมูลนักศึกษา พร้อมกับทักษะและระดับทักษะ
       const [rows] = await promisePool.query(`
@@ -412,6 +414,37 @@ class ScholarshipRegistrations {
       };
 
       console.log(rows, "rows");
+
+      return rows;
+    } catch (error) {
+      console.error("Error finding student by ID:", error);
+      throw error; // ส่งต่อข้อผิดพลาด
+    }
+  }
+
+  //ใช้ดึงข้อมูลนิสิตก่อนแปลงเป็นตัวเลข
+  static async findByStudentMatching({scholarship_id, organization_id}) {
+    try {
+      // Query เพื่อดึงข้อมูลนักศึกษา พร้อมกับทักษะและระดับทักษะ
+      const [rows] = await promisePool.query(`
+          SELECT student.join_org, studentskills.skill_level, skilltypes.skill_type_name, 
+               datetimeavailable.is_parttime, datetimeavailable.date_available
+        FROM scholarshipregistrations
+        INNER JOIN studentskills ON studentskills.student_id = scholarshipregistrations.student_id
+        INNER JOIN student ON scholarshipregistrations.student_id = student.student_id
+        INNER JOIN skills ON studentskills.skill_id = skills.skill_id
+        INNER JOIN skills_skilltypes ON skills.skill_id = skills_skilltypes.skill_id
+        INNER JOIN skilltypes ON skilltypes.skill_type_id = skills_skilltypes.skill_type_id
+        INNER JOIN datetimeavailable ON scholarshipregistrations.regist_id = datetimeavailable.regist_id
+        INNER JOIN scholarships ON scholarships.scholarship_id = scholarshipregistrations.scholarship_id
+        INNER JOIN scholarshiporganization ON scholarshiporganization.scholarship_id = scholarships.scholarship_id
+        WHERE scholarships.scholarship_id =? AND scholarshiporganization.organization_id =?`,
+        [scholarship_id, organization_id]
+      );
+      
+      if (rows.length === 0) {
+        return null; // คืนค่า null หากไม่พบข้อมูลนักศึกษา
+      }
 
       return rows;
     } catch (error) {
