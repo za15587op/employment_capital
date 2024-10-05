@@ -68,11 +68,12 @@ export default function AdminPage() {
       let data = await res.json();
       console.log("Fetched student data:", data); // Log ข้อมูลนักศึกษาเพื่อดีบัก
 
-      // แปลงข้อความเป็นตัวเลข
-      data = data.map(student => ({
+       // แปลงข้อความเป็นตัวเลข
+       data = data.map(student => ({
         ...student,
         availability_time: timeMapping[student.is_parttime] || [0, 0],
-        availability_days: JSON.parse(student.availability_days).map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
+        // ตรวจสอบว่ามีการใช้ JSON.parse() ก่อนแปลงเป็น array ของวันที่พร้อมทำงาน
+        availability_days: JSON.parse(student.date_available).map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
           .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0]),
         skill_type_name: student.skilltypes.split(',').map(skill => skillMapping[skill.trim()] || [0, 0, 0, 0, 0, 0, 0, 0, 0])
           .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -106,11 +107,11 @@ export default function AdminPage() {
       let data = await res.json();
       console.log("Fetched org data:", data); // Log ข้อมูลหน่วยงานเพื่อดีบัก
 
-      // แปลงข้อความเป็นตัวเลข
+      // แปลงข้อความเป็นตัวเลข โดยใช้ JSON.parse() กับ workTime
       data = {
         ...data,
         availability_time: timeMapping[data.workType] || [0, 0],
-        availability_days: data.workTime.map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
+        availability_days: JSON.parse(data.workTime).map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
           .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0]),
         skill_type_name: data.skill_type_name.split(',').map(skill => skillMapping[skill.trim()] || [0, 0, 0, 0, 0, 0, 0, 0, 0])
           .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0, 0, 0])
