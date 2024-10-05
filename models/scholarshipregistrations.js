@@ -427,7 +427,7 @@ class ScholarshipRegistrations {
     try {
       // Query เพื่อดึงข้อมูลนักศึกษา พร้อมกับทักษะและระดับทักษะ
       const [rows] = await promisePool.query(`
-          SELECT student.join_org, studentskills.skill_level, skilltypes.skill_type_name, 
+          SELECT student.student_id,student.join_org, studentskills.skill_level, skilltypes.skill_type_name, 
                datetimeavailable.is_parttime, datetimeavailable.date_available
         FROM scholarshipregistrations
         INNER JOIN studentskills ON studentskills.student_id = scholarshipregistrations.student_id
