@@ -73,9 +73,9 @@ export default function AdminPage() {
       // แปลงข้อความเป็นตัวเลข
       data = data.map(student => ({
         ...student,
-        availability_time: timeMapping[student.availability_time] || [0, 0],
-        availability_days: student.availability_days.map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0]).reduce((a, b) => a.map((x, i) => x + b[i])),
-        skill_type_name: skillMapping[student.skill_type_name] || [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        availability_time: timeMapping[student.is_parttime] || [0, 0],
+        availability_days: student.date_available.map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0]).reduce((a, b) => a.map((x, i) => x + b[i])),
+        skill_type_name: skillMapping[student.skilltypes] || [0, 0, 0, 0, 0, 0, 0, 0, 0],
       }));
 
       console.log("Mapped student data:", data); // Log ข้อมูลหน่วยงานหลังการแปลง
@@ -109,8 +109,8 @@ export default function AdminPage() {
       // แปลงข้อความเป็นตัวเลข
       data = {
         ...data,
-        availability_time: timeMapping[data.availability_time] || [0, 0],
-        availability_days: data.availability_days.map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0]).reduce((a, b) => a.map((x, i) => x + b[i])),
+        availability_time: timeMapping[data.workType] || [0, 0],
+        availability_days: data.workTime.map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0]).reduce((a, b) => a.map((x, i) => x + b[i])),
         skill_type_name: skillMapping[data.skill_type_name] || [0, 0, 0, 0, 0, 0, 0, 0, 0],
       };
       console.log("Mapped org data:", data); // Log ข้อมูลหน่วยงานหลังการแปลง
