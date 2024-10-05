@@ -152,6 +152,10 @@ function ShowPage({ params }) {
         router.push(`${apiUrl}/homeAdmin/genPDF/${scholarship_id}/${organization_id}`);
         
     };
+    const Test = (organization_id) => {
+        router.push(`${apiUrl}/knn/${scholarship_id}/${organization_id}`);
+        
+    };
 
    
 
@@ -202,6 +206,12 @@ function ShowPage({ params }) {
         <td className="py-2 px-4 whitespace-nowrap">{org.organization_name}</td>
         <td className="py-2 px-4 whitespace-nowrap">{org.contactPhone}</td>
         <td className="py-2 px-4 text-right">
+        <button
+            onClick={() => test(org.organization_id)}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 ml-2"
+          >
+            test
+          </button>
         <button
             onClick={() => handlePDF(org.organization_id)}
             className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 ml-2"
