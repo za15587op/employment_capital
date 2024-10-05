@@ -152,7 +152,7 @@ function ShowPage({ params }) {
         router.push(`${apiUrl}/homeAdmin/genPDF/${scholarship_id}/${organization_id}`);
         
     };
-    const Test = (organization_id) => {
+    const test = (organization_id) => {
         router.push(`${apiUrl}/knn/${scholarship_id}/${organization_id}`);
         
     };
