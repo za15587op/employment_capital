@@ -18,8 +18,8 @@ export default function AdminPage() {
 
   // Example mapping dictionaries
   const timeMapping = {
-    "ในเวลา": [1, 0],
-    "นอกเวลา": [0, 1]
+    "ในเวลาที่กำหนด": [1, 0],
+    "นอกเวลาทำการที่กำหนด": [0, 1]
   };
 
   const dayMapping = {
