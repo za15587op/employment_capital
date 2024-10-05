@@ -48,14 +48,18 @@ class ScholarshipOrganization {
     try {
       // Query เพื่อดึงข้อมูลนักศึกษา พร้อมกับทักษะและระดับทักษะ
       const [rows] = await promisePool.query(`
-          SELECT organization.organization_name, scholarshiporganization.amount, 
-               skilltypes.skill_type_name, scholarshiporganization.workType, 
-               scholarshiporganization.workTime, scholarshiprequirement.required_level
-        FROM organization
-        INNER JOIN scholarshiporganization ON scholarshiporganization.organization_id = organization.organization_id
-        INNER JOIN scholarshiprequirement ON scholarshiporganization.scholarship_organ_id = scholarshiprequirement.scholarship_organ_id
-        INNER JOIN skilltypes ON scholarshiprequirement.skill_type_id = skilltypes.skill_type_id
-        WHERE scholarshiporganization.scholarship_id =? AND scholarshiporganization.organization_id =?`,
+          SELECT organization.organization_name, 
+       scholarshiporganization.amount, 
+       GROUP_CONCAT(DISTINCT CONCAT(skilltypes.skill_type_name)) AS skill_type_name,
+       GROUP_CONCAT(DISTINCT CONCAT(scholarshiprequirement.required_level)) AS required_level,
+       scholarshiporganization.workType, 
+       scholarshiporganization.workTime
+FROM organization
+INNER JOIN scholarshiporganization ON scholarshiporganization.organization_id = organization.organization_id
+INNER JOIN scholarshiprequirement ON scholarshiporganization.scholarship_organ_id = scholarshiprequirement.scholarship_organ_id
+INNER JOIN skilltypes ON scholarshiprequirement.skill_type_id = skilltypes.skill_type_id
+WHERE scholarshiporganization.scholarship_id = ? AND scholarshiporganization.organization_id = ?
+GROUP BY organization.organization_name, scholarshiporganization.amount, scholarshiporganization.workType, scholarshiporganization.workTime`,
         [scholarship_id, organization_id]
       );
       
