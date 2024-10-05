@@ -18,10 +18,38 @@ export default function AdminPage() {
   const [matchPercentage, setMatchPercentage] = useState({}); // Store matching percentages for each student
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
+  // Example mapping dictionaries
+  const timeMapping = {
+    "ในเวลา": [1, 0],
+    "นอกเวลา": [0, 1]
+  };
+
+  const dayMapping = {
+    "จันทร์": [1, 0, 0, 0, 0, 0, 0],
+    "อังคาร": [0, 1, 0, 0, 0, 0, 0],
+    "พุธ": [0, 0, 1, 0, 0, 0, 0],
+    "พฤหัสบดี": [0, 0, 0, 1, 0, 0, 0],
+    "ศุกร์": [0, 0, 0, 0, 1, 0, 0],
+    "เสาร์": [0, 0, 0, 0, 0, 1, 0],
+    "อาทิตย์": [0, 0, 0, 0, 0, 0, 1]
+  };
+
+  const skillMapping = {
+    "ทักษะในการถ่ายภาพ วิดีโอ": [1, 0, 0, 0, 0, 0, 0, 0, 0],
+    "ทักษะในการสื่อสาร เช่น เขียนข่าวประชาสัมพันธ์": [0, 1, 0, 0, 0, 0, 0, 0, 0],
+    "ทักษะด้านภาษาอังกฤษ การพูด อ่าน เขียน ภาษาอังกฤษ": [0, 0, 1, 0, 0, 0, 0, 0, 0],
+    "ความรู้พื้นฐานเกี่ยวกับการบริหารโครงการ การเงิน พัสดุ": [0, 0, 0, 1, 0, 0, 0, 0, 0],
+    "มีความรับผิดชอบ": [0, 0, 0, 0, 1, 0, 0, 0, 0],
+    "สามารถใช้โปรแกรม Microsoft Office ได้": [0, 0, 0, 0, 0, 1, 0, 0, 0],
+    "มีความรู้ด้านคอมพิวเตอร์ เช่น ซ่อมบำรุงได้ เขียนโปรแกรม": [0, 0, 0, 0, 0, 0, 1, 0, 0],
+    "ความคิดสร้างสรรค์ ในการออกแบบ สามารถใช้งานโปรแกรม เช่น Canva,  Adobe Illustrator, Adobe Photoshop และโปรแกรมตัดต่อวิดิโอ": [0, 0, 0, 0, 0, 0, 0, 1, 0],
+    "ทำงานอื่นๆ ตามที่ได้รับมอบหมาย": [0, 0, 0, 0, 0, 0, 0, 0, 1]
+  };
+
   useEffect(() => {
     if (scholarship_id && organization_id) {
       fetchStudentData(scholarship_id, organization_id);  // ดึงข้อมูลนักศึกษาเมื่อมี scholarship_id และ organization_id
-      fetchOrgData(scholarship_id,organization_id);
+      fetchOrgData(scholarship_id, organization_id);
     }
   }, [scholarship_id, organization_id]);
 
@@ -39,14 +67,23 @@ export default function AdminPage() {
         throw new Error("Failed to fetch student data");
       }
 
-      const data = await res.json();
+      let data = await res.json();
       console.log("Fetched student data:", data); // Log ข้อมูลนักศึกษาเพื่อดีบัก
-      setStudentData(data);
+
+      // แปลงข้อความเป็นตัวเลข
+      student = data.map(student => ({
+        ...student,
+        availability_time: timeMapping[student.availability_time] || [0, 0],
+        availability_days: student.availability_days.map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0]).reduce((a, b) => a.map((x, i) => x + b[i])),
+        skill_type_name: skillMapping[student.skill_type_name] || [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      }));
+
+      console.log(student,"student");
+      
+
+      setStudentData(student);
       setSuccess("ข้อมูลถูกโหลดสำเร็จ!");
 
-      // // ดึงเปอร์เซ็นต์การแมตช์
-      // await fetchMatchingPercentages(data);
-      
     } catch (error) {
       console.error("Error fetching student data:", error);
       setError("ไม่สามารถโหลดข้อมูลนักศึกษาได้ กรุณาลองใหม่อีกครั้ง.");
@@ -67,20 +104,28 @@ export default function AdminPage() {
         throw new Error("Failed to fetch org data");
       }
 
-      const data = await res.json();
+      let data = await res.json();
       console.log("Fetched org data:", data); // Log ข้อมูลนักศึกษาเพื่อดีบัก
-      setOrgData(data);
+
+      // แปลงข้อความเป็นตัวเลข
+      org = {
+        ...data,
+        availability_time: timeMapping[data.availability_time] || [0, 0],
+        availability_days: data.availability_days.map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0]).reduce((a, b) => a.map((x, i) => x + b[i])),
+        skill_type_name: skillMapping[data.skill_type_name] || [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      };
+      console.log(org,"org");
+      
+
+      setOrgData(org);
+
       setSuccess("ข้อมูลถูกโหลดสำเร็จ!");
 
-      // // ดึงเปอร์เซ็นต์การแมตช์
-      // await fetchMatchingPercentages(data);
-      
     } catch (error) {
       console.error("Error fetching org data:", error);
       setError("ไม่สามารถโหลดข้อมูลหน่วยงานได้ กรุณาลองใหม่อีกครั้ง.");
     }
   };
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
