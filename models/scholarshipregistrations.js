@@ -427,18 +427,22 @@ class ScholarshipRegistrations {
     try {
       // Query เพื่อดึงข้อมูลนักศึกษา พร้อมกับทักษะและระดับทักษะ
       const [rows] = await promisePool.query(`
-          SELECT student.student_id,student.join_org, studentskills.skill_level, skilltypes.skill_type_name, 
-               datetimeavailable.is_parttime, datetimeavailable.date_available
-        FROM scholarshipregistrations
-        INNER JOIN studentskills ON studentskills.student_id = scholarshipregistrations.student_id
-        INNER JOIN student ON scholarshipregistrations.student_id = student.student_id
-        INNER JOIN skills ON studentskills.skill_id = skills.skill_id
-        INNER JOIN skills_skilltypes ON skills.skill_id = skills_skilltypes.skill_id
-        INNER JOIN skilltypes ON skilltypes.skill_type_id = skills_skilltypes.skill_type_id
-        INNER JOIN datetimeavailable ON scholarshipregistrations.regist_id = datetimeavailable.regist_id
-        INNER JOIN scholarships ON scholarships.scholarship_id = scholarshipregistrations.scholarship_id
-        INNER JOIN scholarshiporganization ON scholarshiporganization.scholarship_id = scholarships.scholarship_id
-        WHERE scholarships.scholarship_id =? AND scholarshiporganization.organization_id =?`,
+          SELECT student.student_id, student.join_org, 
+       GROUP_CONCAT(DISTINCT CONCAT(skilltypes.skill_type_name)) AS skilltypes,
+       GROUP_CONCAT(DISTINCT CONCAT(studentskills.skill_level)) AS skill_level,
+       datetimeavailable.is_parttime, datetimeavailable.date_available
+FROM scholarshipregistrations
+INNER JOIN studentskills ON studentskills.student_id = scholarshipregistrations.student_id
+INNER JOIN student ON scholarshipregistrations.student_id = student.student_id
+INNER JOIN skills ON studentskills.skill_id = skills.skill_id
+INNER JOIN skills_skilltypes ON skills.skill_id = skills_skilltypes.skill_id
+INNER JOIN skilltypes ON skilltypes.skill_type_id = skills_skilltypes.skill_type_id
+INNER JOIN datetimeavailable ON scholarshipregistrations.regist_id = datetimeavailable.regist_id
+INNER JOIN scholarships ON scholarships.scholarship_id = scholarshipregistrations.scholarship_id
+INNER JOIN scholarshiporganization ON scholarshiporganization.scholarship_id = scholarships.scholarship_id
+WHERE scholarships.scholarship_id = ? AND scholarshiporganization.organization_id = ?
+GROUP BY student.student_id
+`,
         [scholarship_id, organization_id]
       );
       
