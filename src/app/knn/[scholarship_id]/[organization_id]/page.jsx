@@ -71,17 +71,16 @@ export default function AdminPage() {
       console.log("Fetched student data:", data); // Log ข้อมูลนักศึกษาเพื่อดีบัก
 
       // แปลงข้อความเป็นตัวเลข
-      student = data.map(student => ({
+      data = data.map(student => ({
         ...student,
         availability_time: timeMapping[student.availability_time] || [0, 0],
         availability_days: student.availability_days.map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0]).reduce((a, b) => a.map((x, i) => x + b[i])),
         skill_type_name: skillMapping[student.skill_type_name] || [0, 0, 0, 0, 0, 0, 0, 0, 0],
       }));
 
-      console.log(student,"student");
-      
+      console.log("Mapped student data:", data); // Log ข้อมูลหน่วยงานหลังการแปลง
 
-      setStudentData(student);
+      setStudentData(data);
       setSuccess("ข้อมูลถูกโหลดสำเร็จ!");
 
     } catch (error) {
@@ -108,17 +107,15 @@ export default function AdminPage() {
       console.log("Fetched org data:", data); // Log ข้อมูลนักศึกษาเพื่อดีบัก
 
       // แปลงข้อความเป็นตัวเลข
-      org = {
+      data = {
         ...data,
         availability_time: timeMapping[data.availability_time] || [0, 0],
         availability_days: data.availability_days.map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0]).reduce((a, b) => a.map((x, i) => x + b[i])),
         skill_type_name: skillMapping[data.skill_type_name] || [0, 0, 0, 0, 0, 0, 0, 0, 0],
       };
-      console.log(org,"org");
-      
+      console.log("Mapped org data:", data); // Log ข้อมูลหน่วยงานหลังการแปลง
 
-      setOrgData(org);
-
+      setOrgData(data);
       setSuccess("ข้อมูลถูกโหลดสำเร็จ!");
 
     } catch (error) {
@@ -126,6 +123,8 @@ export default function AdminPage() {
       setError("ไม่สามารถโหลดข้อมูลหน่วยงานได้ กรุณาลองใหม่อีกครั้ง.");
     }
   };
+
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
