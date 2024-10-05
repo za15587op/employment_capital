@@ -23,7 +23,6 @@ export async function GET(req, { params }) {
       return NextResponse.json({ message: "No data found" }, { status: 404 });
     }
     
-    console.log(result, "result");
     
     return NextResponse.json(result, { status: 200 });
   } catch (error) {

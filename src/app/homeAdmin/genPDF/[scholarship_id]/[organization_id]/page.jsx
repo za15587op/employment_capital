@@ -21,9 +21,6 @@ function ShowScholarshipGenPDF() {
 
   let { scholarship_id, organization_id } = useParams(); // Extract params from URL
 
-  console.log(scholarship_id, "scholarship_id");
-  console.log(organization_id, "organization_id");
-
   useEffect(() => {
     if (status === "loading") return; // รอจนกว่าจะโหลด session เสร็จ
     if (!session) {
