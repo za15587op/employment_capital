@@ -1,7 +1,7 @@
 // src/app/api/showScholarshipAll/showStdOrgan/[scholarship_id]/[organization_id]/route.js
 
 import { NextResponse } from "next/server";
-import ScholarshipRegistrations from "../../../../../../models/scholarshipregistrations";
+import ScholarshipRegistrations from "models/scholarshipregistrations";
 
 // ฟังก์ชัน API ที่ถูกต้องพร้อมพารามิเตอร์จาก dynamic route
 export async function GET(req, { params }) {
