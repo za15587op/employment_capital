@@ -71,169 +71,147 @@ function Navbar({ session }) {
   };
 
   return (
-    <header className="header relative flex flex-col items-end">
-      <div className="nav relative w-full h-[30px] bg-[#0F1035] mt-[60px]">
-        <div className="logo absolute top-[50px] right-[30px] z-20">
-          <Image src="/tsu.png" width={150} height={100} alt="logo" />
+      <header className="header relative flex flex-col items-end">
+        <div className="nav relative w-full h-[30px] bg-[#0F1035] mt-[60px]">
+          <div className="logo absolute top-[50px] right-[30px] z-20">
+            <Image src="/tsu.png" width={150} height={100} alt="logo" />
+          </div>
         </div>
-      </div>
-
-      <nav className="relative z-10 flex items-center justify-between p-4 bg-gray-800 w-full">
-        {/* <div className="flex items-center justify-center w-full">
-          <Image
-            src="/thaksin3.png"
-            alt="Thaksin University Logo"
-            width={80}
-            height={80}
-            className="mx-auto"
-          />
-        </div> */}
-        <div
-          className="absolute top-[-35px] left-0 flex items-center space-x-2 bg-[#0F1035] px-4 py-2 rounded-t-lg shadow-md"
-          style={{
-            clipPath: "polygon(0 0, 95% 0, 100% 100%, 0 100%)",
-            zIndex: 10,
-          }}
-        >
-          {status === "loading" ? (
-            <li className="text-white">กำลังโหลด...</li>
-          ) : !sessionData ? (
-            <>
-              <Link href="/login">
-                <button
-                  className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
-                  style={{ fontSize: "20px" }}
-                >
-                  เข้าสู่ระบบ
-                </button>
-              </Link>
-
-              <Link href="/register">
-                <button
-                  className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
-                  style={{ fontSize: "20px" }}
-                >
-                  สมัครสมาชิก
-                </button>
-              </Link>
-            </>
-          ) : (
-            <>
-              {sessionData.user.role === "student" && (
-                <>
-                 <div className="white-white-500">
-                     {sessionData.user.name}
-                  </div>
-                   <br/>
-                  <Link href="/homeSt">
-                    <button
-                      className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
-                      style={{ fontSize: "20px" }}
-                    >
-                      หน้าแรก
-                    </button>
-                  </Link>
-                  <Link href="/procedureSt">
-                    <button
-                      className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
-                      style={{ fontSize: "20px" }}
-                    >
-                      ขั้นตอนการสมัครทุน
-                    </button>
-                  </Link>
-                  <Link href="/welcome">
-                    <button
-                      className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
-                      style={{ fontSize: "20px" }}
-                    >
-                      สมัครทุน
-                    </button>
-                  </Link>
-                  <Link href="/welcome/showStudentScholarships">
-                    <button
-                      className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
-                      style={{ fontSize: "20px" }}
-                    >
-                      ติดตามผลการสมัคร
-                    </button>
-                  </Link>
+    
+        <nav className="relative z-10 flex items-center justify-between p-4 bg-gray-800 w-full">
+          <div
+            className="absolute top-[-35px] left-0 flex items-center space-x-2 bg-[#0F1035] px-4 py-2 rounded-t-lg shadow-md"
+            style={{
+              clipPath: "polygon(0 0, 95% 0, 100% 100%, 0 100%)",
+              zIndex: 10,
+            }}
+          >
+            {status === "loading" ? (
+              <li className="text-white">กำลังโหลด...</li>
+            ) : !sessionData ? (
+              <>
+                <Link href="/login">
                   <button
-                    onClick={handleProfileClick}
-                    className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                    className="text-white bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                     style={{ fontSize: "20px" }}
                   >
-                    โปรไฟล์
+                    เข้าสู่ระบบ
                   </button>
-
-                  <div className="text-center">
+                </Link>
+    
+                <Link href="/register">
+                  <button
+                    className="text-white bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                    style={{ fontSize: "20px" }}
+                  >
+                    สมัครสมาชิก
+                  </button>
+                </Link>
+              </>
+            ) : (
+              <>
+                {sessionData.user.role === "student" && (
+                  <>
+                    <div className="text-white">
+                      {sessionData.user.name}
+                    </div>
+                    <br />
+                    <Link href="/homeSt">
+                      <button
+                        className="text-white bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                        style={{ fontSize: "20px" }}
+                      >
+                        หน้าแรก
+                      </button>
+                    </Link>
+                    <Link href="/procedureSt">
+                      <button
+                        className="text-white bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                        style={{ fontSize: "20px" }}
+                      >
+                        ขั้นตอนการสมัครทุน
+                      </button>
+                    </Link>
+                    <Link href="/welcome">
+                      <button
+                        className="text-white bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                        style={{ fontSize: "20px" }}
+                      >
+                        สมัครทุน
+                      </button>
+                    </Link>
+                    <Link href="/welcome/showStudentScholarships">
+                      <button
+                        className="text-white bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                        style={{ fontSize: "20px" }}
+                      >
+                        ติดตามผลการสมัคร
+                      </button>
+                    </Link>
                     <button
-                      className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                      onClick={handleProfileClick}
+                      className="text-white bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                       style={{ fontSize: "20px" }}
-                      onClick={handleSignOut}
                     >
-                      ออกจากระบบ
+                      โปรไฟล์
                     </button>
-                  </div>
-                </>
-              )}
-
-              {sessionData.user.role === "admin" && (
-                <div className="flex items-center justify-between px-4 py-2">
-                  <div className="flex-grow flex justify-center items-center space-x-4">
-                  <div className="text-white-500"> 
-                     {sessionData.user.name}
-                  </div>
-                    <div className="text-center">
-                    
-                      <Link href="/scholarships">
-                        <button
-                          className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
-                          style={{ fontSize: "20px" }}
-                        >
-                          หน้าหลัก
-                        </button>
-                      </Link>
-                    </div>
-                    <div className="text-center">
-                      <Link href="/organization">
-                        <button
-                          className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
-                          style={{ fontSize: "20px" }}
-                        >
-                          ดูหน่วยงานทั้งหมด
-                        </button>
-                      </Link>
-                    </div>
-                    {/* <div className="text-center">
-                      <Link href="/homeAdmin/genPDF">
-                        <button
-                          className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
-                          style={{ fontSize: "20px" }}
-                        >
-                          ออกรายงาน
-                        </button>
-                      </Link>
-                    </div> */}
+    
                     <div className="text-center">
                       <button
-                        className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                        className="text-white bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                         style={{ fontSize: "20px" }}
                         onClick={handleSignOut}
                       >
                         ออกจากระบบ
                       </button>
                     </div>
+                  </>
+                )}
+    
+                {sessionData.user.role === "admin" && (
+                  <div className="flex items-center justify-between px-4 py-2">
+                    <div className="flex-grow flex justify-center items-center space-x-4">
+                      <div className="text-white">
+                        {sessionData.user.name}
+                      </div>
+                      <div className="text-center">
+                        <Link href="/scholarships">
+                          <button
+                            className="text-white bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                            style={{ fontSize: "20px" }}
+                          >
+                            หน้าหลัก
+                          </button>
+                        </Link>
+                      </div>
+                      <div className="text-center">
+                        <Link href="/organization">
+                          <button
+                            className="text-white bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                            style={{ fontSize: "20px" }}
+                          >
+                            ดูหน่วยงานทั้งหมด
+                          </button>
+                        </Link>
+                      </div>
+                      <div className="text-center">
+                        <button
+                          className="text-white bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                          style={{ fontSize: "20px" }}
+                          onClick={handleSignOut}
+                        >
+                          ออกจากระบบ
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              )}
-                   
-            </>
-          )}
-        </div>
-      </nav>
-      
-    </header>
-  );
+                )}
+              </>
+            )}
+          </div>
+        </nav>
+      </header>
+    );
 }
 
 export default Navbar;
