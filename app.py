@@ -1,17 +1,19 @@
 from flask import Flask, request, jsonify
 from sklearn.neighbors import NearestNeighbors
 import numpy as np
+from flask_cors import CORS  # Import CORS
 
 app = Flask(__name__)
+CORS(app ,resources={r"/*": {"origins": "https://employment-capital.vercel.app"}})  # เปิดใช้งาน CORS สำหรับทุกเส้นทาง
 
 # ฟังก์ชันการสร้าง feature vector
 def create_feature_vector(data):
     return np.array([*data["skills"], *data["skill_levels"], *data["availability_time"], *data["availability_days"]])
 
-@app.route('/api/knn/student/<int:scholarship_id>/<int:organization_id>', methods=['GET'])
-def get_student_data(scholarship_id, organization_id):
-    # ดึงข้อมูลตาม scholarship_id และ organization_id ที่ส่งมา
-    return jsonify(student_data)
+# @app.route('/api/knn/student/<int:scholarship_id>/<int:organization_id>', methods=['GET'])
+# def get_student_data(scholarship_id, organization_id):
+#     # ดึงข้อมูลตาม scholarship_id และ organization_id ที่ส่งมา
+#     return jsonify(student_data)
 
 
 @app.route('/match', methods=['POST'])
