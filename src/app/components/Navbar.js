@@ -79,7 +79,7 @@ function Navbar({ session }) {
       </div>
 
       <nav className="relative z-10 flex items-center justify-between p-4 bg-gray-800 w-full">
-        <div className="flex items-center justify-center w-full">
+        {/* <div className="flex items-center justify-center w-full">
           <Image
             src="/thaksin3.png"
             alt="Thaksin University Logo"
@@ -87,7 +87,7 @@ function Navbar({ session }) {
             height={80}
             className="mx-auto"
           />
-        </div>
+        </div> */}
         <div
           className="absolute top-[-35px] left-0 flex items-center space-x-2 bg-[#0F1035] px-4 py-2 rounded-t-lg shadow-md"
           style={{
@@ -101,7 +101,7 @@ function Navbar({ session }) {
             <>
               <Link href="/login">
                 <button
-                  className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                  className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                   style={{ fontSize: "20px" }}
                 >
                   เข้าสู่ระบบ
@@ -110,7 +110,7 @@ function Navbar({ session }) {
 
               <Link href="/register">
                 <button
-                  className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                  className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                   style={{ fontSize: "20px" }}
                 >
                   สมัครสมาชิก
@@ -121,13 +121,13 @@ function Navbar({ session }) {
             <>
               {sessionData.user.role === "student" && (
                 <>
-                 <div className="text-blue-500">
+                 <div className="white-white-500">
                      {sessionData.user.name}
                   </div>
                    <br/>
                   <Link href="/homeSt">
                     <button
-                      className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                      className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                       style={{ fontSize: "20px" }}
                     >
                       หน้าแรก
@@ -135,7 +135,7 @@ function Navbar({ session }) {
                   </Link>
                   <Link href="/procedureSt">
                     <button
-                      className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                      className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                       style={{ fontSize: "20px" }}
                     >
                       ขั้นตอนการสมัครทุน
@@ -143,7 +143,7 @@ function Navbar({ session }) {
                   </Link>
                   <Link href="/welcome">
                     <button
-                      className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                      className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                       style={{ fontSize: "20px" }}
                     >
                       สมัครทุน
@@ -151,7 +151,7 @@ function Navbar({ session }) {
                   </Link>
                   <Link href="/welcome/showStudentScholarships">
                     <button
-                      className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                      className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                       style={{ fontSize: "20px" }}
                     >
                       ติดตามผลการสมัคร
@@ -159,7 +159,7 @@ function Navbar({ session }) {
                   </Link>
                   <button
                     onClick={handleProfileClick}
-                    className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                    className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                     style={{ fontSize: "20px" }}
                   >
                     โปรไฟล์
@@ -167,7 +167,7 @@ function Navbar({ session }) {
 
                   <div className="text-center">
                     <button
-                      className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                      className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                       style={{ fontSize: "20px" }}
                       onClick={handleSignOut}
                     >
@@ -180,14 +180,14 @@ function Navbar({ session }) {
               {sessionData.user.role === "admin" && (
                 <div className="flex items-center justify-between px-4 py-2">
                   <div className="flex-grow flex justify-center items-center space-x-4">
-                  <div className="text-blue-500"> 
+                  <div className="text-white-500"> 
                      {sessionData.user.name}
                   </div>
                     <div className="text-center">
                     
                       <Link href="/scholarships">
                         <button
-                          className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                          className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                           style={{ fontSize: "20px" }}
                         >
                           หน้าหลัก
@@ -197,7 +197,7 @@ function Navbar({ session }) {
                     <div className="text-center">
                       <Link href="/organization">
                         <button
-                          className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                          className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                           style={{ fontSize: "20px" }}
                         >
                           ดูหน่วยงานทั้งหมด
@@ -216,7 +216,7 @@ function Navbar({ session }) {
                     </div> */}
                     <div className="text-center">
                       <button
-                        className="text-blue-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
+                        className="text-white-500 bg-transparent rounded-lg px-4 py-2 hover:bg-blue-100"
                         style={{ fontSize: "20px" }}
                         onClick={handleSignOut}
                       >
