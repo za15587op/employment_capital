@@ -141,8 +141,14 @@ export default function AdminPage() {
 
     const handleMatch = async (students, org) => {
       try {
-        // ส่งข้อมูล orgData และ studentData ไปใน API
-        const response = await axios.post(`http://localhost:5000/match`, { organizations: [org], students });
+        const response = await fetch('http://127.0.0.1:5000/match', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ organizations: [org], students }),
+        });
+        console.log(JSON.stringify({ organizations: [org], students: students }));
         setMatches(response.data);
       } catch (error) {
         console.error('Error matching students:', error);

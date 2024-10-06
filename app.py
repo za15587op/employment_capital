@@ -1,23 +1,37 @@
 from flask import Flask, request, jsonify
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import NearestNeighbors
 import numpy as np
 
 app = Flask(__name__)
 
-# ตัวอย่างข้อมูลการฝึกโมเดล (คุณสามารถแก้ไขได้ตามความต้องการ)
-X_train = np.array([[5.1, 3.5, 1.4, 0.2], [6.0, 3.0, 4.8, 1.8], [6.9, 3.1, 5.4, 2.1]])
-y_train = np.array([0, 1, 2])
+# ฟังก์ชันการสร้าง feature vector
+def create_feature_vector(data):
+    return np.array([*data["skills"], *data["skill_levels"], *data["availability_time"], *data["availability_days"]])
 
-# สร้างโมเดล KNN และฝึกด้วยข้อมูล
-knn = KNeighborsClassifier(n_neighbors=3)
-knn.fit(X_train, y_train)
+@app.route('/api/knn/student/<int:scholarship_id>/<int:organization_id>', methods=['GET'])
+def get_student_data(scholarship_id, organization_id):
+    # ดึงข้อมูลตาม scholarship_id และ organization_id ที่ส่งมา
+    return jsonify(student_data)
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    data = request.json  # รับข้อมูลจาก request ที่ส่งมาในรูปแบบ JSON
-    features = np.array(data['features']).reshape(1, -1)  # แปลงข้อมูลเป็น numpy array
-    prediction = knn.predict(features)  # ทำนายผล
-    return jsonify({'prediction': int(prediction[0])})  # ส่งผลลัพธ์กลับไปในรูปแบบ JSON
+
+@app.route('/match', methods=['POST'])
+def match_students():
+    data = request.json
+    organizations = data['organizations']
+    students = data['students']
+
+    student_vectors = np.array([create_feature_vector(student) for student in students])
+    org_vector = create_feature_vector(organizations[0]).reshape(1, -1)
+
+    # ใช้ k-NN สำหรับการจับคู่
+    model = NearestNeighbors(n_neighbors=len(students), metric='euclidean')
+    model.fit(student_vectors)
+    distances, indices = model.kneighbors(org_vector)
+
+    matches = [{"Organization ID": organizations[0]["id"], "Student ID": students[i]["id"], "Distance": distances[0][j]} 
+               for j, i in enumerate(indices[0])]
+    
+    return jsonify(matches)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5000, debug=True)
