@@ -107,14 +107,14 @@ export default function AdminPage() {
       let data = await res.json();
       console.log("Fetched org data:", data); // Log ข้อมูลหน่วยงานเพื่อดีบัก
 
-       // แปลงข้อความเป็นตัวเลข โดยใช้ JSON.parse() กับ workTime ถ้ามีค่า
-       data = {
+      // แปลงข้อความเป็นตัวเลข โดยใช้ JSON.parse() กับ workTime
+      data = {
         ...data,
         availability_time: timeMapping[data.workType] || [0, 0],
-        availability_days: data.workTime ? JSON.parse(data.workTime).map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
-          .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0]) : [0, 0, 0, 0, 0, 0, 0],
-        skill_type_name: data.skill_type_name.split(',').map(skill => skillMapping[skill.trim()] || [0, 0, 0, 0, 0, 0, 0, 0, 0])
-          .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0, 0, 0])
+        availability_days: JSON.parse(data.workTime).map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
+          .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0]),
+        // skill_type_name: data.skill_type_name.split(',').map(skill => skillMapping[skill.trim()] || [0, 0, 0, 0, 0, 0, 0, 0, 0])
+        //   .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0, 0, 0])
       };
 
       console.log("Mapped org data:", data); // Log ข้อมูลหน่วยงานหลังการแปลง
