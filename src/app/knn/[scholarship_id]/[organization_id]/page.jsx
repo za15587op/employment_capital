@@ -93,40 +93,47 @@ export default function AdminPage() {
   // ฟังก์ชันดึงข้อมูลหน่วยงาน
   const fetchOrgData = async (scholarship_id, organization_id) => {
     try {
-      const res = await fetch(
-        `${apiUrl}/api/knn/org/${scholarship_id}/${organization_id}`,
-        {
-          method: "GET",
+        const res = await fetch(
+            `${apiUrl}/api/knn/org/${scholarship_id}/${organization_id}`,
+            {
+                method: "GET",
+            }
+        );
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch org data");
         }
-      );
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch org data");
-      }
+        let data = await res.json();
+        console.log("Fetched org data:", data); // Log ข้อมูลหน่วยงานเพื่อดีบัก
 
-      let data = await res.json();
-      console.log("Fetched org data:", data); // Log ข้อมูลหน่วยงานเพื่อดีบัก
+        // ตรวจสอบว่ามีข้อมูลในอาร์เรย์
+        if (data.length > 0) {
+            let org = data[0];  // เข้าถึงองค์แรกในอาร์เรย์
 
-      // แปลงข้อความเป็นตัวเลข โดยใช้ JSON.parse() กับ workTime
-      data = {
-        ...data,
-        availability_time: timeMapping[data.workType] || [0, 0],
-        availability_days: JSON.parse(data.workTime).map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
-          .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0]),
-        // skill_type_name: data.skill_type_name.split(',').map(skill => skillMapping[skill.trim()] || [0, 0, 0, 0, 0, 0, 0, 0, 0])
-        //   .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0, 0, 0])
-      };
+            // แปลงข้อความเป็นตัวเลข โดยใช้ JSON.parse() กับ workTime
+            org = {
+                ...org,
+                availability_time: timeMapping[org.workType] || [0, 0],
+                availability_days: JSON.parse(org.workTime).map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
+                    .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0]),
+                skill_type_name: org.skill_type_name.split(',').map(skill => skillMapping[skill.trim()] || [0, 0, 0, 0, 0, 0, 0, 0, 0])
+                    .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0, 0, 0])
+            };
 
-      console.log("Mapped org data:", data); // Log ข้อมูลหน่วยงานหลังการแปลง
+            console.log("Mapped org data:", org); // Log ข้อมูลหน่วยงานหลังการแปลง
 
-      setOrgData(data);
-      setSuccess("ข้อมูลถูกโหลดสำเร็จ!");
+            setOrgData(org);
+            setSuccess("ข้อมูลถูกโหลดสำเร็จ!");
+        } else {
+            setError("ไม่มีข้อมูลหน่วยงาน");
+        }
 
     } catch (error) {
-      console.error("Error fetching org data:", error);
-      setError("ไม่สามารถโหลดข้อมูลหน่วยงานได้ กรุณาลองใหม่อีกครั้ง.");
+        console.error("Error fetching org data:", error);
+        setError("ไม่สามารถโหลดข้อมูลหน่วยงานได้ กรุณาลองใหม่อีกครั้ง.");
     }
-  };
+};
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
