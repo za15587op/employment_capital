@@ -561,13 +561,11 @@ function CreateogzPage({ params }) {
   };
 
   const handleSelectAllWorkTimes = () => {
-    if (workType === "ในเวลาทำการปกติ") {
+    if (workType === "ในเวลาที่กำหนด") {
       setWorkTime(workTimeOptionsInTime);
     } else if (workType === "นอกเวลาทำการที่กำหนด") {
       setWorkTime(workTimeOptionsOutTime);
-    } else if (workType === "ทำได้ทั้งนอกเวลาและในเวลา") {
-      setWorkTime(workTimeOptionsOutTime);
-    }
+    } 
   };
 
   const handleDeselectAllWorkTimes = () => {
@@ -662,18 +660,18 @@ function CreateogzPage({ params }) {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             >
               <option value="">เลือกประเภทการทำงาน</option>
-              <option value="ในเวลาทำการปกติ">ในเวลาทำการปกติ</option>
+              <option value="ในเวลาที่กำหนด">ในเวลาที่กำหนด</option>
               <option value="นอกเวลาทำการที่กำหนด">นอกเวลาทำการที่กำหนด</option>
-              <option value="ทำได้ทั้งนอกเวลาและในเวลา">
+              {/* <option value="ทำได้ทั้งนอกเวลาและในเวลา">
                 ทำได้ทั้งนอกเวลาและในเวลา
-              </option>
+              </option> */}
             </select>
           </div>
 
           <div>
             <h3 className="text-gray-700">เลือกเวลาทำงาน</h3>
             <div className="grid grid-cols-1 gap-2">
-              {workType === "ในเวลาทำการปกติ" &&
+              {workType === "ในเวลาที่กำหนด" &&
                 workTimeOptionsInTime.map((time) => (
                   <label key={time}>
                     <input
