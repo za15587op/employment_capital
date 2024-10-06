@@ -46,8 +46,9 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (scholarship_id && organization_id) {
-      fetchStudentData(scholarship_id, organization_id);  // ดึงข้อมูลนักศึกษาเมื่อมี scholarship_id และ organization_id
       fetchOrgData(scholarship_id, organization_id);
+      fetchStudentData(scholarship_id, organization_id);  // ดึงข้อมูลนักศึกษาเมื่อมี scholarship_id และ organization_id
+      
     }
   }, [scholarship_id, organization_id]);
 
@@ -70,7 +71,7 @@ export default function AdminPage() {
 
        // แปลงข้อความเป็นตัวเลข
        data = data.map(student => ({
-        ...student,
+        // ...student,
         skill_level: student.skill_level,
         availability_time: timeMapping[student.is_parttime] || [0, 0],
         // ตรวจสอบว่ามีการใช้ JSON.parse() ก่อนแปลงเป็น array ของวันที่พร้อมทำงาน
@@ -84,6 +85,8 @@ export default function AdminPage() {
 
       setStudentData(data);
       setSuccess("ข้อมูลถูกโหลดสำเร็จ!");
+
+      handleMatch(data, orgData); // เรียกใช้ฟังก์ชัน Matching โดยตรงเมื่อดึงข้อมูลเสร็จ
 
     } catch (error) {
       console.error("Error fetching student data:", error);
@@ -135,6 +138,17 @@ export default function AdminPage() {
         console.error("Error fetching org data:", error);
         setError("ไม่สามารถโหลดข้อมูลหน่วยงานได้ กรุณาลองใหม่อีกครั้ง.");
     }
+
+    const handleMatch = async (students, org) => {
+      try {
+        // ส่งข้อมูล orgData และ studentData ไปใน API
+        const response = await axios.post(`http://localhost:5000/match`, { organizations: [org], students });
+        setMatches(response.data);
+      } catch (error) {
+        console.error('Error matching students:', error);
+      }
+    };
+
 };
 
   return (
@@ -182,37 +196,3 @@ export default function AdminPage() {
     </div>
   );
 }
-
-
-
-
-// "use client";
-// import { useState } from 'react';
-
-// export default function Home() {
-//   const [features, setFeatures] = useState([5.1, 3.5, 1.4, 0.2]); // ข้อมูลตัวอย่าง
-//   const [prediction, setPrediction] = useState(null);
-
-//   const handlePredict = async () => {
-//     try {
-//       const res = await fetch('/api/knn', {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify({ features }),
-//       });
-
-//       const data = await res.json();
-//       setPrediction(data.prediction);
-//     } catch (error) {
-//       console.error("Error fetching prediction:", error);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h1>KNN Prediction</h1>
-//       <button onClick={handlePredict}>Predict</button>
-//       {prediction !== null && <div>Prediction: {prediction}</div>}
-//     </div>
-//   );
-// }

@@ -427,7 +427,7 @@ class ScholarshipRegistrations {
     try {
       // Query เพื่อดึงข้อมูลนักศึกษา พร้อมกับทักษะและระดับทักษะ
       const [rows] = await promisePool.query(`
-          SELECT student.student_id, student.join_org, 
+          SELECT student.student_id, student.join_org,student.student_gpa,
        GROUP_CONCAT(DISTINCT CONCAT(skilltypes.skill_type_name)) AS skilltypes,
        GROUP_CONCAT(DISTINCT CONCAT(studentskills.skill_level)) AS skill_level,
        datetimeavailable.is_parttime, datetimeavailable.date_available
