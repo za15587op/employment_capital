@@ -71,6 +71,7 @@ export default function AdminPage() {
        // แปลงข้อความเป็นตัวเลข
        data = data.map(student => ({
         ...student,
+        skill_level: student.skill_level,
         availability_time: timeMapping[student.is_parttime] || [0, 0],
         // ตรวจสอบว่ามีการใช้ JSON.parse() ก่อนแปลงเป็น array ของวันที่พร้อมทำงาน
         availability_days: JSON.parse(student.date_available).map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
@@ -113,7 +114,8 @@ export default function AdminPage() {
 
             // แปลงข้อความเป็นตัวเลข โดยใช้ JSON.parse() กับ workTime
             org = {
-                ...org,
+                // ...org,
+                required_level:org.required_level,
                 availability_time: timeMapping[org.workType] || [0, 0],
                 availability_days: JSON.parse(org.workTime).map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
                     .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0]),
