@@ -65,17 +65,29 @@ export default function AdminPage() {
       let data = await res.json();
       console.log("Fetched student data:", data);
 
-        // แปลงข้อความเป็นตัวเลข
+            // แปลงข้อความเป็นตัวเลข
     data = data.map(student => {
       // แปลง skilltypes ให้กลายเป็น skill array
       const skills = student.skilltypes.split(',').map(skill => skillMapping[skill.trim()] || [0, 0, 0, 0, 0, 0, 0, 0, 0])
         .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0, 0, 0]);
 
-      // แปลง skill_level ตามตำแหน่งที่มีทักษะใน skill array
-      const skillLevel = skills.map((hasSkill, i) => (hasSkill === 1 ? student.skill_level : 0));
+      // แปลง skill_level จาก string เป็น array ของตัวเลข
+      const skillLevels = student.skill_level.split(',').map(Number); // แปลง '4,5' เป็น [4, 5]
+
+      // แปลง skill_level ให้ใส่ตัวเลขตัวแรกในตำแหน่งแรกที่มีทักษะ และตัวถัดไปในตำแหน่งถัดไป
+      let skillLevelIndex = 0; // ตำแหน่งที่เราใช้ดึงค่าจาก skillLevels
+      const skillLevelsArray = skills.map((hasSkill, i) => {
+        if (hasSkill === 1 && skillLevelIndex < skillLevels.length) {
+          // ถ้ามีทักษะในตำแหน่งนี้ และยังมีค่า skill_level ที่ยังไม่ได้ใช้
+          const level = skillLevels[skillLevelIndex]; // ใช้ค่าจาก skillLevels
+          skillLevelIndex++; // ไปยังค่าต่อไป
+          return level; // คืนค่าที่ตรงกับตำแหน่งทักษะ
+        }
+        return 0; // ถ้าไม่มีทักษะ ให้ใส่ค่า 0
+      });
 
       return {
-        skill_level: skillLevel, // skill_level ใหม่ตามทักษะ
+        skill_level: skillLevelsArray, // skill_level ใหม่ตามทักษะ
         availability_time: timeMapping[student.is_parttime] || [0, 0],
         availability_days: JSON.parse(student.date_available).map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
           .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0]),
