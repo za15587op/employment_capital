@@ -429,7 +429,7 @@ class ScholarshipRegistrations {
       const [rows] = await promisePool.query(`
           SELECT student.student_id, student.join_org,student.student_gpa,
        GROUP_CONCAT(DISTINCT CONCAT(skilltypes.skill_type_name)) AS skilltypes,
-       GROUP_CONCAT(DISTINCT CONCAT(studentskills.skill_level)) AS skill_level,
+       GROUP_CONCAT(CONCAT(studentskills.skill_level)) AS skill_level,
        datetimeavailable.is_parttime, datetimeavailable.date_available
 FROM scholarshipregistrations
 INNER JOIN studentskills ON studentskills.student_id = scholarshipregistrations.student_id
