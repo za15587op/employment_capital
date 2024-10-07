@@ -179,7 +179,7 @@ const handleMatch = async (students, org) => {
 
   try {
     const response = await fetch(`${apiUrl}/match`, {
-      method: 'POST',
+      method: "POST",
       headers: {
         'Content-Type': 'application/json',
       },

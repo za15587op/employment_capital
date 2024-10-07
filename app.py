@@ -15,7 +15,6 @@ def create_feature_vector(data):
 #     # ดึงข้อมูลตาม scholarship_id และ organization_id ที่ส่งมา
 #     return jsonify(student_data)
 
-
 @app.route('/match', methods=['POST'])
 def match_students():
     data = request.json
@@ -34,6 +33,7 @@ def match_students():
                for j, i in enumerate(indices[0])]
     
     return jsonify(matches)
+
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
