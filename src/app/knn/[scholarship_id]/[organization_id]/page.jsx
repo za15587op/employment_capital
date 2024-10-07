@@ -65,15 +65,23 @@ export default function AdminPage() {
       let data = await res.json();
       console.log("Fetched student data:", data);
 
-      // แปลงข้อความเป็นตัวเลข
-      data = data.map(student => ({
-        skill_level: student.skill_level,
+        // แปลงข้อความเป็นตัวเลข
+    data = data.map(student => {
+      // แปลง skilltypes ให้กลายเป็น skill array
+      const skills = student.skilltypes.split(',').map(skill => skillMapping[skill.trim()] || [0, 0, 0, 0, 0, 0, 0, 0, 0])
+        .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0, 0, 0]);
+
+      // แปลง skill_level ตามตำแหน่งที่มีทักษะใน skill array
+      const skillLevel = skills.map((hasSkill, i) => (hasSkill === 1 ? student.skill_level : 0));
+
+      return {
+        skill_level: skillLevel, // skill_level ใหม่ตามทักษะ
         availability_time: timeMapping[student.is_parttime] || [0, 0],
         availability_days: JSON.parse(student.date_available).map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
           .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0]),
-        skill_type_name: student.skilltypes.split(',').map(skill => skillMapping[skill.trim()] || [0, 0, 0, 0, 0, 0, 0, 0, 0])
-          .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0, 0, 0])
-      }));
+        skill_type_name: skills // skill array ที่แปลงแล้ว
+      };
+    });
 
       console.log("Mapped student data:", data);
 
@@ -138,7 +146,7 @@ export default function AdminPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ organizations: [org], students }),
+        body: JSON.stringify({ organizations: org, students }),
       });
       console.log(JSON.stringify({ organizations: [org], students }));
       const matchResults = await response.json();
