@@ -11,6 +11,7 @@ export default function AdminPage() {
   const router = useRouter();
   const [studentData, setStudentData] = useState(null);
   const [orgData, setOrgData] = useState(null);
+  const [matches, setMatches] = useState(null);
   const [error, setError] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [success, setSuccess] = useState("บันทึกสำเร็จ!");
@@ -100,7 +101,9 @@ export default function AdminPage() {
       setStudentData(data);
       setSuccess("ข้อมูลถูกโหลดสำเร็จ!");
 
-      handleMatch(data, orgData); // เรียกใช้ฟังก์ชัน Matching โดยตรงเมื่อดึงข้อมูลเสร็จ
+      if (orgData) {
+        handleMatch(data, orgData); // เรียกใช้ฟังก์ชัน Matching เมื่อข้อมูลพร้อม
+      }
 
     } catch (error) {
       console.error("Error fetching student data:", error);
@@ -153,9 +156,8 @@ const fetchOrgData = async (scholarship_id, organization_id) => {
       console.log("Mapped org data:", org);
       setOrgData(org); // ตั้งค่า orgData หลังจากการแปลงข้อมูล
 
-      // ตรวจสอบว่าข้อมูล org ถูกตั้งค่าแล้ว
-      if (orgData) {
-        handleMatch(studentData, org); // เรียก handleMatch หลังจากที่ orgData ถูกตั้งค่าแล้ว
+      if (studentData) {
+        handleMatch(studentData, org); // เรียก handleMatch เมื่อข้อมูลพร้อม
       }
 
     } else {
@@ -169,8 +171,8 @@ const fetchOrgData = async (scholarship_id, organization_id) => {
 };
 
 // ฟังก์ชันจับคู่
-const handleMatch = async (students, orgData) => {
-  if (!orgData) {
+const handleMatch = async (students, org) => {
+  if (!org || !students) {
     console.error('Error: ไม่มีข้อมูลหน่วยงานในการจับคู่');
     return;
   }
@@ -181,10 +183,10 @@ const handleMatch = async (students, orgData) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ organizations: [orgData], students }),
+      body: JSON.stringify({ organizations: [org], students }),
     });
     
-    console.log("Sending data to API:", JSON.stringify({ organizations: [orgData], students }));
+    console.log("Sending data to API:", JSON.stringify({ organizations: [org], students }));
     
     const matchResults = await response.json();
     setMatches(matchResults);  // เก็บผลลัพธ์การจับคู่
