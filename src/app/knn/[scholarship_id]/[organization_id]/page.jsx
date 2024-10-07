@@ -169,8 +169,8 @@ const fetchOrgData = async (scholarship_id, organization_id) => {
 };
 
 // ฟังก์ชันจับคู่
-const handleMatch = async (students, org) => {
-  if (!org) {
+const handleMatch = async (students, orgData) => {
+  if (!orgData) {
     console.error('Error: ไม่มีข้อมูลหน่วยงานในการจับคู่');
     return;
   }
@@ -181,10 +181,10 @@ const handleMatch = async (students, org) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ organizations: [org], students }),
+      body: JSON.stringify({ organizations: [orgData], students }),
     });
     
-    console.log("Sending data to API:", JSON.stringify({ organizations: [org], students }));
+    console.log("Sending data to API:", JSON.stringify({ organizations: [orgData], students }));
     
     const matchResults = await response.json();
     setMatches(matchResults);  // เก็บผลลัพธ์การจับคู่
