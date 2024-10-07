@@ -122,20 +122,35 @@ export default function AdminPage() {
       let data = await res.json();
       console.log("Fetched org data:", data);
 
-      // ตรวจสอบว่ามีข้อมูลในอาร์เรย์
-      if (data.length > 0) {
-        let org = data[0];
+       // ตรวจสอบว่ามีข้อมูลในอาร์เรย์
+    if (data.length > 0) {
+      let org = data[0];
 
-        // แปลงข้อความเป็นตัวเลข โดยใช้ JSON.parse() กับ workTime
-        org = {
-          required_level: org.required_level,
-          availability_time: timeMapping[org.workType] || [0, 0],
-          availability_days: JSON.parse(org.workTime).map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
-            .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0]),
-          skill_type_name: org.skill_type_name.split(',').map(skill => skillMapping[skill.trim()] || [0, 0, 0, 0, 0, 0, 0, 0, 0])
-            .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0, 0, 0])
-        };
+      // แปลง required_level ให้เหมือนกับ skill_level
+      const requiredLevels = org.required_level.split(',').map(Number); // แปลง '4,5' เป็น [4, 5]
 
+      let requiredLevelIndex = 0; // ตำแหน่งที่เราใช้ดึงค่าจาก requiredLevels
+      const requiredLevelArray = org.skill_type_name.split(',').map(skill => skillMapping[skill.trim()] || [0, 0, 0, 0, 0, 0, 0, 0, 0])
+        .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0, 0, 0])
+        .map((hasSkill, i) => {
+          if (hasSkill === 1 && requiredLevelIndex < requiredLevels.length) {
+            const level = requiredLevels[requiredLevelIndex];
+            requiredLevelIndex++;
+            return level;
+          }
+          return 0; // ถ้าไม่มีทักษะในตำแหน่งนั้น ใส่ค่า 0
+        });
+
+      // แปลงข้อมูลหน่วยงาน
+      org = {
+        required_level: requiredLevelArray, // แปลง required_level ใหม่
+        availability_time: timeMapping[org.workType] || [0, 0],
+        availability_days: JSON.parse(org.workTime).map(day => dayMapping[day] || [0, 0, 0, 0, 0, 0, 0])
+          .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0]),
+        skill_type_name: org.skill_type_name.split(',').map(skill => skillMapping[skill.trim()] || [0, 0, 0, 0, 0, 0, 0, 0, 0])
+          .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0, 0, 0])
+      };
+      
         console.log("Mapped org data:", org);
 
         setOrgData(org);
