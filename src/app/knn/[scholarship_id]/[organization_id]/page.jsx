@@ -108,21 +108,20 @@ export default function AdminPage() {
     }
   };
 
-  // ฟังก์ชันดึงข้อมูลหน่วยงาน
-  const fetchOrgData = async (scholarship_id, organization_id) => {
-    try {
-      const res = await fetch(`${apiUrl}/api/knn/org/${scholarship_id}/${organization_id}`, {
-        method: "GET",
-      });
+ // ฟังก์ชันดึงข้อมูลหน่วยงาน
+const fetchOrgData = async (scholarship_id, organization_id) => {
+  try {
+    const res = await fetch(`${apiUrl}/api/knn/org/${scholarship_id}/${organization_id}`, {
+      method: "GET",
+    });
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch org data");
-      }
+    if (!res.ok) {
+      throw new Error("Failed to fetch org data");
+    }
 
-      let data = await res.json();
-      console.log("Fetched org data:", data);
+    let data = await res.json();
+    console.log("Fetched org data:", data);
 
-       // ตรวจสอบว่ามีข้อมูลในอาร์เรย์
     if (data.length > 0) {
       let org = data[0];
 
@@ -151,37 +150,49 @@ export default function AdminPage() {
           .reduce((acc, curr) => acc.map((a, i) => a + curr[i]), [0, 0, 0, 0, 0, 0, 0, 0, 0])
       };
       
-        console.log("Mapped org data:", org);
+      console.log("Mapped org data:", org);
+      setOrgData(org); // ตั้งค่า orgData หลังจากการแปลงข้อมูล
 
-        setOrgData(org);
-        setSuccess("ข้อมูลถูกโหลดสำเร็จ!");
-      } else {
-        setError("ไม่มีข้อมูลหน่วยงาน");
+      // ตรวจสอบว่าข้อมูล org ถูกตั้งค่าแล้ว
+      if (orgData) {
+        handleMatch(studentData, org); // เรียก handleMatch หลังจากที่ orgData ถูกตั้งค่าแล้ว
       }
 
-    } catch (error) {
-      console.error("Error fetching org data:", error);
-      setError("ไม่สามารถโหลดข้อมูลหน่วยงานได้ กรุณาลองใหม่อีกครั้ง.");
+    } else {
+      setError("ไม่มีข้อมูลหน่วยงาน");
     }
-  };
 
-  // ย้ายฟังก์ชัน handleMatch ออกมานอกฟังก์ชัน fetchOrgData
-  const handleMatch = async (students, org) => {
-    try {
-      const response = await fetch(`${apiUrl}/match`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ organizations: org, students }),
-      });
-      console.log(JSON.stringify({ organizations: [org], students }));
-      const matchResults = await response.json();
-      setMatches(matchResults);  // เก็บผลลัพธ์การจับคู่
-    } catch (error) {
-      console.error('Error matching students:', error);
-    }
-  };
+  } catch (error) {
+    console.error("Error fetching org data:", error);
+    setError("ไม่สามารถโหลดข้อมูลหน่วยงานได้ กรุณาลองใหม่อีกครั้ง.");
+  }
+};
+
+// ฟังก์ชันจับคู่
+const handleMatch = async (students, org) => {
+  if (!org) {
+    console.error('Error: ไม่มีข้อมูลหน่วยงานในการจับคู่');
+    return;
+  }
+
+  try {
+    const response = await fetch(`${apiUrl}/match`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ organizations: [org], students }),
+    });
+    
+    console.log("Sending data to API:", JSON.stringify({ organizations: [org], students }));
+    
+    const matchResults = await response.json();
+    setMatches(matchResults);  // เก็บผลลัพธ์การจับคู่
+  } catch (error) {
+    console.error('Error matching students:', error);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
