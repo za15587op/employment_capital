@@ -168,7 +168,7 @@ export default function AdminPage() {
   // ย้ายฟังก์ชัน handleMatch ออกมานอกฟังก์ชัน fetchOrgData
   const handleMatch = async (students, org) => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/match', {
+      const response = await fetch(`${apiUrl}/match`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

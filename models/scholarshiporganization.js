@@ -50,7 +50,7 @@ class ScholarshipOrganization {
       const [rows] = await promisePool.query(`
           SELECT organization.organization_name, 
        scholarshiporganization.amount, 
-       GROUP_CONCAT(DISTINCT CONCAT(skilltypes.skill_type_name)) AS skill_type_name,
+       GROUP_CONCAT(CONCAT(skilltypes.skill_type_name)) AS skill_type_name,
        GROUP_CONCAT(CONCAT(scholarshiprequirement.required_level)) AS required_level,
        scholarshiporganization.workType, 
        scholarshiporganization.workTime
