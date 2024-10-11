@@ -198,7 +198,7 @@ const fetchOrgData = async (scholarship_id, organization_id) => {
 const handleMatch = async (students, org) => {
 
   try {
-    const response = await fetch(`/api/k-nn`, {
+    const response = await fetch(`${apiUrl}/api/k-nn`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',

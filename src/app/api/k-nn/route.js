@@ -38,9 +38,9 @@ export async function POST(req) {
   
     //   return NextResponse.json(students, organizations , { status: 200 });
     } catch (error) {
-      console.error("เกิดข้อผิดพลาดระหว่างการดึงข้อมูล:", error);
+      console.error("back เกิดข้อผิดพลาดระหว่างการดึงข้อมูล:", error);
       return NextResponse.json(
-        { message: "เกิดข้อผิดพลาดระหว่างการดึงข้อมูล." },
+        { message: "back เกิดข้อผิดพลาดระหว่างการดึงข้อมูล." },
         { status: 500 }
       );
     }

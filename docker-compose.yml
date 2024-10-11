@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - DB_HOST=gateway01.ap-southeast-1.prod.aws.tidbcloud.com
+      - DB_PORT=4000
+      - DB_USERNAME=3Up79pAfYqQPA9S.root
+      - DB_PASSWORD=KqZNWND6NIPJ6Vlo
+      - DB_DATABASE=employment_capital
+    depends_on:
+      - mysql
+    volumes:
+      - .:/app
+  
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: employment_capital
+      MYSQL_USER: 3Up79pAfYqQPA9S.root
+      MYSQL_PASSWORD: KqZNWND6NIPJ6Vlo
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+
+volumes:
+  mysql-data:
