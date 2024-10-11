@@ -49,8 +49,8 @@ export default function ScholarshipRegistration({ params }) {
   const [success, setSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
-  const weekDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
-  const weekendDays = ["เสาร์", "อาทิตย์"]; // Add weekend days
+  const weekDays = ["วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์"];
+  const weekendDays = ["วันเสาร์", "วันอาทิตย์"]; // Add weekend days
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 

@@ -76,7 +76,21 @@ class ScholarshipRegistrations {
   static async findByIdALL(student_id) {
     try {
       const [rows] = await promisePool.query(
-        "SELECT * FROM scholarshipregistrations JOIN scholarships ON scholarships.scholarship_id = scholarshipregistrations.scholarship_id JOIN student ON student.student_id = scholarshipregistrations.student_id WHERE scholarshipregistrations.student_id = ?",
+        // "SELECT * FROM scholarshipregistrations JOIN scholarships ON scholarships.scholarship_id = scholarshipregistrations.scholarship_id JOIN student ON student.student_id = scholarshipregistrations.student_id WHERE scholarshipregistrations.student_id = ?",
+        `SELECT s.student_firstname ,
+         s.student_lastname , 
+         o.organization_name , 
+         s2.student_status , 
+         o.contactPhone , 
+         sc.academic_year , 
+         sc.academic_term ,
+         sc.scholarship_id
+FROM  student s 
+inner JOIN scholarshipregistrations s2 on s2.student_id = s.student_id 
+inner JOIN scholarships sc on sc.scholarship_id  = s2.scholarship_id 
+inner JOIN scholarshiporganization so on so.scholarship_id  = sc.scholarship_id 
+inner JOIN organization o on o.organization_id = so.organization_id 
+WHERE s2.student_id = ?`,
         [student_id]
       );
 
@@ -427,7 +441,7 @@ class ScholarshipRegistrations {
     try {
       // Query เพื่อดึงข้อมูลนักศึกษา พร้อมกับทักษะและระดับทักษะ
       const [rows] = await promisePool.query(`
-          SELECT student.student_id, student.join_org,student.student_gpa,
+          SELECT student.student_id, student.join_org,student.student_gpa,student.student_firstname, student.student_lastname, scholarshipregistrations.student_status ,scholarshipregistrations.regist_id,
        datetimeavailable.is_parttime, datetimeavailable.date_available,
        GROUP_CONCAT(CONCAT(skilltypes.skill_type_name)) AS skilltypes,
        GROUP_CONCAT(CONCAT(studentskills.skill_level)) AS skill_level
@@ -440,9 +454,8 @@ INNER JOIN skilltypes ON skilltypes.skill_type_id = skills_skilltypes.skill_type
 INNER JOIN datetimeavailable ON scholarshipregistrations.regist_id = datetimeavailable.regist_id
 INNER JOIN scholarships ON scholarships.scholarship_id = scholarshipregistrations.scholarship_id
 INNER JOIN scholarshiporganization ON scholarshiporganization.scholarship_id = scholarships.scholarship_id
-WHERE scholarships.scholarship_id = ? AND scholarshiporganization.organization_id = ?
-GROUP BY student.student_id,datetimeavailable.is_parttime, datetimeavailable.date_available,student.join_org,student.student_gpa
-`,
+WHERE scholarships.scholarship_id = ? AND scholarshiporganization.organization_id = ? AND  scholarshipregistrations.student_status = "Pending"
+GROUP BY student.student_id,datetimeavailable.is_parttime, datetimeavailable.date_available,student.join_org,student.student_gpa,student.student_firstname, student.student_lastname, scholarshipregistrations.student_status,scholarshipregistrations.regist_id`,
         [scholarship_id, organization_id]
       );
       

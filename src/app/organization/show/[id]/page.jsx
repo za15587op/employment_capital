@@ -144,10 +144,10 @@ function ShowPage({ params }) {
         
     };
     
-    const handleEvaluate = (organization_id) => {
-        router.push(`${apiUrl}/evaluateStudent/${scholarship_id}/${organization_id}`);
+    // const handleEvaluate = (organization_id) => {
+    //     router.push(`${apiUrl}/evaluateStudent/${scholarship_id}/${organization_id}`);
         
-    };
+    // };
     const handlePDF = (organization_id) => {
         router.push(`${apiUrl}/homeAdmin/genPDF/${scholarship_id}/${organization_id}`);
         
@@ -210,7 +210,7 @@ function ShowPage({ params }) {
             onClick={() => test(org.organization_id)}
             className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 ml-2"
           >
-            test
+            คัดเลือก
           </button>
         <button
             onClick={() => handlePDF(org.organization_id)}
@@ -218,12 +218,12 @@ function ShowPage({ params }) {
           >
             ออกรายงาน
           </button>
-          <button
+          {/* <button
             onClick={() => handleEvaluate(org.organization_id)}
             className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 ml-2"
           >
             คัดเลือก
-          </button>
+          </button> */}
           <button
             onClick={() => handleShow(org.organization_id)}
             className="bg-purple-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-purple-600 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 ml-2"

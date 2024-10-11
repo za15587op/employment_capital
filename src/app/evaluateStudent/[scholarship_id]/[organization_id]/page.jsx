@@ -42,80 +42,14 @@ export default function AdminPage() {
       setStudentData(data);
       setSuccess("ข้อมูลถูกโหลดสำเร็จ!");
 
-      // ดึงเปอร์เซ็นต์การแมตช์
-      await fetchMatchingPercentages(data);
+      // // ดึงเปอร์เซ็นต์การแมตช์
+      // await fetchMatchingPercentages(data);
       
     } catch (error) {
       console.error("Error fetching student data:", error);
       setError("ไม่สามารถโหลดข้อมูลนักศึกษาได้ กรุณาลองใหม่อีกครั้ง.");
     }
   };
-
-  // ฟังก์ชันคำนวณระยะห่างสำหรับการแมตช์
-  function calculateDistance(student, requirement) {
-    const studentSkillLevel = student.skill_level ?? 0;
-    const requiredSkillLevel = requirement.required_level ?? 0;
-    const skillDistance = Math.abs(studentSkillLevel - requiredSkillLevel);
-    const totalDistance = Math.sqrt(skillDistance);
-    return totalDistance;
-  }
-
-  // ฟังก์ชันดึงเปอร์เซ็นต์การแมตช์
-  const fetchMatchingPercentages = async (students) => {
-    
-    try {
-      const percentages = await Promise.all(
-        students.map(async (student) => {
-          console.log("Student Data:", student);  // Log ค่า student
-  
-          const response = await fetch(`${apiUrl}/api/matching`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ scholarshipId: scholarship_id }),
-          });
-  
-          const requirements = await response.json();
-          console.log("Requirements:", requirements);  // Log ค่า requirement
-  
-          if (!requirements || requirements.length === 0) {
-            return { studentId: student.student_id, matchPercentage: 0 }; // กรณีไม่มีข้อมูล
-            
-          }
-  
-          // คำนวณระยะห่างระหว่าง student และ requirement
-          const distances = requirements.map((requirement) => {
-            console.log("Requirement for matching:", requirement); // Log ค่า requirement ในการคำนวณ
-            return {
-              distance: calculateDistance(student, requirement),
-              requirement,
-            };
-          });
-  
-          distances.sort((a, b) => a.distance - b.distance);
-          const k = 3;
-          const nearestNeighbors = distances.slice(0, k);
-  
-          const matchPercentage = (nearestNeighbors.length / requirements.length) * 100;
-          console.log("Match Percentage for student:", student.student_id, "is", matchPercentage);  // Log ค่า match percentage
-  
-          return { studentId: student.student_id, matchPercentage: isNaN(matchPercentage) ? 0 : matchPercentage };
-        })
-      );
-  
-      const percentageMap = percentages.reduce((acc, item) => {
-        acc[item.studentId] = item.matchPercentage;
-        return acc;
-      }, {});
-  
-      setMatchPercentage(percentageMap);
-  
-    } catch (error) {
-      console.error("Error during matching:", error);
-    }
-  };
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();

@@ -13,6 +13,7 @@ export async function GET(req, { params }) {
         { status: 404 }
       );
     }
+    console.log(getData,"getData");
     
 
     return new Response(JSON.stringify(getData), { status: 200 });

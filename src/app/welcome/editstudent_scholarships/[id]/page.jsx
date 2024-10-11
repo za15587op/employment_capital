@@ -41,8 +41,8 @@ export default function EditScholarshipRegistration({ params }) {
   const [student_gpa, setStudentGpa] = useState("");
   const [student_phone, setStudentPhone] = useState("");
 
-  const weekDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
-  const weekendDays = ["เสาร์", "อาทิตย์"]; // เพิ่มวันเสาร์และวันอาทิตย์
+  const weekDays = ["วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์"];
+  const weekendDays = ["วันเสาร์", "วันอาทิตย์"]; // เพิ่มวันเสาร์และวันอาทิตย์
 
   const getExistingData = async () => {
     try {

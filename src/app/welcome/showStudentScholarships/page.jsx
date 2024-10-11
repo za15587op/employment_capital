@@ -36,6 +36,9 @@ function ShowStudentScholarshipsPage() {
       if (res.ok) {
         const data = await res.json();
         setGetData(data);
+
+        console.log(data,"dada");
+        
       } else {
         setError('Failed to fetch data');
       }
@@ -97,18 +100,20 @@ function ShowStudentScholarshipsPage() {
         ) : (
           <div className="grid grid-cols-1 gap-6">
             {getData.map((item, index) => (
-              <div key={item.scholarship_id} className="bg-gradient-to-r from-blue-200 via-purple-200 to-blue-200 p-6 rounded-lg shadow-md hover:shadow-2xl transition-all duration-300 hover:scale-105">
+              <div key={`${item.scholarship_id}-${index}`}  className="bg-gradient-to-r from-blue-200 via-purple-200 to-blue-200 p-6 rounded-lg shadow-md hover:shadow-2xl transition-all duration-300 hover:scale-105">
                 <div className="flex justify-between items-center mb-4">
-                  <h4 className="text-xl font-semibold text-gray-800">ทุนการศึกษา #{index + 1}</h4>
+                  <h4 className="text-xl font-semibold text-gray-800">ทุนการศึกษาที่ {index + 1}</h4>
                   <span className={`px-3 py-1 rounded-full text-sm ${item.student_status === 'approved' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'}`}>
                     {/* {item.student_status === 'approved' ? 'อนุมัติ' : 'อยู่ระหว่างดำเนินการ'} */}
                     {item.student_status}
                   </span>
                 </div>
                 <div className="text-gray-700">
-                  <p><strong>รหัสนิสิต:</strong> {item.student_id}</p>
+                  <p><strong>รหัสนิสิต:</strong> {student_id}</p>
                   <p><strong>ปีการศึกษา:</strong> {item.academic_year}</p>
                   <p><strong>เทอมการศึกษา:</strong> {item.academic_term}</p>
+                  <p><strong>หน่วยงาน:</strong> {item.organization_name}</p>
+                  <p><strong>เบอร์โทรหน่วยงาน:</strong> {item.contactPhone}</p>
                 </div>
                 <div className="mt-6 flex justify-end space-x-4">
                   <button
