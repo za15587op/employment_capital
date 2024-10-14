@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   nextjs:
     build:
@@ -16,6 +15,8 @@ services:
       - mysql
     volumes:
       - .:/app
+    networks:
+      - app-network  # เชื่อมกับเครือข่าย app-network
   
   mysql:
     image: mysql:8.0
@@ -28,6 +29,12 @@ services:
       - mysql-data:/var/lib/mysql
     ports:
       - '3306:3306'
+    networks:
+      - app-network  # เชื่อมกับเครือข่าย app-network
 
 volumes:
   mysql-data:
+
+networks:
+  app-network:
+    external: true  # ใช้เครือข่ายภายนอก

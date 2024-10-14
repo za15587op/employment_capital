@@ -14,7 +14,7 @@ export async function POST(req) {
         // console.log({organizations},"orgggg");
         
 
-        const response = await fetch('http://127.0.0.1:5000/match',
+        const response = await fetch('http://flaskapp:5000/match',
             {
                 method:"POST" ,
                 headers: {
@@ -23,6 +23,8 @@ export async function POST(req) {
                 body: JSON.stringify(data)
             }
         )
+
+        console.log("Response from Python API:", response);
 
         const res = await response.json();
 

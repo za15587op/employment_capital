@@ -206,8 +206,6 @@ const handleMatch = async (students, org) => {
       body: JSON.stringify({ organizations: [org], students }),
     });
 
-    // const data = await response.json();
-
     const matchResults = await response.json();
     console.log(matchResults,"matchResults");
     
