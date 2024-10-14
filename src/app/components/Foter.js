@@ -2,14 +2,14 @@ export default function Foter() {
     return (
         <footer 
   className="text-white py-8" 
-  style={{ background: 'linear-gradient(to right, #DCF2F1, #7FC7D9, #365486, #0F1035)' }}
+  style={{ background: '#365486' }}
 >
   <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
     
     {/* ส่วนที่ 1: โลโก้และข้อมูลการติดต่อ */}
     <div className="flex flex-col space-y-4"> 
       <div className="flex items-start space-x-4"> 
-      <img src="/logoicon.png" alt="Logo" className="w-full h-auto max-w-[30%]" />
+      <img src="/logo.png" alt="Logo" className="w-full h-auto max-w-[30%]" />
         <div>
           <h3 className="text-lg font-semibold leading-none">
            ฝ่ายกิจการนิสิต สำนักงานมหาวิทยาลัยทักษิณ วิทยาเขตพัทลุง

@@ -454,10 +454,11 @@ INNER JOIN skilltypes ON skilltypes.skill_type_id = skills_skilltypes.skill_type
 INNER JOIN datetimeavailable ON scholarshipregistrations.regist_id = datetimeavailable.regist_id
 INNER JOIN scholarships ON scholarships.scholarship_id = scholarshipregistrations.scholarship_id
 INNER JOIN scholarshiporganization ON scholarshiporganization.scholarship_id = scholarships.scholarship_id
-WHERE scholarships.scholarship_id = ? AND scholarshiporganization.organization_id = ? AND  scholarshipregistrations.student_status = "Pending"
+WHERE scholarships.scholarship_id = ? AND scholarshiporganization.organization_id = ? 
 GROUP BY student.student_id,datetimeavailable.is_parttime, datetimeavailable.date_available,student.join_org,student.student_gpa,student.student_firstname, student.student_lastname, scholarshipregistrations.student_status,scholarshipregistrations.regist_id`,
         [scholarship_id, organization_id]
       );
+      //AND  scholarshipregistrations.student_status = "Pending"
       
       if (rows.length === 0) {
         return null; // คืนค่า null หากไม่พบข้อมูลนักศึกษา

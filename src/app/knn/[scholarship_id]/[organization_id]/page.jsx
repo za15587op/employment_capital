@@ -301,7 +301,7 @@ const handleSubmit = async (event) => {
         )}
           {/* แสดงชื่อหน่วยงานและจำนวนที่รับ */}
   <h1>หน่วยงาน: {orgData?.organization_name}</h1>
-  <h2>จำนวนที่รับ: {orgData?.amount}</h2> {/* แสดงจำนวนที่รับ */}
+  <h1>จำนวนที่รับ: {orgData?.amount}</h1> {/* แสดงจำนวนที่รับ */}
           <form onSubmit={handleSubmit} className="mt-6 space-y-6">
             {studentData?.length > 0 ? (
               <table className="min-w-full bg-white table-auto border-collapse border mt-6">
@@ -314,7 +314,7 @@ const handleSubmit = async (event) => {
                     <th className="px-4 py-2 border">สถานะ</th>
                     <th className="px-4 py-2 border">ผ่าน</th>
                     <th className="px-4 py-2 border">ไม่ผ่าน</th>
-                    <th className="px-4 py-2 border">Distance</th>
+                    <th className="px-4 py-2 border">ผลการจับคู่ (ยิ่งน้อยยิ่งดี)</th>
                     <th className="px-4 py-2 border">ดูรายละเอียด</th>
                   </tr>
                 </thead>

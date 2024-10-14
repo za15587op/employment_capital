@@ -40,14 +40,14 @@ footer{ /* ใช้แสดง  Copyright 2024 | Thaksin Univerity ของ f
     
 }
 
-.แถบสี { /* แถบสีแสดงทุกหน้า ต้องใส่ทุกหน้า ยังแก้ไม่ได้ */
+/* .แถบสี { 
     width: auto;
     padding: 5px 0;
     height: 18px; 
     width: 100%; 
     background-color: #4979ff;
     color: white; 
-}
+} */
 .หน้าแรกแอดมิน{ /* หน้าแรกของแอดมิน */
     color: #4979ff;
     text-align: center;
