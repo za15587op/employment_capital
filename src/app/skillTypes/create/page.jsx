@@ -20,7 +20,7 @@ function SkillTypesForm() {
       return;
     } else {
       try {
-        const res = await fetch(`${apiUrl}/api/skillTypes`, {
+        const res = await fetch(`http://10.120.1.109:11150/api/skillTypes`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -36,7 +36,7 @@ function SkillTypesForm() {
           setSuccess("เพิ่มข้อมูลประเภททักษะสำเร็จ");
           form.reset();
           router.refresh();
-          router.push(`${apiUrl}/skillTypes`);
+          router.push(`http://10.120.1.109:11150/skillTypes`);
         } else {
           console.log("เพิ่มข้อมูลประเภททักษะไม่สำเร็จ");
         }

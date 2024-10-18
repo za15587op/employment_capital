@@ -28,7 +28,7 @@ function ShowStudentScholarshipsPage() {
   const fetchGetData = async () => {
     if (!student_id) return;
     try {
-      const res = await fetch(`${apiUrl}/api/showStudentScholarships/${student_id}`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/showStudentScholarships/${student_id}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -57,14 +57,14 @@ function ShowStudentScholarshipsPage() {
     setSuccessMessage("กำลังนำคุณไปยังหน้าสมัครทุนถัดไป...");
     setSuccess(true);
     setTimeout(() => {
-      router.push(`${apiUrl}/welcome/editstudent_scholarships/${regist_id}`);
+      router.push(`http://10.120.1.109:11150/welcome/editstudent_scholarships/${regist_id}`);
     }, 1500);
   };
 
   const handleDelete = async (regist_id) => {
     const confirmed = confirm("Are you sure?");
     if (confirmed) {
-      const res = await fetch(`${apiUrl}/api/student_scholarships/?regist_id=${regist_id}`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/student_scholarships/?regist_id=${regist_id}`, {
         method: "DELETE"
       });
       if (res.ok) {

@@ -28,7 +28,7 @@ function ShowogzPage({ params }) {
 
     const fetchOrganization = async () => {
         try {
-          const resOrganization = await fetch(`${apiUrl}/api/organization`, {
+          const resOrganization = await fetch(`http://10.120.1.109:11150/api/organization`, {
             method: "GET",
           });
     
@@ -48,7 +48,7 @@ function ShowogzPage({ params }) {
 
     const getDataById = async (scholarship_id) => {
         try {
-          const res = await fetch(`${apiUrl}/api/scholarships/${scholarship_id}`, {
+          const res = await fetch(`http://10.120.1.109:11150/api/scholarships/${scholarship_id}`, {
             method: "GET",
             cache: "no-store",
           });

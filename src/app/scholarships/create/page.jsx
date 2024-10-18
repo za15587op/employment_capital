@@ -34,7 +34,7 @@ function ScholarshipsForm() {
       return;
     }
       try {
-        const res = await fetch(`${apiUrl}/api/scholarships`, {
+        const res = await fetch(`http://10.120.1.109:11150/api/scholarships`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -53,7 +53,7 @@ function ScholarshipsForm() {
           setSuccess(true); // แสดงแจ้งเตือนว่าการดำเนินการสำเร็จ
           form.reset();
           setTimeout(() => {
-            router.push(`${apiUrl}/scholarships`);
+            router.push(`http://10.120.1.109:11150/scholarships`);
           }, 2000); // Redirect after 2 seconds
         } else {
           setError("เพิ่มทุนไม่สำเร็จ เนื่องจากปีการศึกษาทุนซ้ำกัน");

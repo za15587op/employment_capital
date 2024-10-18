@@ -38,7 +38,7 @@ function ShowScholarshipGenPDF() {
   const fetchGetData = async (scholarship_id, organization_id) => {
     try {
       const res = await fetch(
-        `${apiUrl}/api/genPDF/${scholarship_id}/${organization_id}`,
+        `http://10.120.1.109:11150/api/genPDF/${scholarship_id}/${organization_id}`,
         {
           method: "GET",
           headers: {

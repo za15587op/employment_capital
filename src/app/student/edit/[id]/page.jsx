@@ -60,7 +60,7 @@ function EditStudentPage({ params }) {
   // Fetch skill types from API
   const fetchSkillTypes = async () => {
     try {
-      const res = await fetch(`${apiUrl}/api/skillTypes`);
+      const res = await fetch(`http://10.120.1.109:11150/api/skillTypes`);
       if (!res.ok) {
         throw new Error("Failed to fetch skill types");
       }
@@ -75,7 +75,7 @@ function EditStudentPage({ params }) {
   const getDataById = async (student_id) => {
     try {
       const res = await fetch(
-        `${apiUrl}/api/student/${student_id}`,
+        `http://10.120.1.109:11150/api/student/${student_id}`,
         {
           method: "GET",
           cache: "no-store",
@@ -172,7 +172,7 @@ function EditStudentPage({ params }) {
     e.preventDefault();
     try {
       const res = await fetch(
-        `${apiUrl}/api/student/${student_id}`,
+        `http://10.120.1.109:11150/api/student/${student_id}`,
         {
           method: "PUT",
           headers: {
@@ -203,7 +203,7 @@ function EditStudentPage({ params }) {
 
       setTimeout(() => {
         setSuccess(false);
-        router.push(`${apiUrl}/welcome`);
+        router.push(`http://10.120.1.109:11150/welcome`);
       }, 2000);
     } catch (error) {
       console.log(error);

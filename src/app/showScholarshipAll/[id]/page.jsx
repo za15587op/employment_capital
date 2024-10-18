@@ -27,7 +27,7 @@ function ShowScholarshipAllPage({ params }) {
   // ฟังก์ชันสำหรับดึงข้อมูลทุนการศึกษา
   const fetchScholarShipReGist = async (scholarship_id) => {
     try {
-      const res = await fetch(`${apiUrl}/api/showScholarshipAll/${scholarship_id}`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/showScholarshipAll/${scholarship_id}`, {
         method: "GET",
         cache: "no-store",
       });
@@ -56,11 +56,11 @@ function ShowScholarshipAllPage({ params }) {
 
 
   const ViewDetails = (regist_id) => {
-    router.push(`${apiUrl}/showScholarshipAll/showStudentDetail/${regist_id}`);
+    router.push(`http://10.120.1.109:11150/showScholarshipAll/showStudentDetail/${regist_id}`);
   };
 
   const Back = () => {
-    router.push(`${apiUrl}/scholarships`);
+    router.push(`http://10.120.1.109:11150/scholarships`);
   };
 
 

@@ -27,7 +27,7 @@ export default function AdminPage() {
   const fetchStudentData = async (scholarship_id, organization_id) => {
     try {
       const res = await fetch(
-        `${apiUrl}/api/matching/${scholarship_id}/${organization_id}`,
+        `http://10.120.1.109:11150/api/matching/${scholarship_id}/${organization_id}`,
         {
           method: "GET",
         }
@@ -62,7 +62,7 @@ export default function AdminPage() {
     );
 
     try {
-      const res = await fetch(`${apiUrl}/api/evaluateStudent`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/evaluateStudent`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -91,11 +91,11 @@ export default function AdminPage() {
   };
 
   const ViewDetails = (regist_id) => {
-    router.push(`${apiUrl}/evaluateStudent/evaluateStudentDetail/${organization_id}/${regist_id}`);
+    router.push(`http://10.120.1.109:11150/evaluateStudent/evaluateStudentDetail/${organization_id}/${regist_id}`);
   };
 
     const handleEvaluate = (organization_id) => {
-    router.push(`${apiUrl}/evaluateStudent/editEvaluateStudent/${scholarship_id}/${organization_id}`);
+    router.push(`http://10.120.1.109:11150/evaluateStudent/editEvaluateStudent/${scholarship_id}/${organization_id}`);
     
 };
 

@@ -46,7 +46,7 @@ function HomeStudentPage() {
     useEffect(() => {
         const fetchScholarships = async () => {
             try {
-                const res = await fetch(`${apiUrl}/api/showScholarshipsStd`);
+                const res = await fetch(`http://10.120.1.109:11150/api/showScholarshipsStd`);
                 if (res.ok) {
                     const data = await res.json();
 
@@ -86,7 +86,7 @@ const formatDateToBuddhistEra = (dateString) => {
     const ApplyScholarship = (scholarship_id) => {
         setSuccess(true);
         setTimeout(() => {
-            router.push(`${apiUrl}/welcome/student_scholarships/${scholarship_id}`);
+            router.push(`http://10.120.1.109:11150/welcome/student_scholarships/${scholarship_id}`);
         }, 3000);
     };
 

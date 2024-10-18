@@ -31,7 +31,7 @@ function EditScholarshipsPage({ params }) {
 
   const getDataById = async (scholarship_id) => {
     try {
-      const res = await fetch(`${apiUrl}/api/scholarships/${scholarship_id}`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/scholarships/${scholarship_id}`, {
         method: "GET",
         cache: "no-store",
       });
@@ -78,7 +78,7 @@ function EditScholarshipsPage({ params }) {
       }
 
       try {
-        const res = await fetch(`${apiUrl}/api/scholarships/${scholarship_id}`, {
+        const res = await fetch(`http://10.120.1.109:11150/api/scholarships/${scholarship_id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -98,7 +98,7 @@ function EditScholarshipsPage({ params }) {
           setSuccess(true); // ตั้งค่า success เป็น true เมื่อแก้ไขสำเร็จ
           form.reset();
           setTimeout(() => {
-            router.push(`${apiUrl}/scholarships`);
+            router.push(`http://10.120.1.109:11150/scholarships`);
           }, 2000); // Redirect after 2 seconds
         } else {
           setError("แก้ไขทุนไม่สำเร็จ เนื่องจากปีการศึกษาทุนซ้ำกัน");

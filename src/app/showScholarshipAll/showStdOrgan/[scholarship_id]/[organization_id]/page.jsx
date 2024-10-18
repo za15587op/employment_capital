@@ -34,7 +34,7 @@ export default function ShowStdOrgan() {
     try {
       // Corrected fetch call
       const res = await fetch(
-        `${apiUrl}/api/showScholarshipAll/showStdOrgan/${scholarship_id}/${organization_id}`,
+        `http://10.120.1.109:11150/api/showScholarshipAll/showStdOrgan/${scholarship_id}/${organization_id}`,
         {
           method: "GET",
         }
@@ -67,7 +67,7 @@ export default function ShowStdOrgan() {
     setSuccess("กำลังกลับไปยังหน้าก่อนหน้านี้!");
     setTimeout(() => {
       setShowSuccess(false);
-      router.push(`${apiUrl}/organization/show/${scholarship_id}`);
+      router.push(`http://10.120.1.109:11150/organization/show/${scholarship_id}`);
     }, 3000);
   };
 
@@ -77,13 +77,13 @@ export default function ShowStdOrgan() {
     setTimeout(() => {
       setShowSuccess(false);
       router.push(
-        `${apiUrl}/showScholarshipAll/showStudentDetail/${organization_id}/${regist_id}`
+        `http://10.120.1.109:11150/showScholarshipAll/showStudentDetail/${organization_id}/${regist_id}`
       );
     }, 3000);
   };
 
   const handleMatching = (organization_id) => {
-    router.push(`${apiUrl}/matching_admin/${scholarship_id}/${organization_id}`);
+    router.push(`http://10.120.1.109:11150/matching_admin/${scholarship_id}/${organization_id}`);
   };
 
   // Ensure we get organization_name[0] from the first student, if available

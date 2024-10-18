@@ -44,7 +44,7 @@ export default function ShowScholarshipRegistration({ params }) {
 
   const getExistingData = async () => {
     try {
-      const res = await fetch(`${apiUrl}/api/student_scholarships/edit/${regist_id}`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/student_scholarships/edit/${regist_id}`, {
         method: "GET",
       });
 

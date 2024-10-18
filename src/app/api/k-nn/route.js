@@ -14,7 +14,7 @@ export async function POST(req) {
         // console.log({organizations},"orgggg");
         
 
-        const response = await fetch('http://flaskapp:5000/match',
+        const response = await fetch('http://10.120.1.109:5000/match',
             {
                 method:"POST" ,
                 headers: {

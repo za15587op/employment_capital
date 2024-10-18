@@ -428,7 +428,7 @@ function CreateogzPage({ params }) {
   useEffect(() => {
     const fetchSkillTypes = async () => {
       try {
-        const response = await fetch(`${apiUrl}/api/skillTypes`);
+        const response = await fetch(`http://10.120.1.109:11150/api/skillTypes`);
         if (!response.ok) throw new Error("ไม่สามารถดึงข้อมูลประเภททักษะได้");
         const data = await response.json();
         console.log(data);
@@ -516,7 +516,7 @@ function CreateogzPage({ params }) {
     }));
 
     try {
-      const responseOrg = await fetch(`${apiUrl}/api/scholarshiporganization`, {
+      const responseOrg = await fetch(`http://10.120.1.109:11150/api/scholarshiporganization`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -538,7 +538,7 @@ function CreateogzPage({ params }) {
       setError("");
       setSuccess(true); // แสดง success message
       setTimeout(() => {
-        router.push(`${apiUrl}/organization/show/${scholarship_id}`);
+        router.push(`http://10.120.1.109:11150/organization/show/${scholarship_id}`);
       }, 1000); // Redirect after 1 second
     } catch (error) {
       console.error("Error:", error);

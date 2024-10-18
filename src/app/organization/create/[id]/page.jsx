@@ -30,7 +30,7 @@ function EditorganizationPage({ params }) {
   // ฟังก์ชันสำหรับดึงข้อมูลทุนการศึกษาตาม scholarship_id
   const getDataById = async (scholarship_id) => {
     try {
-      const res = await fetch(`${apiUrl}api/scholarships/${scholarship_id}`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/scholarships/${scholarship_id}`, {
         method: "GET",
         cache: "no-store",
       });
@@ -63,7 +63,7 @@ function EditorganizationPage({ params }) {
 
   const fetchOrganizationList = async () => {
     try {
-      const res = await fetch(`${apiUrl}/api/organization`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/organization`, {
         method: "GET",
       });
       if (!res.ok) {
@@ -98,7 +98,7 @@ function EditorganizationPage({ params }) {
 
     try {
       // บันทึกข้อมูล Organization
-      const organizationRes = await fetch(`${apiUrl}/api/organization`, {
+      const organizationRes = await fetch(`http://10.120.1.109:11150/api/organization`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -122,7 +122,7 @@ function EditorganizationPage({ params }) {
       setSuccess(true); // ตั้งค่า success เป็น true เมื่อบันทึกสำเร็จ
       e.target.reset();
       setTimeout(() => {
-        router.push(`${apiUrl}/organization/show/${organization_id}`);
+        router.push(`http://10.120.1.109:11150/organization/show/${organization_id}`);
       }, 2000); // Redirect after 2 seconds
       
     } catch (error) {

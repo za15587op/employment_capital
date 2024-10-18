@@ -29,7 +29,7 @@ function ShowPage({ params }) {
 
       const fetchOrganization = async () => {
         try {
-          const resOrganization = await fetch(`${apiUrl}/api/organization/${scholarship_id}`, {
+          const resOrganization = await fetch(`http://10.120.1.109:11150/api/organization/${scholarship_id}`, {
             method: "GET",
           });
       
@@ -52,7 +52,7 @@ function ShowPage({ params }) {
     
       const getDataById = async (scholarship_id) => {
         try {
-          const res = await fetch(`${apiUrl}/api/scholarships/${scholarship_id}`, {
+          const res = await fetch(`http://10.120.1.109:11150/api/scholarships/${scholarship_id}`, {
             method: "GET",
             cache: "no-store",
           });
@@ -101,7 +101,7 @@ function ShowPage({ params }) {
             try {
                 // ลบข้อมูลจาก organization
                 const resOrganization = await fetch(
-                    `${apiUrl}/api/organization?organization_id=${organization_id}`,
+                    `http://10.120.1.109:11150/api/organization?organization_id=${organization_id}`,
                     {
                         method: "DELETE",
                     }
@@ -126,7 +126,7 @@ function ShowPage({ params }) {
     const handleAddData = (organization_id) => {
         setSuccess("กำลังเข้าสู่หน้าเพิ่มข้อมูลหน่วยงาน!");
         setTimeout(() => {
-          router.push(`${apiUrl}/organization/createogz/${scholarship_id}/${organization_id}`);
+          router.push(`http://10.120.1.109:11150/organization/createogz/${scholarship_id}/${organization_id}`);
           setSuccess(""); // Reset success message after navigation
         }, 1000);
     };
@@ -134,13 +134,13 @@ function ShowPage({ params }) {
     const handleedit_add = (organization_id) => {
         setSuccess("กำลังเข้าสู่หน้าดูข้อมูลหน่วยงาน!");
         setTimeout(() => {
-          router.push(`${apiUrl}/organization/showogz/${scholarship_id}/${organization_id}`);
+          router.push(`http://10.120.1.109:11150/organization/showogz/${scholarship_id}/${organization_id}`);
           setSuccess(""); // Reset success message after navigation
         }, 1000);
     };
 
     const handleShow = (organization_id) => {
-        router.push(`${apiUrl}/showScholarshipAll/showStdOrgan/${scholarship_id}/${organization_id}`);
+        router.push(`http://10.120.1.109:11150/showScholarshipAll/showStdOrgan/${scholarship_id}/${organization_id}`);
         
     };
     
@@ -149,11 +149,11 @@ function ShowPage({ params }) {
         
     // };
     const handlePDF = (organization_id) => {
-        router.push(`${apiUrl}/homeAdmin/genPDF/${scholarship_id}/${organization_id}`);
+        router.push(`http://10.120.1.109:11150/homeAdmin/genPDF/${scholarship_id}/${organization_id}`);
         
     };
     const test = (organization_id) => {
-        router.push(`${apiUrl}/knn/${scholarship_id}/${organization_id}`);
+        router.push(`http://10.120.1.109:11150/knn/${scholarship_id}/${organization_id}`);
         
     };
 

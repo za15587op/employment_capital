@@ -13,7 +13,7 @@ function ShowScholarships() {
   const [success, setSuccess] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  // const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   const formatDateToYYYYMMDD = (dateString) => {
     const date = new Date(dateString);
@@ -27,7 +27,7 @@ function ShowScholarships() {
     } else {
       const fetchScholarships = async () => {
         try {
-          const res = await fetch(`${apiUrl}/api/scholarships`);
+          const res = await fetch(`http://10.120.1.109:11150/api/scholarships`);
           if (res.ok) {
             const data = await res.json();
             const formattedData = data.map(scholarship => ({
@@ -59,24 +59,24 @@ function ShowScholarships() {
   }, [success]);
   
   const handleUpdate = (scholarship_id) => {
-    router.push(`${apiUrl}/scholarships/edit/${scholarship_id}`);
+    router.push(`http://10.120.1.109:11150/scholarships/edit/${scholarship_id}`);
     setSuccess("แก้ไขข้อมูลทุนสำเร็จ!");
   };
 
   const handleAddData = (scholarship_id) => {
-    router.push(`${apiUrl}/organization/create/${scholarship_id}`);
+    router.push(`http://10.120.1.109:11150/organization/create/${scholarship_id}`);
     setSuccess("เพิ่มหน่วยงานสำเร็จ!");
   };
 
   const handleOrganization = (organization_id) => {
-    router.push(`${apiUrl}/organization/show/${organization_id}`);
+    router.push(`http://10.120.1.109:11150/organization/show/${organization_id}`);
     setSuccess("ดูหน่วยงานสำเร็จ!");
   };
 
   const handleDelete = async (scholarship_id) => {
     const confirmed = confirm("ต้องการลบทุนนี้ใช่หรือไม่?");
     if (confirmed) {
-      const res = await fetch(`${apiUrl}/api/scholarships/?scholarship_id=${scholarship_id}`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/scholarships/?scholarship_id=${scholarship_id}`, {
         method: "DELETE",
       });
 
@@ -91,7 +91,7 @@ function ShowScholarships() {
     const newStatus = currentStatus === 1 ? 0 : 1;
   
     try {
-      const res = await fetch(`${apiUrl}/api/scholarships/toggle-status`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/scholarships/toggle-status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

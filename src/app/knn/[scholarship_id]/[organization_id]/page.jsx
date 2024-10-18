@@ -66,7 +66,7 @@ export default function AdminPage() {
   // ฟังก์ชันดึงข้อมูลนักศึกษา
   const fetchStudentData = async (scholarship_id, organization_id) => {
     try {
-      const res = await fetch(`${apiUrl}/api/knn/student/${scholarship_id}/${organization_id}`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/knn/student/${scholarship_id}/${organization_id}`, {
         method: "GET",
       });
 
@@ -131,7 +131,7 @@ export default function AdminPage() {
  // ฟังก์ชันดึงข้อมูลหน่วยงาน
 const fetchOrgData = async (scholarship_id, organization_id) => {
   try {
-    const res = await fetch(`${apiUrl}/api/knn/org/${scholarship_id}/${organization_id}`, {
+    const res = await fetch(`http://10.120.1.109:11150/api/knn/org/${scholarship_id}/${organization_id}`, {
       method: "GET",
     });
 
@@ -198,7 +198,7 @@ const fetchOrgData = async (scholarship_id, organization_id) => {
 const handleMatch = async (students, org) => {
 
   try {
-    const response = await fetch(`${apiUrl}/api/k-nn`, {
+    const response = await fetch(`http://10.120.1.109:11150/api/k-nn`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -231,7 +231,7 @@ const handleMatch = async (students, org) => {
 };
 
 const ViewDetails = (regist_id) => {
-  router.push(`${apiUrl}/evaluateStudent/evaluateStudentDetail/${organization_id}/${regist_id}`);
+  router.push(`http://10.120.1.109:11150/evaluateStudent/evaluateStudentDetail/${organization_id}/${regist_id}`);
 };
 
 const handlePassFailChange = (regist_id, student_status) => {
@@ -263,7 +263,7 @@ const handleSubmit = async (event) => {
   );
 
   try {
-    const res = await fetch(`${apiUrl}/api/evaluateStudent`, {
+    const res = await fetch(`http://10.120.1.109:11150/api/evaluateStudent`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

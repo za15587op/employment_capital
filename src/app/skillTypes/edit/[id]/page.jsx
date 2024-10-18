@@ -16,7 +16,7 @@ function EditSkillTypePage({ params }) {
   const getDataById = async (skill_type_id) => {
     try {
       const res = await fetch(
-        `${apiUrl}/api/skillTypes/${skill_type_id}`,
+        `http://10.120.1.109:11150/api/skillTypes/${skill_type_id}`,
         {
           method: "GET",
           cache: "no-store",
@@ -48,7 +48,7 @@ function EditSkillTypePage({ params }) {
 
     try {
       const res = await fetch(
-        `${apiUrl}/api/skillTypes/${skill_type_id}`,
+        `http://10.120.1.109:11150/api/skillTypes/${skill_type_id}`,
         {
           method: "PUT",
           headers: {
@@ -65,7 +65,7 @@ function EditSkillTypePage({ params }) {
       }
 
       router.refresh();
-      router.push(`${apiUrl}/skillTypes`);
+      router.push(`http://10.120.1.109:11150/skillTypes`);
     } catch (error) {
       console.log(error);
     }

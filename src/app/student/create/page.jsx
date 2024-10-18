@@ -62,7 +62,7 @@ function StudentForm({ params }) {
   useEffect(() => {
     const fetchSkillTypes = async () => {
       try {
-        const response = await fetch(`${apiUrl}/api/skillTypes`);
+        const response = await fetch(`http://10.120.1.109:11150/api/skillTypes`);
         if (!response.ok) throw new Error("ไม่สามารถดึงข้อมูลประเภททักษะได้");
         const data = await response.json();
         setSkillTypes(data);
@@ -134,7 +134,7 @@ function StudentForm({ params }) {
       return;
     } else {
       try {
-        const res = await fetch(`${apiUrl}/api/student`, {
+        const res = await fetch(`http://10.120.1.109:11150/api/student`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -167,7 +167,7 @@ function StudentForm({ params }) {
           setError("");
           setSuccess(true); // Trigger success notification
           setTimeout(async () => {
-            router.push(`${apiUrl}/homeSt`);
+            router.push(`http://10.120.1.109:11150/homeSt`);
             await signOut(); // Log the user out after successful submission
           }, 2000); // Redirect and logout after 2 seconds
         } else {

@@ -46,7 +46,7 @@ export default function EditScholarshipRegistration({ params }) {
 
   const getExistingData = async () => {
     try {
-      const res = await fetch(`${apiUrl}/api/student_scholarships/edit/${regist_id}`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/student_scholarships/edit/${regist_id}`, {
         method: "GET",
       });
 
@@ -97,7 +97,7 @@ export default function EditScholarshipRegistration({ params }) {
         formData.append("file", file);
       }
 
-      const response = await fetch(`${apiUrl}/api/student_scholarships/edit/${regist_id}`, {
+      const response = await fetch(`http://10.120.1.109:11150/api/student_scholarships/edit/${regist_id}`, {
         method: "PUT",
         body: formData,
       });
@@ -111,7 +111,7 @@ export default function EditScholarshipRegistration({ params }) {
         setSuccessMessage("แก้ไขข้อมูลการสมัครสำเร็จ!");
         setSuccess(true);
         setTimeout(() => {
-          router.push(`${apiUrl}/welcome/showStudentScholarships`);
+          router.push(`http://10.120.1.109:11150/welcome/showStudentScholarships`);
         }, 2000);
       } else {
         alert("การแก้ไขข้อมูลไม่สำเร็จ");
@@ -199,7 +199,7 @@ export default function EditScholarshipRegistration({ params }) {
           {/* ถ้าแก้เพิ่มไฟล์ไม่ทันให้ 200 - 212 */}
           <div>
             <label htmlFor="file" className="font-medium text-gray-700">ไฟล์ที่อัปโหลดแล้ว:</label>{" "}
-            <a href={`${apiUrl}/${relatedWorks}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
+            <a href={`http://10.120.1.109:11150/${relatedWorks}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
               ดูไฟล์ที่อัปโหลด
             </a>
             <input

@@ -43,7 +43,7 @@ function ViewCombinedPage({ params }) {
 
   const fetchCombinedData = async (organization_id) => {
     try {
-      const res = await fetch(`${apiUrl}/api/scholarshiporganization/${organization_id}`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/scholarshiporganization/${organization_id}`, {
         method: "GET",
       });
 

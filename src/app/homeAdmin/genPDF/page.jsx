@@ -27,7 +27,7 @@ function ShowScholarshipGenPDF() {
   // ฟังก์ชันดึงข้อมูลนักศึกษาจาก API
   const fetchGetData = async () => {
     try {
-      const res = await fetch(`${apiUrl}/api/genPDF/`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/genPDF/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

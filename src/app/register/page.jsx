@@ -16,7 +16,7 @@ function RegisterPage() {
 
   // ตรวจสอบ session เพื่อเปลี่ยนเส้นทาง
   if (session) {
-    router.replace(`${apiUrl}/welcome`);
+    router.replace(`http://10.120.1.109:11150/welcome`);
   }
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -34,7 +34,7 @@ function RegisterPage() {
     } else {
       try {
 
-        const res = await fetch(`${apiUrl}/api/register`, {
+        const res = await fetch(`http://10.120.1.109:11150/api/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -50,7 +50,7 @@ function RegisterPage() {
           setSuccess(true); // Trigger success notification
           e.target.reset(); // รีเซ็ตฟอร์มหลังจากลงทะเบียนสำเร็จ
           setTimeout(() => {
-            router.push(`${apiUrl}/scholarships`);
+            router.push(`http://10.120.1.109:11150/scholarships`);
           }, 2000); // Redirect after 2 seconds
         } else {
           setError("การลงทะเบียนผู้ใช้ล้มเหลว");

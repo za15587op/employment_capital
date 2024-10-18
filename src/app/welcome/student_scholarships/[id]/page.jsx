@@ -70,7 +70,7 @@ export default function ScholarshipRegistration({ params }) {
 
   const getStudentById = async (student_id) => {
     try {
-      const res = await fetch(`${apiUrl}/api/student/${student_id}`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/student/${student_id}`, {
         method: "GET",
         cache: "no-store",
       });
@@ -96,7 +96,7 @@ export default function ScholarshipRegistration({ params }) {
 
   const getDataById = async (scholarship_id) => {
     try {
-      const res = await fetch(`${apiUrl}/api/scholarships/${scholarship_id}`, {
+      const res = await fetch(`http://10.120.1.109:11150/api/scholarships/${scholarship_id}`, {
         method: "GET",
         cache: "no-store",
       });
@@ -136,7 +136,7 @@ export default function ScholarshipRegistration({ params }) {
 
     try {
       const checkRegistrationResponse = await fetch(
-        `${apiUrl}/api/student_scholarships/?student_id=${student_id}`,
+        `http://10.120.1.109:11150/api/student_scholarships/?student_id=${student_id}`,
         {
           method: "GET",
         }
@@ -161,7 +161,7 @@ export default function ScholarshipRegistration({ params }) {
       //   formData.append("file", fileInput.files[0]);
       // }
 
-      const response = await fetch(`${apiUrl}/api/student_scholarships`, {
+      const response = await fetch(`http://10.120.1.109:11150/api/student_scholarships`, {
         method: "POST",
         body: formData,
       });
@@ -177,7 +177,7 @@ export default function ScholarshipRegistration({ params }) {
         setSuccessMessage("สมัครทุนการศึกษาสำเร็จ!");
         setSuccess(true);
         setTimeout(() => {
-          router.push(`${apiUrl}/welcome/showStudentScholarships`);
+          router.push(`http://10.120.1.109:11150/welcome/showStudentScholarships`);
         }, 2000);
       }
     } catch (error) {
