@@ -158,14 +158,6 @@ const formatDateToBuddhistEra = (dateString) => {
                 </div>
                 <div className="relative z-10 container mx-auto py-8 text-left">
                     <h1 className="text-4xl font-bold text-gray-900">ประกาศรับสมัครนิสิตทุนการจ้างงาน</h1>
-                    <div className="mt-4 text-lg text-gray-700">
-                        <div className="flex items-center justify-between">
-                            <div className="inline-flex items-center text-gray-600">
-                                <img src="/news.png" alt="News Icon" className="w-5 h-5" />
-                                <span className="ml-2">ประกาศ ณ วันที่ 25 กันยายน 2567</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div className="relative z-10 container mx-auto py-4 text-left text-gray-800">
                     <p>ทุนนิสิตจ้างงานเป็นโครงการหรือรูปแบบการสนับสนุนที่หลายมหาวิทยาลัยทั่วประเทศได้ริเริ่มเพื่อช่วยเหลือนิสิตนักศึกษาในการเพิ่มโอกาสการทำงานควบคู่ไปกับการศึกษา โดยการได้รับทุนประเภทนี้ นิสิตจะมีโอกาสทำงานในสถาบันการศึกษา หน่วยงานภาครัฐ หรือองค์กรเอกชน ซึ่งจะได้รับค่าตอบแทนเป็นรายได้เสริมพร้อมกับประสบการณ์ที่มีคุณค่าในอนาคต ทุนนิสิตจ้างงานนี้ไม่ได้เพียงแต่ช่วยให้นิสิตสามารถมีรายได้เท่านั้น แต่ยังเป็นการเปิดประตูให้พวกเขาได้รับโอกาสในการพัฒนาตัวเองทั้งทางด้านทักษะการทำงาน ความรับผิดชอบ และการปรับตัวเข้ากับชีวิตในอนาคต</p>

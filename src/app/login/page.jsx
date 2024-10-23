@@ -60,6 +60,10 @@ function LoginPage() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#DCF2F1] via-[#7FC7D9] via-[#365486] to-[#0F1035]">
       <Navbar />
       <div className="แถบสี"></div>
+      <br></br>
+      <h3 className="text-4xl font-extrabold text-center text-blue-900 tracking-wider ">
+          ระบบบริหารจัดการทุนจ้างงานนิสิต
+          </h3>
       <div className="flex flex-1 justify-center items-center py-12 bg-opacity-60">
         <form
           onSubmit={handlerSubmit}
@@ -68,9 +72,7 @@ function LoginPage() {
           {error && (
             <div className="text-red-500 mb-4 text-center">{error}</div>
           )}
-          <h3 className="text-4xl font-extrabold mb-6 text-center text-gray-800">
-            หน้าเข้าสู่ระบบ
-          </h3>
+          
           <div className="mb-4">
             <input
               onChange={(e) => setUsername(e.target.value)}
